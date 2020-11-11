@@ -2,7 +2,7 @@ package ui;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
-import java.awt.BorderLayout;
+import java.awt.*;
 
 public class MainWindow {
 
@@ -15,11 +15,11 @@ public class MainWindow {
 
     public MainWindow() {
         frame = createFrame();
-        frame.add(createToolbar(), BorderLayout.BEFORE_FIRST_LINE);
-        frame.add(createTabbedPane(), BorderLayout.CENTER);
-        addAction = new AddAction();
+        addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
+        frame.add(createToolbar(), BorderLayout.BEFORE_FIRST_LINE);
+        frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
     }
@@ -30,6 +30,8 @@ public class MainWindow {
 
     private JFrame createFrame() {
         var frame = new JFrame("Home page");
+        ImageIcon img = new ImageIcon(getClass().getResource("/ui/piggy-bank.png"));
+        frame.setIconImage(img.getImage());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         return frame;
     }

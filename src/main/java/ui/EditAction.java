@@ -9,7 +9,7 @@ final class EditAction extends AbstractAction {
     private final JTabbedPane pane;
 
     public EditAction(JTabbedPane pane) {
-        super("Edit", null);
+        super("Edit", Icons.EDIT_ICON);
         this.pane = pane;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Edits selected row");

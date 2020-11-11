@@ -9,7 +9,7 @@ final class DeleteAction extends AbstractAction {
     private final JTabbedPane pane;
 
     public DeleteAction(JTabbedPane pane) {
-        super("Delete", null);
+        super("Delete", Icons.DELETE_ICON);
         this.pane = pane;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Deletes selected rows");
