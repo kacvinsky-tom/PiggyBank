@@ -28,14 +28,37 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         var tannedPane = new JTabbedPane();
+        tannedPane.add("Home", createHomeTable());
+        tannedPane.add("Transactions", createTransactionTable());
+        tannedPane.add("Categories", createCategoriesTable());
+        return tannedPane;
+    }
+
+    private JTable createHomeTable(){
+        var homeModel = new HomeTable();
+        var homeTable = new JTable(homeModel);
+        homeTable.setAutoCreateRowSorter(true);
+        homeTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        homeTable.setRowHeight(20);
+        return homeTable;
+    }
+
+    private JTable createTransactionTable(){
         var transactionsModel = new TransactionsTable();
         var transactionsTable = new JTable(transactionsModel);
-        tannedPane.add("Transactions", transactionsTable);
+        transactionsTable.setAutoCreateRowSorter(true);
+        transactionsTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        transactionsTable.setRowHeight(20);
+        return transactionsTable;
+    }
 
+    private JTable createCategoriesTable(){
         var categoriesModel = new CategoriesTable();
         var categoriesTable = new JTable(categoriesModel);
-        tannedPane.add("Categories", categoriesTable);
-        return tannedPane;
+        categoriesTable.setAutoCreateRowSorter(true);
+        categoriesTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        categoriesTable.setRowHeight(20);
+        return categoriesTable;
     }
 
     private JToolBar createToolbar() {
