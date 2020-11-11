@@ -7,11 +7,19 @@ import java.awt.BorderLayout;
 public class MainWindow {
 
     private final JFrame frame;
+    private final JTabbedPane pane = new JTabbedPane();
+    private final Action quitAction = new QuitAction();
+    private final Action addAction;
+    private final Action deleteAction;
+    private final Action editAction;
 
     public MainWindow() {
         frame = createFrame();
         frame.add(createToolbar(), BorderLayout.BEFORE_FIRST_LINE);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
+        addAction = new AddAction();
+        deleteAction = new DeleteAction(pane);
+        editAction = new EditAction(pane);
         frame.pack();
         frame.setLocationRelativeTo(null);
     }
@@ -27,11 +35,10 @@ public class MainWindow {
     }
 
     private JTabbedPane createTabbedPane() {
-        var tannedPane = new JTabbedPane();
-        tannedPane.add("Home", createHomeTable());
-        tannedPane.add("Transactions", createTransactionTable());
-        tannedPane.add("Categories", createCategoriesTable());
-        return tannedPane;
+        pane.add("Home", createHomeTable());
+        pane.add("Transactions", createTransactionTable());
+        pane.add("Categories", createCategoriesTable());
+        return pane;
     }
 
     private JTable createHomeTable(){
@@ -63,6 +70,11 @@ public class MainWindow {
 
     private JToolBar createToolbar() {
         var toolbar = new JToolBar();
+        toolbar.add(addAction);
+        toolbar.add(deleteAction);
+        toolbar.add(editAction);
+        toolbar.addSeparator();
+        toolbar.add(quitAction);
         toolbar.addSeparator();
         return toolbar;
     }
@@ -70,5 +82,7 @@ public class MainWindow {
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
         var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
         // here you can put the code for handling selection change
+        deleteAction.setEnabled(selectionModel.getSelectedItemsCount() != 0);
+        editAction.setEnabled(selectionModel.getSelectedItemsCount() == 1);
     }
 }
