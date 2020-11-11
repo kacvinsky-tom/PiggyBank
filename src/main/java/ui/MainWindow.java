@@ -8,12 +8,12 @@ public class MainWindow {
 
     private final JFrame frame;
 
-
     public MainWindow() {
         frame = createFrame();
         frame.add(createToolbar(), BorderLayout.BEFORE_FIRST_LINE);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
+        frame.setLocationRelativeTo(null);
     }
 
     public void show() {
@@ -28,7 +28,13 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         var tannedPane = new JTabbedPane();
-        tannedPane.add("Transactions", new JTable());
+        var transactionsModel = new TransactionsTable();
+        var transactionsTable = new JTable(transactionsModel);
+        tannedPane.add("Transactions", transactionsTable);
+
+        var categoriesModel = new CategoriesTable();
+        var categoriesTable = new JTable(categoriesModel);
+        tannedPane.add("Categories", categoriesTable);
         return tannedPane;
     }
 
