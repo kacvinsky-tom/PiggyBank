@@ -8,7 +8,6 @@ public class MainWindow {
 
     private final JFrame frame;
     private final JTabbedPane pane = new JTabbedPane();
-    private final Action quitAction = new QuitAction();
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
@@ -75,9 +74,6 @@ public class MainWindow {
         toolbar.add(addAction);
         toolbar.add(deleteAction);
         toolbar.add(editAction);
-        toolbar.addSeparator();
-        toolbar.add(quitAction);
-        toolbar.addSeparator();
         return toolbar;
     }
 

@@ -10,7 +10,6 @@ final class Icons {
     static final Icon DELETE_ICON = createIcon("delete-icon.png");
     static final Icon EDIT_ICON = createIcon("edit-icon.png");
     static final Icon ADD_ICON = createIcon("add-icon.png");
-    static final Icon QUIT_ICON = createIcon("Crystal_Clear_action_exit.png");
 
     private Icons() {
         throw new AssertionError("This class is not instantiable");
