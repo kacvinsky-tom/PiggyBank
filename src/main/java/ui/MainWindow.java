@@ -14,10 +14,11 @@ public class MainWindow {
 
     public MainWindow() {
         frame = createFrame();
+        frame.setPreferredSize(new Dimension(700, 500));
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
-        frame.add(createToolbar(), BorderLayout.BEFORE_FIRST_LINE);
+        frame.add(createToolbar(), BorderLayout.WEST);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -28,8 +29,8 @@ public class MainWindow {
     }
 
     private JFrame createFrame() {
-        var frame = new JFrame("Home page");
-        ImageIcon img = new ImageIcon(getClass().getResource("/ui/piggy-bank.png"));
+        var frame = new JFrame("Piggy Bank - Personal cash flow manager");
+        ImageIcon img = new ImageIcon(getClass().getResource("/ui/app-icon.png"));
         frame.setIconImage(img.getImage());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         return frame;
@@ -70,7 +71,7 @@ public class MainWindow {
     }
 
     private JToolBar createToolbar() {
-        var toolbar = new JToolBar();
+        var toolbar = new JToolBar(null,SwingConstants.VERTICAL);
         toolbar.add(addAction);
         toolbar.add(deleteAction);
         toolbar.add(editAction);
