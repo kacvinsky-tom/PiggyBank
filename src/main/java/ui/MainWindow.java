@@ -38,8 +38,8 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         pane.add("Home", createHomeTable());
-        pane.add("Transactions", createTransactionTable());
         pane.add("Statistics", createCategoriesTable());
+        pane.add("Transactions", createTransactionTable());
         pane.add("Categories", createCategoriesTable());
         return pane;
     }
