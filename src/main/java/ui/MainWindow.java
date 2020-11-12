@@ -38,7 +38,7 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         pane.add("Home", createHomeTable());
-        pane.add("Statistics", createCategoriesTable());
+        pane.add("Statistics", createStatisticsTable());
         pane.add("Transactions", createTransactionTable());
         pane.add("Categories", createCategoriesTable());
         return pane;
@@ -51,6 +51,15 @@ public class MainWindow {
         homeTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
         homeTable.setRowHeight(20);
         return homeTable;
+    }
+
+    private JScrollPane createStatisticsTable(){
+        var statisticsModel = new StatisticsTable();
+        var statisticsTable = new JTable(statisticsModel);
+        statisticsTable.setAutoCreateRowSorter(true);
+        statisticsTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        statisticsTable.setRowHeight(20);
+        return new JScrollPane(statisticsTable);
     }
 
     private JScrollPane createTransactionTable(){
@@ -81,7 +90,6 @@ public class MainWindow {
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
         var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
-        // here you can put the code for handling selection change
         deleteAction.setEnabled(selectionModel.getSelectedItemsCount() != 0);
         editAction.setEnabled(selectionModel.getSelectedItemsCount() == 1);
     }
