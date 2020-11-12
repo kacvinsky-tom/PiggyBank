@@ -12,12 +12,14 @@ public class StatisticsTable extends AbstractTableModel {
 
     StatisticsTable(){
         // following lines are just fo testing purposes
+        /*
         Category c1 = new Category();
         c1.name = "Food";
         c1.expenses = -80;
         c1.income = 0;
         c1.sum = -80;
         c1.percentageAmount = 0;
+        c1.transactionsNumber = 3;
 
         Category c2 = new Category();
         c2.name = "Sex services";
@@ -25,6 +27,7 @@ public class StatisticsTable extends AbstractTableModel {
         c2.income = 60;
         c2.sum = 40;
         c2.percentageAmount = 40;
+        c2.transactionsNumber = 2;
 
         Category c3 = new Category();
         c3.name = "Job";
@@ -32,10 +35,12 @@ public class StatisticsTable extends AbstractTableModel {
         c3.income = 80;
         c3.sum = 80;
         c3.percentageAmount = 60;
+        c3.transactionsNumber = 5;
 
         categories.add(c1);
         categories.add(c2);
         categories.add(c3);
+        */
     }
 
     @Override
@@ -60,21 +65,17 @@ public class StatisticsTable extends AbstractTableModel {
         var category = categories.get(rowIndex);
         switch (columnIndex){
             case 0:
-                return category.name;
             case 1:
-                return editAmount(category.sum);
             case 2:
-                return editAmount(category.income);
             case 3:
-                return editAmount(category.expenses);
             case 4:
-                return category.percentageAmount + "%";
             case 5:
-                return category.transactionsNumber;
+                return null;
             default:
                 throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
         }
     }
+
 
     @Override
     public String getColumnName(int columnIndex) {

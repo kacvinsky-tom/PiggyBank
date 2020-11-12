@@ -20,6 +20,8 @@ public class MainWindow {
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
         frame.add(createToolbar(), BorderLayout.WEST);
+
+
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
