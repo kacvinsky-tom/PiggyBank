@@ -12,5 +12,5 @@ public class Transaction {
         this.name = name;
         this.note = note;
     }
-    
+
 }
