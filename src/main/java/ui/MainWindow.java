@@ -38,8 +38,8 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         pane.add("Home", createHomeTable());
-        pane.add("Transactions", createTransactionTable());
         pane.add("Statistics", createCategoriesTable());
+        pane.add("Transactions", createTransactionTable());
         pane.add("Categories", createCategoriesTable());
         return pane;
     }
@@ -53,22 +53,22 @@ public class MainWindow {
         return homeTable;
     }
 
-    private JTable createTransactionTable(){
+    private JScrollPane createTransactionTable(){
         var transactionsModel = new TransactionsTable();
         var transactionsTable = new JTable(transactionsModel);
         transactionsTable.setAutoCreateRowSorter(true);
         transactionsTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
         transactionsTable.setRowHeight(20);
-        return transactionsTable;
+        return new JScrollPane(transactionsTable);
     }
 
-    private JTable createCategoriesTable(){
+    private JScrollPane createCategoriesTable(){
         var categoriesModel = new CategoriesTable();
         var categoriesTable = new JTable(categoriesModel);
         categoriesTable.setAutoCreateRowSorter(true);
         categoriesTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
         categoriesTable.setRowHeight(20);
-        return categoriesTable;
+        return new JScrollPane(categoriesTable);
     }
 
     private JToolBar createToolbar() {
