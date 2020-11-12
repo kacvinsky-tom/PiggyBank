@@ -22,20 +22,23 @@ public class CategoriesTable extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 1;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         var category = categories.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return category.getName();
-            case 1:
-                return category.getSum();
-            default:
-                throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
+        if (columnIndex == 0) {
+            return category.getName();
         }
+        throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
     }
 
+    @Override
+    public String getColumnName(int columnIndex) {
+        if (columnIndex == 0) {
+            return "Name";
+        }
+        throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
+    }
 }

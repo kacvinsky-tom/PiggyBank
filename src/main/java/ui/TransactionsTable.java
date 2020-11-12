@@ -14,14 +14,13 @@ public class TransactionsTable extends AbstractTableModel {
     };
 
     TransactionsTable(){
-        Category c = new Category();
-        Transaction t1 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        Transaction t1 = new Transaction("something", -6.9, new Category("Others"), LocalDate.now(), "blah");
         transactions.add(t1);
-        Transaction t2 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        Transaction t2 = new Transaction("bread", -6.9, new Category("Food"), LocalDate.now(), "blah");
         transactions.add(t2);
-        Transaction t3 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        Transaction t3 = new Transaction("...", -6.9, new Category("Sex Service"), LocalDate.now(), "blah");
         transactions.add(t3);
-        Transaction t4 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        Transaction t4 = new Transaction("payout", 6.9, new Category("Job"), LocalDate.now(), "blah");
         transactions.add(t4);
     }
 
@@ -112,7 +111,7 @@ public class TransactionsTable extends AbstractTableModel {
             case 2:
                 return "Category";
             case 3:
-                return "Date of create";
+                return "Created";
             case 4:
                 return "Note";
             default:
