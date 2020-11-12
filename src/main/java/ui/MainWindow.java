@@ -76,12 +76,12 @@ public class MainWindow {
         toolbar.add(addAction);
         toolbar.add(deleteAction);
         toolbar.add(editAction);
+        toolbar.setFloatable(false);
         return toolbar;
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
         var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
-        // here you can put the code for handling selection change
         deleteAction.setEnabled(selectionModel.getSelectedItemsCount() != 0);
         editAction.setEnabled(selectionModel.getSelectedItemsCount() == 1);
     }
