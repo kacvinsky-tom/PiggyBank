@@ -10,7 +10,7 @@ import java.util.List;
 
 public class TransactionsTable extends AbstractTableModel {
 
-    private List<Transaction> transactions = new ArrayList<>() {
+    private final List<Transaction> transactions = new ArrayList<>() {
     };
 
     //neskor vytvorit konstruktor s transactions ktore budu nacitane z jsona
