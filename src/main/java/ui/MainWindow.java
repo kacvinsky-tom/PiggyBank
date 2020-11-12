@@ -15,7 +15,7 @@ public class MainWindow {
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
-    private final JToolBar toolBar = new JToolBar(null,SwingConstants.VERTICAL);
+    private final JToolBar toolBar;
     private final double income = new Random().ints(0,1000).findFirst().getAsInt();
     private final double expenses = new Random().ints(0,1000).findFirst().getAsInt();
 
@@ -69,16 +69,9 @@ public class MainWindow {
         toolBar.add(addAction);
         toolBar.add(deleteAction);
         toolBar.add(editAction);
-        toolBar.setVisible(false);
-        return toolBar;
-    }
-
-    private void createToolbar() {
-        toolBar.add(addAction);
-        toolBar.add(deleteAction);
-        toolBar.add(editAction);
         toolBar.setFloatable(false);
         toolBar.setVisible(false);
+        return toolBar;
     }
 
     private void changeTable(ChangeEvent changeEvent){
