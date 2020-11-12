@@ -22,8 +22,8 @@ public class Transaction {
     }
 
     public void setAmount(float amount) {
-        if (amount == 0.0){
-            throw new IllegalArgumentException("amount must not be null");
+        if (amount <= 0.0){
+            throw new IllegalArgumentException("amount must not be 0 or less");
         }
         this.amount = amount;
     }
