@@ -4,6 +4,8 @@ import javax.swing.table.AbstractTableModel;
 
 public class TransactionsTable extends AbstractTableModel {
 
+
+
     @Override
     public int getRowCount() {
         return 0;
