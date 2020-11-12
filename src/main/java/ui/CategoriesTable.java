@@ -18,4 +18,5 @@ public class CategoriesTable extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         return null;
     }
+
 }
