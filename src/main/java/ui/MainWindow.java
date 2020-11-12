@@ -3,6 +3,7 @@ package ui;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.Random;
 
@@ -24,7 +25,7 @@ public class MainWindow {
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
-        createToolbar();
+        toolBar = createToolbar();
         frame.add(toolBar, BorderLayout.WEST);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
@@ -44,65 +45,32 @@ public class MainWindow {
     }
 
     private JTabbedPane createTabbedPane() {
-        pane.add("Home", createHomePanel());
-        pane.add("Transactions", createTransactionTable());
-        pane.add("Statistics", createCategoriesTable());
-        pane.add("Categories", createCategoriesTable());
+        pane.add("Home", (Component) createTable(new HomeTable(), false));
+        pane.add("Statistics", (Component) createTable(new StatisticsTable(), true));
+        pane.add("Transactions", (Component) createTable(new TransactionsTable(), true));
+        pane.add("Categories", (Component) createTable(new CategoriesTable(), true));
         pane.addChangeListener(this::changeTable);
         return pane;
     }
 
-    private JPanel createHomePanel(){
-        var panel = new JPanel(new GridBagLayout());
-//        panel.setBackground(new Color(250, 255, 255));
-        Font fontSubTitle = new Font("arial", Font.PLAIN, 30);
-        Font fontTitle = new Font("arial", Font.BOLD, 40);
-        Font fontNumbers = new Font("arial", Font.BOLD, 25);
-        addJlabel("Your balance",1,0,0, 0, fontTitle, Color.black, panel);
-        addJlabel("Income",0,1,40, 0, fontSubTitle, Color.black, panel);
-        addJlabel("Margin",1,2,40, 0, fontSubTitle, Color.black, panel);
-        addJlabel("Expenses",2,1,40, 10, fontSubTitle, Color.black, panel);
-        addJlabel(String.valueOf(income) + "€",0,2,40, 0, fontNumbers, new Color(101, 168, 47), panel);
-        addJlabel(String.valueOf(income-expenses) + "€",1,3,40, 0, fontNumbers, Color.black, panel);
-        addJlabel(String.valueOf(expenses) + "€",2,2,40, 0, fontNumbers, new Color(168, 43, 43), panel);
-        return panel;
-    }
-
-    private void addJlabel(String text, int gridx, int gridy, int ipadx, int ipady, Font font, Color color, JPanel panel){
-        var label = new JLabel(text, SwingConstants.CENTER);
-        label.setForeground(color);
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = gridx;
-        c.gridy = gridy;
-        c.ipadx = ipadx;
-        c.ipady = ipady;
-        if (text.equals("Your balance"))
-            c.insets = new Insets(0,0,50,0);
-
-        if (text.equals("Margin")){
-            c.insets = new Insets(0,0,10,0);
+    private Object createTable(Object o, Boolean makeScroll){
+        var table = new JTable((TableModel) o);
+        table.setAutoCreateRowSorter(true);
+        table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        table.setRowHeight(20);
+        if (makeScroll){
+            return new JScrollPane(table);
         }
-        label.setFont(font);
-        panel.add(label, c);
+        return table;
     }
 
-    private JTable createTransactionTable(){
-        var transactionsModel = new TransactionsTable();
-        var transactionsTable = new JTable(transactionsModel);
-        transactionsTable.setAutoCreateRowSorter(true);
-        transactionsTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        transactionsTable.setRowHeight(20);
-        return transactionsTable;
-    }
-
-    private JTable createCategoriesTable(){
-        var categoriesModel = new CategoriesTable();
-        var categoriesTable = new JTable(categoriesModel);
-        categoriesTable.setAutoCreateRowSorter(true);
-        categoriesTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        categoriesTable.setRowHeight(20);
-        return categoriesTable;
+    private JToolBar createToolbar() {
+        JToolBar toolBar = new JToolBar(null,SwingConstants.VERTICAL);
+        toolBar.add(addAction);
+        toolBar.add(deleteAction);
+        toolBar.add(editAction);
+        toolBar.setVisible(false);
+        return toolBar;
     }
 
     private void createToolbar() {
