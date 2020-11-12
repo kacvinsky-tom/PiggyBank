@@ -11,16 +11,30 @@ public class TransactionsTable extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return 0;
+        return transactions.size();
     }
 
     @Override
     public int getColumnCount() {
-        return 0;
+        return 5;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return null;
+        var transaction = transactions.get(rowIndex);
+        switch (columnIndex){
+            case 0:
+                return transaction.getName();
+            case 1:
+                return transaction.getAmount();
+            case 2:
+                return transaction.getCategory();
+            case 3:
+                return transaction.getDate();
+            case 4:
+                return transaction.getNote();
+            default:
+                throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
+        }
     }
 }
