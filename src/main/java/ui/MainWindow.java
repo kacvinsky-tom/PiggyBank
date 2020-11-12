@@ -2,6 +2,7 @@ package ui;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class MainWindow {
@@ -37,47 +38,22 @@ public class MainWindow {
     }
 
     private JTabbedPane createTabbedPane() {
-        pane.add("Home", createHomeTable());
-        pane.add("Statistics", createStatisticsTable());
-        pane.add("Transactions", createTransactionTable());
-        pane.add("Categories", createCategoriesTable());
+        pane.add("Home", (Component) createTable(new HomeTable(), false));
+        pane.add("Statistics", (Component) createTable(new StatisticsTable(), true));
+        pane.add("Transactions", (Component) createTable(new TransactionsTable(), true));
+        pane.add("Categories", (Component) createTable(new CategoriesTable(), true));
         return pane;
     }
 
-    private JTable createHomeTable(){
-        var homeModel = new HomeTable();
-        var homeTable = new JTable(homeModel);
-        homeTable.setAutoCreateRowSorter(true);
-        homeTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        homeTable.setRowHeight(20);
-        return homeTable;
-    }
-
-    private JScrollPane createStatisticsTable(){
-        var statisticsModel = new StatisticsTable();
-        var statisticsTable = new JTable(statisticsModel);
-        statisticsTable.setAutoCreateRowSorter(true);
-        statisticsTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        statisticsTable.setRowHeight(20);
-        return new JScrollPane(statisticsTable);
-    }
-
-    private JScrollPane createTransactionTable(){
-        var transactionsModel = new TransactionsTable();
-        var transactionsTable = new JTable(transactionsModel);
-        transactionsTable.setAutoCreateRowSorter(true);
-        transactionsTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        transactionsTable.setRowHeight(20);
-        return new JScrollPane(transactionsTable);
-    }
-
-    private JScrollPane createCategoriesTable(){
-        var categoriesModel = new CategoriesTable();
-        var categoriesTable = new JTable(categoriesModel);
-        categoriesTable.setAutoCreateRowSorter(true);
-        categoriesTable.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        categoriesTable.setRowHeight(20);
-        return new JScrollPane(categoriesTable);
+    private Object createTable(Object o, Boolean makeScroll){
+        var table = new JTable((TableModel) o);
+        table.setAutoCreateRowSorter(true);
+        table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
+        table.setRowHeight(20);
+        if (makeScroll){
+            return new JScrollPane(table);
+        }
+        return table;
     }
 
     private JToolBar createToolbar() {
