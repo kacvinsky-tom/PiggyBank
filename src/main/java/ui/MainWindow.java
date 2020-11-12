@@ -83,9 +83,6 @@ public class MainWindow {
         if (text.equals("Margin")){
             c.insets = new Insets(0,0,10,0);
         }
-        if (text.equals("Margin")){
-            c.insets = new Insets(0,0,10,0);
-        }
         label.setFont(font);
         panel.add(label, c);
     }
