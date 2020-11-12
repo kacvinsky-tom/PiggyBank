@@ -1,10 +1,13 @@
 package ui;
 
+import model.Transaction;
+
 import javax.swing.table.AbstractTableModel;
+import java.util.List;
 
 public class TransactionsTable extends AbstractTableModel {
 
-
+    private List<Transaction> transactions;
 
     @Override
     public int getRowCount() {
