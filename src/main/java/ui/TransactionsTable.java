@@ -35,6 +35,13 @@ public class TransactionsTable extends AbstractTableModel {
         return 5;
     }
 
+    String editAmount(double amount){
+        if (amount < 0){
+            return Double.toString(amount);
+        }
+        return " " + amount;
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         var transaction = transactions.get(rowIndex);
@@ -42,7 +49,7 @@ public class TransactionsTable extends AbstractTableModel {
             case 0:
                 return transaction.getName();
             case 1:
-                return transaction.getAmount();
+                return editAmount(transaction.getAmount());
             case 2:
                 return transaction.getCategory();
             case 3:
