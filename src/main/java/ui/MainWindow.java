@@ -11,7 +11,6 @@ public class MainWindow {
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
-    private JToolBar tb;
 
     public MainWindow() {
         frame = createFrame();
@@ -19,8 +18,7 @@ public class MainWindow {
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
-        tb = createToolbar();
-        frame.add(tb, BorderLayout.WEST);
+        frame.add(createToolbar(), BorderLayout.WEST);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -40,8 +38,8 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         pane.add("Home", createHomeTable());
-        pane.add("Statistics", createCategoriesTable());
         pane.add("Transactions", createTransactionTable());
+        pane.add("Statistics", createCategoriesTable());
         pane.add("Categories", createCategoriesTable());
         return pane;
     }
@@ -74,7 +72,7 @@ public class MainWindow {
     }
 
     private JToolBar createToolbar() {
-        var toolbar = new JToolBar(null, SwingConstants.VERTICAL);
+        var toolbar = new JToolBar(null,SwingConstants.VERTICAL);
         toolbar.add(addAction);
         toolbar.add(deleteAction);
         toolbar.add(editAction);
