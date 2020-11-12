@@ -3,13 +3,13 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Transaction {
-    private float amount;
+    private double amount;
     private String name;
     private LocalDate date;
     private String note;
     private Category category;
 
-    public Transaction(String name, float amount, Category category, LocalDate date, String note){
+    public Transaction(String name, double amount, Category category, LocalDate date, String note){
         setName(name);
         setAmount(amount);
         setCategory(category);
@@ -17,11 +17,11 @@ public class Transaction {
         setNote(note);
     }
 
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(double amount) {
         if (amount <= 0.0){
             throw new IllegalArgumentException("amount must not be 0 or less");
         }

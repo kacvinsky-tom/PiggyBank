@@ -13,7 +13,17 @@ public class TransactionsTable extends AbstractTableModel {
     private final List<Transaction> transactions = new ArrayList<>() {
     };
 
-    //neskor vytvorit konstruktor s transactions ktore budu nacitane z jsona
+    TransactionsTable(){
+        Category c = new Category();
+        Transaction t1 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        transactions.add(t1);
+        Transaction t2 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        transactions.add(t2);
+        Transaction t3 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        transactions.add(t3);
+        Transaction t4 = new Transaction("food", 6.9, c, LocalDate.now(), "blah");
+        transactions.add(t4);
+    }
 
     @Override
     public int getRowCount() {
