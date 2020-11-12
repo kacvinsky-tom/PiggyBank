@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
+import java.util.Random;
 
 
 public class MainWindow {
@@ -14,6 +15,8 @@ public class MainWindow {
     private final Action deleteAction;
     private final Action editAction;
     private final JToolBar toolBar = new JToolBar(null,SwingConstants.VERTICAL);
+    private final double income = new Random().ints(0,1000).findFirst().getAsInt();
+    private final double expenses = new Random().ints(0,1000).findFirst().getAsInt();
 
     public MainWindow() {
         frame = createFrame();
@@ -51,25 +54,37 @@ public class MainWindow {
 
     private JPanel createHomePanel(){
         var panel = new JPanel(new GridBagLayout());
+//        panel.setBackground(new Color(250, 255, 255));
         Font fontSubTitle = new Font("arial", Font.PLAIN, 30);
         Font fontTitle = new Font("arial", Font.BOLD, 40);
-        addJlabel("Your balance",1,0,0, 25, fontTitle, panel);
-        addJlabel("Income",0,1,20, 0, fontSubTitle, panel);
-        addJlabel("Margin",1,1,20, 0, fontSubTitle, panel);
-        addJlabel("Expense",2,1,20, 0, fontSubTitle, panel);
+        Font fontNumbers = new Font("arial", Font.BOLD, 25);
+        addJlabel("Your balance",1,0,0, 0, fontTitle, Color.black, panel);
+        addJlabel("Income",0,1,40, 0, fontSubTitle, Color.black, panel);
+        addJlabel("Margin",1,2,40, 0, fontSubTitle, Color.black, panel);
+        addJlabel("Expenses",2,1,40, 10, fontSubTitle, Color.black, panel);
+        addJlabel(String.valueOf(income) + "€",0,2,40, 0, fontNumbers, new Color(101, 168, 47), panel);
+        addJlabel(String.valueOf(income-expenses) + "€",1,3,40, 0, fontNumbers, Color.black, panel);
+        addJlabel(String.valueOf(expenses) + "€",2,2,40, 0, fontNumbers, new Color(168, 43, 43), panel);
         return panel;
     }
 
-    private void addJlabel(String text, int gridx, int gridy, int ipadx, int ipady, Font font, JPanel panel){
+    private void addJlabel(String text, int gridx, int gridy, int ipadx, int ipady, Font font, Color color, JPanel panel){
         var label = new JLabel(text, SwingConstants.CENTER);
+        label.setForeground(color);
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = gridx;
         c.gridy = gridy;
         c.ipadx = ipadx;
         c.ipady = ipady;
-        if (text.equals("Your balance")){
-            label.setVerticalAlignment(JLabel.NORTH);
+        if (text.equals("Your balance"))
+            c.insets = new Insets(0,0,50,0);
+
+        if (text.equals("Margin")){
+            c.insets = new Insets(0,0,10,0);
+        }
+        if (text.equals("Margin")){
+            c.insets = new Insets(0,0,10,0);
         }
         label.setFont(font);
         panel.add(label, c);
