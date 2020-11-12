@@ -1,4 +1,58 @@
 package model;
 
 public class Category {
+    private String name;
+    public int transactionsNumber;
+    private double expenses;
+    private double income;
+    private double sum;
+
+    public Category(String name){
+        setName(name);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getTransactionsNumber() {
+        return transactionsNumber;
+    }
+
+    public void setTransactionsNumber(int transactionsNumber) {
+        this.transactionsNumber = transactionsNumber;
+    }
+
+    public double getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(double expenses) {
+        this.expenses = expenses;
+    }
+
+    public double getIncome() {
+        return income;
+    }
+
+    public void setIncome(double income) {
+        this.income = income;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
+    public void setSum(double sum) {
+        this.sum = sum;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
