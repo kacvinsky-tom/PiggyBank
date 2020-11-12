@@ -65,6 +65,7 @@ public class MainWindow {
         toolBar.add(addAction);
         toolBar.add(deleteAction);
         toolBar.add(editAction);
+        toolBar.setVisible(false);
         return toolBar;
     }
 
