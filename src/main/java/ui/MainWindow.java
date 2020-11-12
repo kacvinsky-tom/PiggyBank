@@ -1,6 +1,7 @@
 package ui;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -12,6 +13,7 @@ public class MainWindow {
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
+    private final JToolBar toolBar;
 
     public MainWindow() {
         frame = createFrame();
@@ -19,9 +21,8 @@ public class MainWindow {
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
-        frame.add(createToolbar(), BorderLayout.WEST);
-
-
+        toolBar = createToolbar();
+        frame.add(toolBar, BorderLayout.WEST);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -44,6 +45,7 @@ public class MainWindow {
         pane.add("Statistics", (Component) createTable(new StatisticsTable(), true));
         pane.add("Transactions", (Component) createTable(new TransactionsTable(), true));
         pane.add("Categories", (Component) createTable(new CategoriesTable(), true));
+        pane.addChangeListener(this::changeTable);
         return pane;
     }
 
@@ -59,11 +61,17 @@ public class MainWindow {
     }
 
     private JToolBar createToolbar() {
-        var toolbar = new JToolBar(null,SwingConstants.VERTICAL);
-        toolbar.add(addAction);
-        toolbar.add(deleteAction);
-        toolbar.add(editAction);
-        return toolbar;
+        JToolBar toolBar = new JToolBar(null,SwingConstants.VERTICAL);
+        toolBar.add(addAction);
+        toolBar.add(deleteAction);
+        toolBar.add(editAction);
+        return toolBar;
+    }
+
+    private void changeTable(ChangeEvent changeEvent){
+        var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
+        toolBar.setVisible(index > 1);
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {

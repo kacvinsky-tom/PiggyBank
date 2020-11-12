@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Category {
     private String name;
     public int transactionsNumber;
@@ -16,7 +18,7 @@ public class Category {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = Objects.requireNonNull(name, "name must not be null");
     }
 
     public int getTransactionsNumber() {
