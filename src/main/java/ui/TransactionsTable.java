@@ -5,11 +5,13 @@ import model.Transaction;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionsTable extends AbstractTableModel {
 
-    private List<Transaction> transactions;
+    private List<Transaction> transactions = new ArrayList<>() {
+    };
 
     //neskor vytvorit konstruktor s transactions ktore budu nacitane z jsona
 

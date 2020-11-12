@@ -9,12 +9,12 @@ public class Transaction {
     private String note;
     private Category category;
 
-    Transaction(float amount, String name, String note, Category category, LocalDate date){
-        setAmount(amount);
+    public Transaction(String name, float amount, Category category, LocalDate date, String note){
         setName(name);
-        setNote(note);
+        setAmount(amount);
         setCategory(category);
         setDate(date);
+        setNote(note);
     }
 
     public float getAmount() {
