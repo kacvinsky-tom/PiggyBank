@@ -37,4 +37,5 @@ public class CategoriesTable extends AbstractTableModel {
                 throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
         }
     }
+
 }

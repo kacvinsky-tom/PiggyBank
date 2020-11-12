@@ -1,31 +1,27 @@
 package model;
-import javax.management.ValueExp;
 import java.time.LocalDate;
 import java.util.Objects;
 
 public class Transaction {
-    private float amount;
+    private double amount;
     private String name;
     private LocalDate date;
     private String note;
     private Category category;
 
-    Transaction(float amount, String name, String note, Category category, LocalDate date){
-        setAmount(amount);
+    public Transaction(String name, double amount, Category category, LocalDate date, String note){
         setName(name);
-        setNote(note);
+        setAmount(amount);
         setCategory(category);
         setDate(date);
+        setNote(note);
     }
 
-    public float getAmount() {
+    public double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
-        if (amount == 0.0){
-            throw new IllegalArgumentException("amount must not be null");
-        }
+    public void setAmount(double amount) {
         this.amount = amount;
     }
 
@@ -58,9 +54,6 @@ public class Transaction {
     }
 
     public void setCategory(Category category) {
-        if (category == null){
-            category = new Category();
-        }
         this.category = category;
     }
 }
