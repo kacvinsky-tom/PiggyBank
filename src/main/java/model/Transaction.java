@@ -1,5 +1,4 @@
 package model;
-import javax.management.ValueExp;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -58,9 +57,6 @@ public class Transaction {
     }
 
     public void setCategory(Category category) {
-        if (category == null){
-            category = new Category();
-        }
         this.category = category;
     }
 }
