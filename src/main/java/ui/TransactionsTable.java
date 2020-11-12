@@ -11,6 +11,8 @@ public class TransactionsTable extends AbstractTableModel {
 
     private List<Transaction> transactions;
 
+    //neskor vytvorit konstruktor s transactions ktore budu nacitane z jsona
+
     @Override
     public int getRowCount() {
         return transactions.size();
