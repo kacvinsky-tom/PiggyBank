@@ -11,14 +11,18 @@ import java.util.Random;
 public class MainWindow {
 
     private final JFrame frame;
+
+    private final JPanel homePanel;
+
     private final JTabbedPane pane = new JTabbedPane();
+    private final JTable statisticsTable;
+    private final JTable transactionsTable;
+    private final JTable categoriesTable;
+
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
     private final JToolBar toolBar;
-    private final JTable statisticsTable;
-    private final JTable transactionsTable;
-    private final JTable categoriesTable;
 
     private final double income = new Random().ints(0,1000).findFirst().getAsInt();
     private final double expenses = -new Random().ints(0,1000).findFirst().getAsInt();
