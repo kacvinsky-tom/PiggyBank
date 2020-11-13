@@ -1,5 +1,8 @@
 package ui;
 
+import model.Category;
+import model.Transaction;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,6 +16,8 @@ import java.util.GregorianCalendar;
 final class AddAction extends AbstractAction {
 
     private final JTabbedPane pane;
+    private JDialog dialog;
+
 
     public AddAction(JTabbedPane pane) {
         super("Add", Icons.ADD_ICON);
@@ -22,7 +27,14 @@ final class AddAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
     }
 
-    private JSpinner createDateSpinner(){
+    private JTable getJTable(int idx) {
+        JScrollPane scrollPane = (JScrollPane) pane.getComponentAt(idx);
+        JViewport viewport = scrollPane.getViewport();
+        return (JTable) viewport.getView();
+    }
+
+    private JSpinner createDateSpinner() {
+        dialog.add(new JLabel("Choose date: "));
         SpinnerDateModel dateModel = new SpinnerDateModel();
         JSpinner spinner = new JSpinner(dateModel);
         Calendar calendar = new GregorianCalendar();
@@ -31,65 +43,100 @@ final class AddAction extends AbstractAction {
         return spinner;
     }
 
-
-    private void createTransactionDialog(){
-        JDialog dialog = new JDialog ();
-        dialog.setTitle("Add Transaction");
-        dialog.setPreferredSize(new Dimension(500, 150));
+    private JDialog createDialog(String string, int width, int height) {
+        dialog = new JDialog();
+        dialog.setTitle("Add " + string);
+        dialog.setSize(new Dimension(width, height));
         dialog.setLayout(new FlowLayout());
 
-        dialog.setModal (true);
-        dialog.setAlwaysOnTop (true);
-        dialog.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setModal(true);
+        dialog.setAlwaysOnTop(true);
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setLocationRelativeTo(null);
 
-        dialog.add(new JLabel("Name: "));
-        JTextField nameField = new JTextField();
-        nameField.setColumns(20);
-        nameField.setSize(new Dimension(150,20));
-        dialog.add(nameField);
+        return dialog;
+    }
 
-        dialog.add(new JLabel("Amount: "));
-        JTextField amountField = new JTextField();
-        amountField.setColumns(8);
-        amountField.setSize(new Dimension(150,20));
-        dialog.add(amountField);
+    private JTextField createTextfield(String string) {
+        dialog.add(new JLabel(string + ": "));
+        JTextField textField = new JTextField();
+        textField.setColumns(20);
+        textField.setSize(new Dimension(150, 20));
+        dialog.add(textField);
+        return textField;
+    }
 
+    private ListSelectionModel createCategorySelector(JTable categoriesSelectionTable) {
         dialog.add(new JLabel("Category: "));
+        categoriesSelectionTable.setPreferredScrollableViewportSize(new Dimension(100, 100));
+        categoriesSelectionTable.setFillsViewportHeight(true);
+        categoriesSelectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        dialog.add(categoriesSelectionTable);
+        return categoriesSelectionTable.getSelectionModel();
+    }
 
 
-        dialog.add(new JLabel("Choose date: "));
-        dialog.add(createDateSpinner());
+    private void createTransactionDialog() {
+        dialog = createDialog("Transaction", 270, 400);
 
+        JTable transactionsTable = getJTable(2);
+        JTable categoriesSelectionTable = new JTable(getJTable(3).getModel());
+        var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
+        var categoriesTableModel = (CategoriesTable) categoriesSelectionTable.getModel();
+
+        JTextField nameField = createTextfield("Name");
+        JTextField amountField = createTextfield("Amount");
+        JTextField noteField = createTextfield("Note");
+
+        ListSelectionModel rowSM = createCategorySelector(categoriesSelectionTable);
+        JSpinner spinner = createDateSpinner();
+        dialog.add(spinner);
+
+        JButton add = new JButton("Add");
+        dialog.getContentPane().add(add);
+
+        add.addActionListener(e -> {
+
+            String name = nameField.getText();
+            double amount = Double.parseDouble(amountField.getText());
+            String note = noteField.getText();
+            int selectedRow = rowSM.getMinSelectionIndex();
+            Category category = categoriesTableModel.getCategories().get(selectedRow);
+
+            transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note));
+            category.setExpenses(category.getExpenses() + amount);
+
+            dialog.dispose();
+        });
         dialog.pack();
         dialog.setVisible(true);
     }
 
-    private void createCategoryDialog(){
-        JDialog dialog = new JDialog ();
-        dialog.setSize(new Dimension(500,200));
-        dialog.setModal (true);
-        dialog.setAlwaysOnTop (true);
-        dialog.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
-        dialog.setLocationRelativeTo(null);
-        JPanel p = new JPanel();
-        p.setLayout(new FlowLayout());
-        dialog.add(p);
-        JLabel l = new JLabel("Enter name of the new category:");
-        JTextField l2 = new JTextField("");
-        l2.setColumns(3);
-        l2.setSize(new Dimension(150,20));
-        p.add(l);
-        p.add(l2);
+    private void createCategoryDialog() {
+        JTable categoriesTable = getJTable(3);
+        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
+
+        dialog = createDialog("Category", 300, 100);
+        JTextField nameField = createTextfield("Category Name");
+
+        JButton add = new JButton("Add");
+        dialog.getContentPane().add(add);
+
+        add.addActionListener(e -> {
+
+            String name = nameField.getText();
+            categoriesTableModel.addRow(new Category(name));
+            dialog.dispose();
+        });
         dialog.setVisible(true);
         dialog.pack();
     }
 
-    private void addTransaction(){
+    private void addTransaction() {
         createTransactionDialog();
     }
 
-    private void addCategory(){
+    private void addCategory() {
         createCategoryDialog();
 
     }
@@ -97,7 +144,7 @@ final class AddAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         int index = pane.getSelectedIndex();
-        if (index == 2){
+        if (index == 2) {
             addTransaction();
         } else if (index == 3) {
             addCategory();
