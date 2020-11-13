@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.*;
 import java.util.Objects;
 
 public class Category {
@@ -8,6 +9,20 @@ public class Category {
     private double expenses;
     private double income;
     private double sum;
+    private Color color;
+
+    public Category(String name, Color color){
+        setName(name);
+        setColor(color);
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
     public double getPercentage() {
         return percentage;
@@ -18,10 +33,6 @@ public class Category {
     }
 
     private double percentage;
-
-    public Category(String name){
-        setName(name);
-    }
 
     public String getName() {
         return name;

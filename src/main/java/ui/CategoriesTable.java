@@ -3,16 +3,17 @@ package ui;
 import model.Category;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesTable extends AbstractTableModel {
 
-    private List <Category> categories;
+    private final List <Category> categories;
 
     public CategoriesTable() {
         this.categories = new ArrayList<>();
-        this.categories.add(new Category("Others"));
+        this.categories.add(new Category("Others", Color.GRAY));
     }
 
     @Override
@@ -22,22 +23,28 @@ public class CategoriesTable extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 1;
+        return 2;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         var category = categories.get(rowIndex);
-        if (columnIndex == 0) {
-            return category.getName();
+        switch (columnIndex){
+            case 0:
+                return category.getName();
+            case 1:
+                return category.getColor();
         }
         throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
     }
 
     @Override
     public String getColumnName(int columnIndex) {
-        if (columnIndex == 0) {
-            return "Name";
+        switch (columnIndex){
+            case 0:
+                return "Name";
+            case 1:
+                return "Color";
         }
         throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
     }
