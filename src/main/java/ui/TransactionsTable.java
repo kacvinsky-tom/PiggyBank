@@ -34,8 +34,8 @@ public class TransactionsTable extends AbstractTableModel {
         return 5;
     }
 
-    String editAmount(double amount){
-        if (amount < 0){
+    String editAmountFormat(double amount){
+        if (amount < 0.0){
             return Double.toString(amount);
         }
         return " " + amount;
@@ -48,7 +48,7 @@ public class TransactionsTable extends AbstractTableModel {
             case 0:
                 return transaction.getName();
             case 1:
-                return editAmount(transaction.getAmount());
+                return editAmountFormat(transaction.getAmount());
             case 2:
                 return transaction.getCategory();
             case 3:

@@ -11,17 +11,17 @@ public class MainWindow {
 
     private final JFrame frame;
 
-    private final HomePanel homePanel;
-
     private final JTabbedPane pane = new JTabbedPane();
+
+    private final HomePanel homePanel;
     private final JTable statisticsTable;
     private final JTable transactionsTable;
     private final JTable categoriesTable;
 
+    private final JToolBar toolBar;
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
-    private final JToolBar toolBar;
 
     public MainWindow() {
         frame = createFrame();
