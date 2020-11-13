@@ -5,27 +5,29 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.Random;
 
 
 public class MainWindow {
 
     private final JFrame frame;
+
+    private final HomePanel homePanel;
+
     private final JTabbedPane pane = new JTabbedPane();
-    private final Action addAction;
-    private final Action deleteAction;
-    private final Action editAction;
-    private final JToolBar toolBar;
     private final JTable statisticsTable;
     private final JTable transactionsTable;
     private final JTable categoriesTable;
 
-    private final double income = new Random().ints(0,1000).findFirst().getAsInt();
-    private final double expenses = -new Random().ints(0,1000).findFirst().getAsInt();
+    private final Action addAction;
+    private final Action deleteAction;
+    private final Action editAction;
+    private final JToolBar toolBar;
 
     public MainWindow() {
         frame = createFrame();
         frame.setPreferredSize(new Dimension(700, 500));
+
+        homePanel = new HomePanel();
 
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
@@ -55,7 +57,7 @@ public class MainWindow {
     }
 
     private JTabbedPane createTabbedPane() {
-        pane.add("Home", createHomePanel());
+        pane.add("Home", homePanel.getPanel());
         pane.add("Statistics", new JScrollPane(statisticsTable));
         pane.add("Transactions", new JScrollPane(transactionsTable));
         pane.add("Categories", new JScrollPane(categoriesTable));
@@ -70,43 +72,6 @@ public class MainWindow {
         table.setRowHeight(20);
         return table;
     }
-
-    private JPanel createHomePanel(){
-        var panel = new JPanel(new GridBagLayout());
-//        panel.setBackground(new Color(250, 255, 255));
-        Font fontSubTitle = new Font("arial", Font.PLAIN, 30);
-        Font fontTitle = new Font("arial", Font.BOLD, 40);
-        Font fontNumbers = new Font("arial", Font.BOLD, 25);
-        addJlabel("Your balance",1,0,0, 0, fontTitle, Color.black, panel);
-        addJlabel("Income",0,1,40, 0, fontSubTitle, Color.black, panel);
-        addJlabel("Margin",1,2,40, 0, fontSubTitle, Color.black, panel);
-        addJlabel("Expenses",2,1,40, 10, fontSubTitle, Color.black, panel);
-        addJlabel(income + "€",0,2,40, 0, fontNumbers, new Color(101, 168, 47), panel);
-        addJlabel(income-expenses + "€",1,3,40, 0, fontNumbers, Color.black, panel);
-        addJlabel(expenses + "€",2,2,40, 0, fontNumbers, new Color(168, 43, 43), panel);
-        return panel;
-    }
-
-
-    private void addJlabel(String text, int gridx, int gridy, int ipadx, int ipady, Font font, Color color, JPanel panel){
-        var label = new JLabel(text, SwingConstants.CENTER);
-        label.setForeground(color);
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = gridx;
-        c.gridy = gridy;
-        c.ipadx = ipadx;
-        c.ipady = ipady;
-        if (text.equals("Your balance"))
-            c.insets = new Insets(0,0,50,0);
-
-        if (text.equals("Margin")){
-            c.insets = new Insets(0,0,10,0);
-        }
-        label.setFont(font);
-        panel.add(label, c);
-    }
-
 
     private JToolBar createToolbar() {
         JToolBar toolBar = new JToolBar(null,SwingConstants.VERTICAL);
