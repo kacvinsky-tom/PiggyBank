@@ -20,7 +20,7 @@ public class FilterAction extends AbstractAction{
 
     private void createDialog(){
         dialog = new JDialog();
-        dialog.setIconImage(Icons.FILTER_IMAGE);
+        dialog.setIconImage(Icons.SETTINGS_IMAGE);
         dialog.setTitle("Choose category");
         dialog.setSize(new Dimension(250,100));
         dialog.setModal (true);

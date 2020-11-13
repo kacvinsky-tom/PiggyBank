@@ -10,7 +10,7 @@ final class Icons {
     static final Icon ADD_ICON = createIcon("add-icon.png");
     static final Image PIGGY_IMAGE = createImage("/ui/app-icon.png");
     static final Image ADD_IMAGE = createImage("add-icon.png");
-    static final Image FILTER_IMAGE = createImage("Filter.png");
+    static final Image SETTINGS_IMAGE = createImage("Filter.png");
 
     private Icons() {
         throw new AssertionError("This class is not instantiable");

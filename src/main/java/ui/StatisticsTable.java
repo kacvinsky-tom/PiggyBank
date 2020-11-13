@@ -3,6 +3,7 @@ package ui;
 import model.Category;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,21 +13,21 @@ public class StatisticsTable extends AbstractTableModel {
 
     StatisticsTable(){
         // following lines are just fo testing purposes
-        Category c1 = new Category("Food");
+        Category c1 = new Category("Food", Color.BLUE);
         c1.setExpenses(-80);
         c1.setIncome(0);
         c1.setSum(-80);
         c1.setTransactionsNumber(3);
         c1.setPercentage(0);
 
-        Category c2 = new Category("Sex services");
+        Category c2 = new Category("Sex services", Color.CYAN);
         c2.setExpenses(-20);
         c2.setIncome(60);
         c2.setSum(40);
         c2.setTransactionsNumber(2);
         c2.setPercentage(40);
 
-        Category c3 = new Category("Job");
+        Category c3 = new Category("Job", Color.GREEN);
         c3.setExpenses(0);
         c3.setIncome(80);
         c3.setSum(80);
