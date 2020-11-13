@@ -16,16 +16,25 @@ public class MainWindow {
     private final Action deleteAction;
     private final Action editAction;
     private final JToolBar toolBar;
+    private final JTable statisticsTable;
+    private final JTable transactionsTable;
+    private final JTable categoriesTable;
     private final double income = new Random().ints(0,1000).findFirst().getAsInt();
     private final double expenses = new Random().ints(0,1000).findFirst().getAsInt();
 
     public MainWindow() {
         frame = createFrame();
         frame.setPreferredSize(new Dimension(700, 500));
+
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
         toolBar = createToolbar();
+
+        statisticsTable = createTable(new StatisticsTable());
+        transactionsTable = createTable(new TransactionsTable());
+        categoriesTable = createTable(new CategoriesTable());
+
         frame.add(toolBar, BorderLayout.WEST);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
@@ -46,19 +55,19 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         pane.add("Home", createHomePanel());
-        pane.add("Statistics", (Component) createTable(new StatisticsTable()));
-        pane.add("Transactions", (Component) createTable(new TransactionsTable()));
-        pane.add("Categories", (Component) createTable(new CategoriesTable()));
+        pane.add("Statistics", new JScrollPane(statisticsTable));
+        pane.add("Transactions", new JScrollPane(transactionsTable));
+        pane.add("Categories", new JScrollPane(categoriesTable));
         pane.addChangeListener(this::changeTable);
         return pane;
     }
 
-    private Object createTable(Object o){
+    private JTable createTable(Object o){
         var table = new JTable((TableModel) o);
         table.setAutoCreateRowSorter(true);
         table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
         table.setRowHeight(20);
-        return new JScrollPane(table);
+        return table;
     }
 
     private JPanel createHomePanel(){
@@ -111,6 +120,9 @@ public class MainWindow {
     private void changeTable(ChangeEvent changeEvent){
         var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
         int index = sourceTabbedPane.getSelectedIndex();
+        statisticsTable.clearSelection();
+        transactionsTable.clearSelection();
+        categoriesTable.clearSelection();
         toolBar.setVisible(index > 1);
     }
 
