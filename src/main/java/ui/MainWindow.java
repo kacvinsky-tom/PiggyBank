@@ -21,6 +21,7 @@ public class MainWindow {
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
+    private final Action filterAction;
     private final JToolBar toolBar;
 
     public MainWindow() {
@@ -32,6 +33,7 @@ public class MainWindow {
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
+        filterAction = new FilterAction(pane);
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
@@ -77,6 +79,8 @@ public class MainWindow {
         toolBar.add(addAction);
         toolBar.add(deleteAction);
         toolBar.add(editAction);
+        toolBar.addSeparator();
+        toolBar.add(filterAction);
         toolBar.setFloatable(false);
         toolBar.setVisible(false);
         return toolBar;
@@ -86,6 +90,7 @@ public class MainWindow {
         var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
         int index = sourceTabbedPane.getSelectedIndex();
         toolBar.setVisible(index > 1);
+        toolBar.getComponentAtIndex(3).setVisible(index == 2);
 
         statisticsTable.clearSelection();
         transactionsTable.clearSelection();
