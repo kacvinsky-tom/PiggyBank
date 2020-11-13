@@ -29,7 +29,7 @@ public class HomePanel {
         addJlabel("Margin",1,2,40, 0, fontSubTitle, Color.black, panel);
         addJlabel("Expenses",2,1,40, 10, fontSubTitle, Color.black, panel);
         addJlabel(income + "€",0,2,40, 0, fontNumbers, new Color(101, 168, 47), panel);
-        addJlabel(income-expenses + "€",1,3,40, 0, fontNumbers, Color.black, panel);
+        addJlabel(income+expenses + "€",1,3,40, 0, fontNumbers, Color.black, panel);
         addJlabel(expenses + "€",2,2,40, 0, fontNumbers, new Color(168, 43, 43), panel);
     }
 

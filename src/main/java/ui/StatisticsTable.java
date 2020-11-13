@@ -12,35 +12,31 @@ public class StatisticsTable extends AbstractTableModel {
 
     StatisticsTable(){
         // following lines are just fo testing purposes
-        /*
-        Category c1 = new Category();
-        c1.name = "Food";
-        c1.expenses = -80;
-        c1.income = 0;
-        c1.sum = -80;
-        c1.percentageAmount = 0;
-        c1.transactionsNumber = 3;
+        Category c1 = new Category("Food");
+        c1.setExpenses(-80);
+        c1.setIncome(0);
+        c1.setSum(-80);
+        c1.setTransactionsNumber(3);
+        c1.setPercentage(0);
 
-        Category c2 = new Category();
-        c2.name = "Sex services";
-        c2.expenses = -20;
-        c2.income = 60;
-        c2.sum = 40;
-        c2.percentageAmount = 40;
-        c2.transactionsNumber = 2;
+        Category c2 = new Category("Sex services");
+        c2.setExpenses(-20);
+        c2.setIncome(60);
+        c2.setSum(40);
+        c2.setTransactionsNumber(2);
+        c2.setPercentage(40);
 
-        Category c3 = new Category();
-        c3.name = "Job";
-        c3.expenses = 0;
-        c3.income = 80;
-        c3.sum = 80;
-        c3.percentageAmount = 60;
-        c3.transactionsNumber = 5;
+        Category c3 = new Category("Job");
+        c3.setExpenses(0);
+        c3.setIncome(80);
+        c3.setSum(80);
+        c3.setTransactionsNumber(5);
+        c3.setPercentage(60);
 
         categories.add(c1);
         categories.add(c2);
         categories.add(c3);
-        */
+
     }
 
     @Override
@@ -53,8 +49,8 @@ public class StatisticsTable extends AbstractTableModel {
         return 6;
     }
 
-    String editAmount(double amount){
-        if (amount < 0){
+    String editAmountFormat(double amount){
+        if (amount < 0.0){
             return Double.toString(amount);
         }
         return " " + amount;
@@ -65,12 +61,17 @@ public class StatisticsTable extends AbstractTableModel {
         var category = categories.get(rowIndex);
         switch (columnIndex){
             case 0:
+                return category.getName();
             case 1:
+                return editAmountFormat(category.getSum());
             case 2:
+                return editAmountFormat(category.getIncome());
             case 3:
+                return editAmountFormat(category.getExpenses());
             case 4:
+                return category.getPercentage();
             case 5:
-                return null;
+                return category.getTransactionsNumber();
             default:
                 throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
         }
@@ -89,7 +90,7 @@ public class StatisticsTable extends AbstractTableModel {
             case 3:
                 return "Expenses";
             case 4:
-                return "Sum in %";
+                return "Proportion in %";
             case 5:
                 return "Transactions";
             default:
