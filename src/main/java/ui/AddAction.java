@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
 final class AddAction extends AbstractAction {
 
     private final JTabbedPane pane;
-    private JLabel categoryColorPanel = new JLabel();
+    private final JLabel categoryColorPanel = new JLabel();
     private JDialog dialog;
 
 
@@ -150,7 +150,7 @@ final class AddAction extends AbstractAction {
         confirmButton.addActionListener(e -> {
 
             String name = newCategoryName.getText();
-            categoriesTableModel.addRow(new Category(name));
+            categoriesTableModel.addRow(new Category(name, Color.LIGHT_GRAY));
             categoryDialog.dispose();
         });
 

@@ -9,11 +9,21 @@ import java.util.List;
 
 public class CategoriesTable extends AbstractTableModel {
 
+    public List<Category> getCategories() {
+        return categories;
+    }
+
     private final List <Category> categories;
 
     public CategoriesTable() {
         this.categories = new ArrayList<>();
         this.categories.add(new Category("Others", Color.GRAY));
+    }
+
+    public void addRow(Category category) {
+        int newRowIndex = categories.size();
+        categories.add(category);
+        fireTableRowsInserted(newRowIndex, newRowIndex);
     }
 
     @Override
