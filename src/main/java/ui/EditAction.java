@@ -19,12 +19,6 @@ final class EditAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int[] selectedRows = ((JTable) pane.getSelectedComponent()).getSelectedRows();
-        if (selectedRows.length != 1) {
-            throw new IllegalStateException("Invalid selected rows count (must be 1): " + selectedRows.length);
-        }
-        JOptionPane.showMessageDialog(pane,
-                "This operation is not implemented yet",
-                "Warning", JOptionPane.WARNING_MESSAGE);
+
     }
 }

@@ -5,19 +5,22 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 
 public class MainWindow {
 
     private final JFrame frame;
 
-    private final HomePanel homePanel;
-
     private final JTabbedPane pane = new JTabbedPane();
+
+    private final HomePanel homePanel;
     private final JTable statisticsTable;
     private final JTable transactionsTable;
     private final JTable categoriesTable;
 
+    private final JToolBar toolBar;
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
@@ -26,7 +29,6 @@ public class MainWindow {
 
     public MainWindow() {
         frame = createFrame();
-        frame.setPreferredSize(new Dimension(700, 500));
 
         homePanel = new HomePanel();
 
@@ -54,12 +56,40 @@ public class MainWindow {
         var frame = new JFrame("Piggy Bank - Personal cash flow manager");
         frame.setIconImage(Icons.PIGGY_IMAGE);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(700, 500));
         return frame;
+    }
+
+    private JSpinner createDateSpinner(){
+        SpinnerDateModel dateModel = new SpinnerDateModel();
+        JSpinner spinner = new JSpinner(dateModel);
+        Calendar calendar = new GregorianCalendar();
+        spinner.setValue(calendar.getTime());
+        spinner.setVisible(true);
+        return spinner;
     }
 
     private JTabbedPane createTabbedPane() {
         pane.add("Home", homePanel.getPanel());
-        pane.add("Statistics", new JScrollPane(statisticsTable));
+
+        JPanel p = new JPanel();
+        p.add(new JLabel("From "));
+        p.add(createDateSpinner());
+        p.add(new JLabel("To "));
+        p.add(createDateSpinner());
+        p.add(new JLabel("Categories "));
+        p.add(new JComboBox<>());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+
+        p.add(new JScrollPane(statisticsTable));
+
+        p.setLayout(new GroupLayout(p));
+
+        pane.add("Statistics", p);
         pane.add("Transactions", new JScrollPane(transactionsTable));
         pane.add("Categories", new JScrollPane(categoriesTable));
         pane.addChangeListener(this::changeTable);

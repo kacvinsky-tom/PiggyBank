@@ -4,10 +4,20 @@ import java.util.Objects;
 
 public class Category {
     private String name;
-    public int transactionsNumber;
+    private int transactionsNumber;
     private double expenses;
     private double income;
     private double sum;
+
+    public double getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(double percentage) {
+        this.percentage = percentage;
+    }
+
+    private double percentage;
 
     public Category(String name){
         setName(name);
