@@ -9,15 +9,16 @@ import java.util.List;
 
 public class CategoriesTable extends AbstractTableModel {
 
-    public List<Category> getCategories() {
-        return categories;
-    }
-
     private final List <Category> categories;
+
 
     public CategoriesTable() {
         this.categories = new ArrayList<>();
         this.categories.add(new Category("Others", Color.GRAY));
+    }
+
+    public List<Category> getCategories() {
+        return categories;
     }
 
     public void addRow(Category category) {

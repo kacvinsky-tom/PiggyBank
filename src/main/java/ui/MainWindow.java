@@ -83,6 +83,7 @@ public class MainWindow {
         toolBar.add(addAction);
         toolBar.add(deleteAction);
         toolBar.add(editAction);
+        toolBar.addSeparator(new Dimension(0,30));
         toolBar.add(filterAction);
         toolBar.add(dateFromAction);
         toolBar.add(dateToAction);
@@ -103,9 +104,10 @@ public class MainWindow {
         toolBar.getComponentAtIndex(0).setVisible(index == 2 || index == 3);
         toolBar.getComponentAtIndex(1).setVisible(index == 2 || index == 3);
         toolBar.getComponentAtIndex(2).setVisible(index == 2 || index == 3);
-        toolBar.getComponentAtIndex(3).setVisible(index == 1 || index == 2);
+        toolBar.getComponentAtIndex(3).setVisible(index == 2);
         toolBar.getComponentAtIndex(4).setVisible(index == 1 || index == 2);
         toolBar.getComponentAtIndex(5).setVisible(index == 1 || index == 2);
+        toolBar.getComponentAtIndex(6).setVisible(index == 1 || index == 2);
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
