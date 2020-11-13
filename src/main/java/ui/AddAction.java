@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 final class AddAction extends AbstractAction {
 
     private final JTabbedPane pane;
+    private JLabel categoryColorPanel = new JLabel();
     private JDialog dialog;
 
 
@@ -46,7 +47,7 @@ final class AddAction extends AbstractAction {
     private JDialog createDialog(String string, int width, int height) {
         dialog = new JDialog();
         dialog.setTitle("Add " + string);
-        dialog.setSize(new Dimension(width, height));
+        dialog.setPreferredSize(new Dimension(width, height));
         dialog.setLayout(new FlowLayout());
 
         dialog.setModal(true);
@@ -112,24 +113,59 @@ final class AddAction extends AbstractAction {
         dialog.setVisible(true);
     }
 
-    private void createCategoryDialog() {
+    private void createCategoryDialog(){
         JTable categoriesTable = getJTable(3);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
-        dialog = createDialog("Category", 300, 100);
-        JTextField nameField = createTextfield("Category Name");
+        categoryColorPanel.setBackground(Color.BLACK);
+        categoryColorPanel.setOpaque(true);
+        categoryColorPanel.setPreferredSize(new Dimension(40,20));
 
-        JButton add = new JButton("Add");
-        dialog.getContentPane().add(add);
+        JDialog categoryDialog = new JDialog ();
+        categoryDialog.setSize(new Dimension(380,200));
+        categoryDialog.setModal (true);
+        categoryDialog.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
+        categoryDialog.setLocationRelativeTo(null);
 
-        add.addActionListener(e -> {
+        JPanel categoryPanel = new JPanel();
+        categoryPanel.setLayout(new FlowLayout());
+        categoryPanel.setBorder(BorderFactory.createTitledBorder("Add new category"));
 
-            String name = nameField.getText();
+        JButton setColorButton = new JButton("Show Color Chooser...");
+        setColorButton.addActionListener(this::colorChooser);
+
+        categoryDialog.add(categoryPanel);
+        JTextField newCategoryName = new JTextField("");
+        newCategoryName.setPreferredSize(new Dimension(150,30));
+
+        categoryPanel.add(new JLabel("Enter name of the new category:"));
+        categoryPanel.add(newCategoryName);
+
+        categoryPanel.add(new JLabel("Color of the category:"));
+        categoryPanel.add(setColorButton);
+        categoryPanel.add(categoryColorPanel);
+
+        JButton confirmButton = new JButton("Confirm");
+        categoryPanel.add(confirmButton);
+        confirmButton.addActionListener(e -> {
+
+            String name = newCategoryName.getText();
             categoriesTableModel.addRow(new Category(name));
-            dialog.dispose();
+            categoryDialog.dispose();
         });
-        dialog.setVisible(true);
-        dialog.pack();
+
+        categoryDialog.setVisible(true);
+        categoryDialog.pack();
+    }
+
+    private void colorChooser(ActionEvent e) {
+        Color newColor = JColorChooser.showDialog(
+                null,
+                "Choose Background Color",
+                Color.BLACK);
+        if (newColor != null) {
+            categoryColorPanel.setBackground(newColor);
+        }
     }
 
     private void addTransaction() {
