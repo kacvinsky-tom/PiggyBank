@@ -32,7 +32,6 @@ final class AddAction extends AbstractAction {
     }
 
 
-
     private void createTransactionDialog(){
         JDialog dialog = new JDialog ();
         dialog.setTitle("Add Transaction");
