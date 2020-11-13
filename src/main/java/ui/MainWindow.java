@@ -19,8 +19,9 @@ public class MainWindow {
     private final JTable statisticsTable;
     private final JTable transactionsTable;
     private final JTable categoriesTable;
+
     private final double income = new Random().ints(0,1000).findFirst().getAsInt();
-    private final double expenses = new Random().ints(0,1000).findFirst().getAsInt();
+    private final double expenses = -new Random().ints(0,1000).findFirst().getAsInt();
 
     public MainWindow() {
         frame = createFrame();
@@ -120,10 +121,11 @@ public class MainWindow {
     private void changeTable(ChangeEvent changeEvent){
         var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
         int index = sourceTabbedPane.getSelectedIndex();
+        toolBar.setVisible(index > 1);
+
         statisticsTable.clearSelection();
         transactionsTable.clearSelection();
         categoriesTable.clearSelection();
-        toolBar.setVisible(index > 1);
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {

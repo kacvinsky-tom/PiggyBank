@@ -18,6 +18,7 @@ final class AddAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        int index = pane.getSelectedIndex();
 
     }
 }
