@@ -71,25 +71,7 @@ public class MainWindow {
 
     private JTabbedPane createTabbedPane() {
         pane.add("Home", homePanel.getPanel());
-
-        JPanel p = new JPanel();
-        p.add(new JLabel("From "));
-        p.add(createDateSpinner());
-        p.add(new JLabel("To "));
-        p.add(createDateSpinner());
-        p.add(new JLabel("Categories "));
-        p.add(new JComboBox<>());
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.gridx = 1;
-        c.gridy = 1;
-        c.fill = GridBagConstraints.HORIZONTAL;
-
-        p.add(new JScrollPane(statisticsTable));
-
-        p.setLayout(new GroupLayout(p));
-
-        pane.add("Statistics", p);
+        pane.add("Statistics", new JScrollPane(statisticsTable));
         pane.add("Transactions", new JScrollPane(transactionsTable));
         pane.add("Categories", new JScrollPane(categoriesTable));
         pane.addChangeListener(this::changeTable);
