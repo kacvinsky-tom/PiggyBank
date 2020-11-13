@@ -4,6 +4,7 @@ import model.Category;
 import model.Transaction;
 
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,13 +15,13 @@ public class TransactionsTable extends AbstractTableModel {
     };
 
     TransactionsTable(){
-        Transaction t1 = new Transaction("something", -6.9, new Category("Others"), LocalDate.now(), "blah");
+        Transaction t1 = new Transaction("something", -6.9, new Category("Others", Color.GRAY), LocalDate.now(), "blah");
         transactions.add(t1);
-        Transaction t2 = new Transaction("bread", -6.9, new Category("Food"), LocalDate.now(), "blah");
+        Transaction t2 = new Transaction("bread", -6.9, new Category("Food", Color.BLUE), LocalDate.now(), "blah");
         transactions.add(t2);
-        Transaction t3 = new Transaction("...", -6.9, new Category("Sex Service"), LocalDate.now(), "blah");
+        Transaction t3 = new Transaction("...", -6.9, new Category("Sex Service", Color.RED), LocalDate.now(), "blah");
         transactions.add(t3);
-        Transaction t4 = new Transaction("payout", 6.9, new Category("Job"), LocalDate.now(), "blah");
+        Transaction t4 = new Transaction("payout", 6.9, new Category("Job", Color.BLACK), LocalDate.now(), "blah");
         transactions.add(t4);
     }
 
