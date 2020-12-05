@@ -1,4 +1,7 @@
 package model;
+
+import ui.TransactionType;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -8,8 +11,10 @@ public class Transaction {
     private LocalDate date;
     private String note;
     private Category category;
+    private TransactionType type;
 
-    public Transaction(String name, double amount, Category category, LocalDate date, String note){
+    public Transaction(String name, double amount, Category category, LocalDate date, String note, TransactionType type) {
+        setType(type);
         setName(name);
         setAmount(amount);
         setCategory(category);
@@ -22,7 +27,11 @@ public class Transaction {
     }
 
     public void setAmount(double amount) {
-        this.amount = amount;
+        if (this.type == TransactionType.SPENDING) {
+            this.amount = -amount;
+        } else {
+            this.amount = amount;
+        }
     }
 
     public String getName() {
@@ -55,5 +64,9 @@ public class Transaction {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
     }
 }

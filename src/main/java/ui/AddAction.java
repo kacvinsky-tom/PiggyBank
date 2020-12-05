@@ -65,7 +65,7 @@ final class AddAction extends AbstractAction {
     }
 
     private void createTransactionDialog() {
-        dialog = createDialog("new transaction", 270, 400);
+        dialog = createDialog("new transaction", 250, 330);
         dialog.setLayout(new FlowLayout());
 
         JTable transactionsTable = getJTable(2);
@@ -78,8 +78,13 @@ final class AddAction extends AbstractAction {
         JTextField amountField = createTextfield("Amount");
         JTextField noteField = createTextfield("Note");
 
-        var combobox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
-        dialog.add(combobox);
+        var categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
+        var transactionType = new JComboBox<>(TransactionType.values());
+
+        dialog.add(new JLabel("Choose category:"));
+        dialog.add(categoryBox);
+        dialog.add(new JLabel("Choose type:"));
+        dialog.add(transactionType);
 
         JSpinner spinner = createDateSpinner();
         dialog.add(spinner);
@@ -92,23 +97,26 @@ final class AddAction extends AbstractAction {
             String name = nameField.getText();
             double amount = Double.parseDouble(amountField.getText());
             String note = noteField.getText();
-            Category category = categoriesTableModel.getCategories().get(combobox.getSelectedIndex());
+            Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
+            TransactionType type = transactionType.getItemAt(transactionType.getSelectedIndex());
 
-            transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note));
+            transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note, type));
+
             category.setExpenses(category.getExpenses() + amount);
 
             dialog.dispose();
         });
+        dialog.setResizable(false);
         dialog.setVisible(true);
     }
 
-    private void createCategoryDialog(){
+    private void createCategoryDialog() {
         JTable categoriesTable = getJTable(3);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
         categoryColorPanel.setBackground(Color.BLACK);
         categoryColorPanel.setOpaque(true);
-        categoryColorPanel.setPreferredSize(new Dimension(40,20));
+        categoryColorPanel.setPreferredSize(new Dimension(40, 20));
 
         JDialog categoryDialog = createDialog("new category", 380, 150);
 
@@ -119,7 +127,7 @@ final class AddAction extends AbstractAction {
 
         categoryDialog.add(categoryPanel);
         JTextField newCategoryName = new JTextField("");
-        newCategoryName.setPreferredSize(new Dimension(150,30));
+        newCategoryName.setPreferredSize(new Dimension(150, 30));
 
         categoryPanel.add(new JLabel("Enter name of the new category:"));
         categoryPanel.add(newCategoryName);
