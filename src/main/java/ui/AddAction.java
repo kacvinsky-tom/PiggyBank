@@ -7,8 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 final class AddAction extends AbstractAction {
@@ -34,10 +36,9 @@ final class AddAction extends AbstractAction {
 
     private JSpinner createDateSpinner() {
         dialog.add(new JLabel("Choose date: "));
-        SpinnerDateModel dateModel = new SpinnerDateModel();
-        JSpinner spinner = new JSpinner(dateModel);
-        Calendar calendar = new GregorianCalendar();
-        spinner.setValue(calendar.getTime());
+        JSpinner spinner = new JSpinner();
+        spinner.setModel(new SpinnerDateModel());
+        spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
         spinner.setVisible(true);
         return spinner;
     }
@@ -99,8 +100,9 @@ final class AddAction extends AbstractAction {
             String note = noteField.getText();
             Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
             TransactionType type = transactionType.getItemAt(transactionType.getSelectedIndex());
+            Date date = (Date) spinner.getValue();
 
-            transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note, type));
+            transactionTableModel.addTransaction(new Transaction(name, amount, category, date, note, type));
 
             category.setExpenses(category.getExpenses() + amount);
 

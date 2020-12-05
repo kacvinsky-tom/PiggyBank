@@ -5,8 +5,10 @@ import model.Transaction;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TransactionsTable extends AbstractTableModel {
@@ -15,13 +17,13 @@ public class TransactionsTable extends AbstractTableModel {
     };
 
     TransactionsTable(){
-        Transaction t1 = new Transaction("something", 6.9, new Category("Others", Color.GRAY), LocalDate.now(), "blah", TransactionType.SPENDING);
+        Transaction t1 = new Transaction("something", 6.9, new Category("Others", Color.GRAY), Date.from(Instant.now()), "blah", TransactionType.SPENDING);
         transactions.add(t1);
-        Transaction t2 = new Transaction("bread", 6.9, new Category("Food", Color.BLUE), LocalDate.now(), "blah", TransactionType.SPENDING);
+        Transaction t2 = new Transaction("bread", 6.9, new Category("Food", Color.BLUE), Date.from(Instant.now()), "blah", TransactionType.SPENDING);
         transactions.add(t2);
-        Transaction t3 = new Transaction("...", 6.9, new Category("Sex Service", Color.RED), LocalDate.now(), "blah", TransactionType.SPENDING);
+        Transaction t3 = new Transaction("...", 6.9, new Category("Sex Service", Color.RED), Date.from(Instant.now()), "blah", TransactionType.SPENDING);
         transactions.add(t3);
-        Transaction t4 = new Transaction("payout", 6.9, new Category("Job", Color.BLACK), LocalDate.now(), "blah", TransactionType.INCOME);
+        Transaction t4 = new Transaction("payout", 6.9, new Category("Job", Color.BLACK), Date.from(Instant.now()), "blah", TransactionType.INCOME);
         transactions.add(t4);
     }
 
@@ -75,7 +77,7 @@ public class TransactionsTable extends AbstractTableModel {
                 transaction.setCategory((Category) value);
                 break;
             case 3:
-                transaction.setDate((LocalDate) value);
+                transaction.setDate((Date) value);
                 break;
             case 4:
                 transaction.setNote((String) value);
@@ -96,7 +98,7 @@ public class TransactionsTable extends AbstractTableModel {
             case 2:
                 return Category.class;
             case 3:
-                return LocalDate.class;
+                return Date.class;
             default:
                 throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
         }
