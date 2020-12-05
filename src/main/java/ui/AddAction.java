@@ -129,8 +129,7 @@ final class AddAction extends AbstractAction {
 
         JPanel categoryPanel = new JPanel();
         categoryPanel.setLayout(new FlowLayout());
-        categoryPanel.setBorder(BorderFactory.createTitledBorder("Add new category"));
-
+        categoryDialog.setTitle("Add new category");
         JButton setColorButton = new JButton("Show Color Chooser...");
         setColorButton.addActionListener(this::colorChooser);
 
