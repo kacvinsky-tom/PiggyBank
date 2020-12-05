@@ -48,9 +48,7 @@ final class AddAction extends AbstractAction {
         dialog = new JDialog();
         dialog.setTitle("Add " + string);
         dialog.setSize(new Dimension(width, height));
-
         dialog.setModal(true);
-        dialog.setAlwaysOnTop(true);
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setLocationRelativeTo(null);
 
@@ -145,9 +143,8 @@ final class AddAction extends AbstractAction {
             categoriesTableModel.addRow(new Category(name, Color.LIGHT_GRAY));
             categoryDialog.dispose();
         });
-
         categoryDialog.setVisible(true);
-        categoryDialog.pack();
+
     }
 
     private void colorChooser(ActionEvent e) {
