@@ -43,7 +43,7 @@ public class MainWindow {
         transactionsTable = createTable(new TransactionsTable());
         categoriesTable = createTable(new CategoriesTable());
 
-        frame.add(toolBar, BorderLayout.WEST);
+        frame.add(toolBar, BorderLayout.NORTH);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -79,7 +79,7 @@ public class MainWindow {
     }
 
     private JToolBar createToolbar() {
-        JToolBar toolBar = new JToolBar(null,SwingConstants.VERTICAL);
+        JToolBar toolBar = new JToolBar(null,SwingConstants.HORIZONTAL);
         toolBar.add(addAction);
         toolBar.add(deleteAction);
         toolBar.add(editAction);
