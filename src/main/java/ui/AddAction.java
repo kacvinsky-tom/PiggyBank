@@ -144,7 +144,7 @@ final class AddAction extends AbstractAction {
         confirmButton.addActionListener(e -> {
 
             String name = newCategoryName.getText();
-            categoriesTableModel.addRow(new Category(name, Color.LIGHT_GRAY));
+            categoriesTableModel.addRow(new Category(name, categoryColorPanel.getBackground()));
             categoryDialog.dispose();
         });
         categoryDialog.setVisible(true);
