@@ -47,8 +47,7 @@ final class AddAction extends AbstractAction {
     private JDialog createDialog(String string, int width, int height) {
         dialog = new JDialog();
         dialog.setTitle("Add " + string);
-        dialog.setPreferredSize(new Dimension(width, height));
-        dialog.setLayout(new FlowLayout());
+        dialog.setSize(new Dimension(width, height));
 
         dialog.setModal(true);
         dialog.setAlwaysOnTop(true);
@@ -78,8 +77,8 @@ final class AddAction extends AbstractAction {
 
 
     private void createTransactionDialog() {
-        dialog = createDialog("Transaction", 270, 400);
-
+        dialog = createDialog("new transaction", 270, 400);
+        dialog.setLayout(new FlowLayout());
         JTable transactionsTable = getJTable(2);
         JTable categoriesSelectionTable = new JTable(getJTable(3).getModel());
         var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
@@ -109,7 +108,6 @@ final class AddAction extends AbstractAction {
 
             dialog.dispose();
         });
-        dialog.pack();
         dialog.setVisible(true);
     }
 
@@ -121,15 +119,10 @@ final class AddAction extends AbstractAction {
         categoryColorPanel.setOpaque(true);
         categoryColorPanel.setPreferredSize(new Dimension(40,20));
 
-        JDialog categoryDialog = new JDialog ();
-        categoryDialog.setSize(new Dimension(380,200));
-        categoryDialog.setModal (true);
-        categoryDialog.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
-        categoryDialog.setLocationRelativeTo(null);
+        JDialog categoryDialog = createDialog("new category", 380, 150);
 
         JPanel categoryPanel = new JPanel();
         categoryPanel.setLayout(new FlowLayout());
-        categoryDialog.setTitle("Add new category");
         JButton setColorButton = new JButton("Show Color Chooser...");
         setColorButton.addActionListener(this::colorChooser);
 
