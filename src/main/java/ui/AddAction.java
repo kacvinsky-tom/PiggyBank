@@ -8,9 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 final class AddAction extends AbstractAction {
@@ -66,29 +64,23 @@ final class AddAction extends AbstractAction {
         return textField;
     }
 
-    private ListSelectionModel createCategorySelector(JTable categoriesSelectionTable) {
-        dialog.add(new JLabel("Category: "));
-        categoriesSelectionTable.setPreferredScrollableViewportSize(new Dimension(100, 100));
-        categoriesSelectionTable.setFillsViewportHeight(true);
-        categoriesSelectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        dialog.add(categoriesSelectionTable);
-        return categoriesSelectionTable.getSelectionModel();
-    }
-
-
     private void createTransactionDialog() {
         dialog = createDialog("new transaction", 270, 400);
         dialog.setLayout(new FlowLayout());
+
         JTable transactionsTable = getJTable(2);
-        JTable categoriesSelectionTable = new JTable(getJTable(3).getModel());
+        JTable categoriesTable = getJTable(3);
+
         var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
-        var categoriesTableModel = (CategoriesTable) categoriesSelectionTable.getModel();
+        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
         JTextField nameField = createTextfield("Name");
         JTextField amountField = createTextfield("Amount");
         JTextField noteField = createTextfield("Note");
 
-        ListSelectionModel rowSM = createCategorySelector(categoriesSelectionTable);
+        var combobox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
+        dialog.add(combobox);
+
         JSpinner spinner = createDateSpinner();
         dialog.add(spinner);
 
@@ -100,8 +92,7 @@ final class AddAction extends AbstractAction {
             String name = nameField.getText();
             double amount = Double.parseDouble(amountField.getText());
             String note = noteField.getText();
-            int selectedRow = rowSM.getMinSelectionIndex();
-            Category category = categoriesTableModel.getCategories().get(selectedRow);
+            Category category = categoriesTableModel.getCategories().get(combobox.getSelectedIndex());
 
             transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note));
             category.setExpenses(category.getExpenses() + amount);
