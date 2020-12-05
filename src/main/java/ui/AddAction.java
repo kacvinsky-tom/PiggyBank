@@ -109,13 +109,17 @@ final class AddAction extends AbstractAction {
         dialog.setVisible(true);
     }
 
+    private void prepareColorPanel(JLabel colorLabel){
+        colorLabel.setBackground(Color.BLACK);
+        colorLabel.setOpaque(true);
+        colorLabel.setPreferredSize(new Dimension(40,20));
+    }
+
     private void createCategoryDialog(){
         JTable categoriesTable = getJTable(3);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
-        categoryColorPanel.setBackground(Color.BLACK);
-        categoryColorPanel.setOpaque(true);
-        categoryColorPanel.setPreferredSize(new Dimension(40,20));
+        prepareColorPanel(categoryColorPanel);
 
         JDialog categoryDialog = createDialog("new category", 380, 150);
 
