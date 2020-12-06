@@ -21,6 +21,7 @@ final class AddAction extends AbstractAction {
     private JDialog dialog;
 
 
+
     public AddAction(JTabbedPane pane) {
         super("Add", Icons.ADD_ICON);
         this.pane = pane;

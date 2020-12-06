@@ -29,7 +29,7 @@ public class CategoryDao {
                      "INSERT INTO CATEGORY (\"NAME\", COLOR) VALUES (?, ?)",
                      RETURN_GENERATED_KEYS)) {
             st.setString(1, category.getName());
-            st.setString(2, category.getColor().toString());
+            st.setString(2, String.valueOf(category.getColor().getRGB()));
             st.executeUpdate();
             try (var rs = st.getGeneratedKeys()) {
                 if (rs.next()) {

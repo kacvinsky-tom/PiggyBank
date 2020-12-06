@@ -41,7 +41,7 @@ public class MainWindow {
 
         statisticsTable = createTable(new StatisticsTable());
         transactionsTable = createTable(new TransactionsTable());
-        categoriesTable = createTable(new CategoriesTable());
+        categoriesTable = createTable(new CategoriesTable(categoryDao));
 
         frame.add(toolBar, BorderLayout.NORTH);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
