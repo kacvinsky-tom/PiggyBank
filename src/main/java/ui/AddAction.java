@@ -75,10 +75,12 @@ final class AddAction extends AbstractAction {
 
 
     private void createTransactionDialog() {
+
         dialog = createDialog("new transaction", 270, 400);
         dialog.setLayout(new FlowLayout());
         JTable transactionsTable = getJTable(2);
-        JTable categoriesSelectionTable = new JTable(getJTable(3).getModel());
+        JTable categoriesSelectionTable = new JTable(getJTable(2).getModel());
+
         var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
         var categoriesTableModel = (CategoriesTable) categoriesSelectionTable.getModel();
 
@@ -116,7 +118,7 @@ final class AddAction extends AbstractAction {
     }
 
     private void createCategoryDialog(){
-        JTable categoriesTable = getJTable(3);
+        JTable categoriesTable = getJTable(2);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
         prepareColorPanel(categoryColorPanel);
@@ -173,9 +175,9 @@ final class AddAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         int index = pane.getSelectedIndex();
-        if (index == 2) {
+        if (index == 1) {
             addTransaction();
-        } else if (index == 3) {
+        } else if (index == 2) {
             addCategory();
         }
     }
