@@ -1,5 +1,6 @@
 package ui;
 
+import data.CategoryDao;
 import model.Category;
 
 import javax.swing.table.AbstractTableModel;
@@ -10,9 +11,11 @@ import java.util.List;
 public class CategoriesTable extends AbstractTableModel {
 
     private final List <Category> categories;
+    private final CategoryDao categoryDao;
 
-    public CategoriesTable() {
-        this.categories = new ArrayList<>();
+    public CategoriesTable(CategoryDao categoryDao) {
+        this.categoryDao = categoryDao;
+        this.categories = new ArrayList<>(categoryDao.findAll());
         this.categories.add(new Category("Others", Color.GRAY));
     }
 
@@ -22,6 +25,7 @@ public class CategoriesTable extends AbstractTableModel {
 
     public void addRow(Category category) {
         int newRowIndex = categories.size();
+        categoryDao.create(category);
         categories.add(category);
         fireTableRowsInserted(newRowIndex, newRowIndex);
     }

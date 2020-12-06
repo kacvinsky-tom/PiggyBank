@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Transaction {
+
+    private Long id;
     private double amount;
     private String name;
     private Date date;
@@ -23,6 +25,14 @@ public class Transaction {
         setCategory(category);
         setDate(date);
         setNote(note);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public double getAmount() {
@@ -67,6 +77,10 @@ public class Transaction {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public TransactionType getType() {
+        return type;
     }
 
     public void setType(TransactionType type) {
