@@ -70,7 +70,7 @@ public class CategoryDao {
                      "UPDATE CATEGORY SET NAME = ?, COLOR = ? WHERE ID = ?"
              )){
             st.setString(1, category.getName());
-            st.setString(2, category.getColor();
+            st.setString(2, category.getColor().toString());
             st.setLong(5, category.getId());
             int updatedRowCount = st.executeUpdate();
             if(updatedRowCount == 0){
