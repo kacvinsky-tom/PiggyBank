@@ -1,5 +1,11 @@
 package model;
+
+import ui.TransactionType;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 public class Transaction {
@@ -7,12 +13,12 @@ public class Transaction {
     private Long id;
     private double amount;
     private String name;
-    private LocalDate date;
+    private Date date;
     private String note;
     private Category category;
     private TransactionType type;
 
-    public Transaction(String name, double amount, Category category, LocalDate date, String note, TransactionType type){
+    public Transaction(String name, double amount, Category category, Date date, String note, TransactionType type) {
         setType(type);
         setName(name);
         setAmount(amount);
@@ -34,7 +40,11 @@ public class Transaction {
     }
 
     public void setAmount(double amount) {
-        this.amount = amount;
+        if (this.type == TransactionType.SPENDING) {
+            this.amount = -amount;
+        } else {
+            this.amount = amount;
+        }
     }
 
     public String getName() {
@@ -45,11 +55,11 @@ public class Transaction {
         this.name = Objects.requireNonNull(name, "name must not be null");
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

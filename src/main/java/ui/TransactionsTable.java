@@ -8,8 +8,10 @@ import model.TransactionType;
 
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TransactionsTable extends AbstractTableModel {
@@ -71,7 +73,7 @@ public class TransactionsTable extends AbstractTableModel {
                 transaction.setCategory((Category) value);
                 break;
             case 3:
-                transaction.setDate((LocalDate) value);
+                transaction.setDate((Date) value);
                 break;
             case 4:
                 transaction.setNote((String) value);
@@ -92,7 +94,7 @@ public class TransactionsTable extends AbstractTableModel {
             case 2:
                 return Category.class;
             case 3:
-                return LocalDate.class;
+                return Date.class;
             default:
                 throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
         }

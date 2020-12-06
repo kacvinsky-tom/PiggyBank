@@ -8,8 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -38,10 +38,9 @@ final class AddAction extends AbstractAction {
 
     private JSpinner createDateSpinner() {
         dialog.add(new JLabel("Choose date: "));
-        SpinnerDateModel dateModel = new SpinnerDateModel();
-        JSpinner spinner = new JSpinner(dateModel);
-        Calendar calendar = new GregorianCalendar();
-        spinner.setValue(calendar.getTime());
+        JSpinner spinner = new JSpinner();
+        spinner.setModel(new SpinnerDateModel());
+        spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
         spinner.setVisible(true);
         return spinner;
     }
@@ -66,31 +65,29 @@ final class AddAction extends AbstractAction {
         return textField;
     }
 
-    private ListSelectionModel createCategorySelector(JTable categoriesSelectionTable) {
-        dialog.add(new JLabel("Category: "));
-        categoriesSelectionTable.setPreferredScrollableViewportSize(new Dimension(100, 100));
-        categoriesSelectionTable.setFillsViewportHeight(true);
-        categoriesSelectionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        dialog.add(categoriesSelectionTable);
-        return categoriesSelectionTable.getSelectionModel();
-    }
-
-
     private void createTransactionDialog() {
 
-        dialog = createDialog("new transaction", 270, 400);
+        dialog = createDialog("new transaction", 250, 330);
         dialog.setLayout(new FlowLayout());
+
         JTable transactionsTable = getJTable(1);
-        JTable categoriesSelectionTable = new JTable(getJTable(2).getModel());
+        JTable categoriesTable = getJTable(2);
 
         var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
-        var categoriesTableModel = (CategoriesTable) categoriesSelectionTable.getModel();
+        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
         JTextField nameField = createTextfield("Name");
         JTextField amountField = createTextfield("Amount");
         JTextField noteField = createTextfield("Note");
 
-        ListSelectionModel rowSM = createCategorySelector(categoriesSelectionTable);
+        var categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
+        var transactionType = new JComboBox<>(TransactionType.values());
+
+        dialog.add(new JLabel("Choose category:"));
+        dialog.add(categoryBox);
+        dialog.add(new JLabel("Choose type:"));
+        dialog.add(transactionType);
+
         JSpinner spinner = createDateSpinner();
         dialog.add(spinner);
 
@@ -102,14 +99,17 @@ final class AddAction extends AbstractAction {
             String name = nameField.getText();
             double amount = Double.parseDouble(amountField.getText());
             String note = noteField.getText();
-            int selectedRow = rowSM.getMinSelectionIndex();
-            Category category = categoriesTableModel.getCategories().get(selectedRow);
+            Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
+            TransactionType type = transactionType.getItemAt(transactionType.getSelectedIndex());
+            Date date = (Date) spinner.getValue();
 
-            transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note, TransactionType.SPENDING));
+            transactionTableModel.addTransaction(new Transaction(name, amount, category, date, note, type));
+
             category.setExpenses(category.getExpenses() + amount);
 
             dialog.dispose();
         });
+        dialog.setResizable(false);
         dialog.setVisible(true);
     }
 
@@ -134,7 +134,7 @@ final class AddAction extends AbstractAction {
 
         categoryDialog.add(categoryPanel);
         JTextField newCategoryName = new JTextField("");
-        newCategoryName.setPreferredSize(new Dimension(150,30));
+        newCategoryName.setPreferredSize(new Dimension(150, 30));
 
         categoryPanel.add(new JLabel("Enter name of the new category:"));
         categoryPanel.add(newCategoryName);
