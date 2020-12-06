@@ -40,7 +40,7 @@ public class MainWindow {
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
-        transactionsTable = createTable(new TransactionsTable());
+        transactionsTable = createTable(new TransactionsTable(transactionDao));
         categoriesTable = createTable(new CategoriesTable(categoryDao));
 
         frame.add(toolBar, BorderLayout.NORTH);

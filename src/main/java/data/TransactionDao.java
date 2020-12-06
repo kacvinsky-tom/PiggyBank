@@ -6,6 +6,8 @@ import model.TransactionType;
 
 import javax.sql.DataSource;
 import java.awt.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class TransactionDao {
              var st = connection.prepareStatement(
                      "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\") VALUES (?, ?, ?, ?, ?, ?)",
                      RETURN_GENERATED_KEYS)) {
-            st.setDouble(1, transaction.getAmount());
+            st.setBigDecimal(1, new BigDecimal(transaction.getAmount(), MathContext.DECIMAL64));
             st.setString(2, transaction.getType().name());
             st.setString(3, transaction.getName());
             st.setDate(4, Date.valueOf(transaction.getDate()));
@@ -94,7 +96,7 @@ public class TransactionDao {
 
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\" FROM TRANSACTIONS")) {
+             var st = connection.prepareStatement("SELECT ID, AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\" FROM TRANSACTIONS")) {
             List<Transaction> transactions = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {

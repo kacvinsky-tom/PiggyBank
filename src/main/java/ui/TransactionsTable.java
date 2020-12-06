@@ -1,5 +1,7 @@
 package ui;
 
+import data.CategoryDao;
+import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import model.TransactionType;
@@ -11,19 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionsTable extends AbstractTableModel {
+    private final TransactionDao transactionDao;
+    private final List<Transaction> transactions;
 
-    private final List<Transaction> transactions = new ArrayList<>() {
-    };
-
-    TransactionsTable(){
-        Transaction t1 = new Transaction("something", -6.9, new Category("Others", Color.GRAY), LocalDate.now(), "blah", TransactionType.SPENDING);
-        transactions.add(t1);
-        Transaction t2 = new Transaction("bread", -6.9, new Category("Food", Color.BLUE), LocalDate.now(), "blah", TransactionType.SPENDING);
-        transactions.add(t2);
-        Transaction t3 = new Transaction("...", -6.9, new Category("Sex Service", Color.RED), LocalDate.now(), "blah", TransactionType.SPENDING);
-        transactions.add(t3);
-        Transaction t4 = new Transaction("payout", 6.9, new Category("Job", Color.BLACK), LocalDate.now(), "blah", TransactionType.SPENDING);
-        transactions.add(t4);
+    TransactionsTable(TransactionDao transactionDao){
+        this.transactionDao = transactionDao;
+        this.transactions = new ArrayList<>(transactionDao.findAll());
     }
 
     @Override
@@ -127,6 +122,7 @@ public class TransactionsTable extends AbstractTableModel {
     }
 
     public void addTransaction(Transaction transaction) {
+        transactionDao.create(transaction);
         int newRowIndex = transactions.size();
         transactions.add(transaction);
         fireTableRowsInserted(newRowIndex, newRowIndex);
