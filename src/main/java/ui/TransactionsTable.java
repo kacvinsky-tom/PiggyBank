@@ -9,7 +9,6 @@ import model.TransactionType;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

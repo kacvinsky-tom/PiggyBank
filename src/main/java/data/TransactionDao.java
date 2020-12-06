@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class TransactionDao {
             st.setBigDecimal(1, new BigDecimal(transaction.getAmount(), MathContext.DECIMAL64));
             st.setString(2, transaction.getType().name());
             st.setString(3, transaction.getName());
-            st.setDate(4, Date.valueOf(transaction.getDate()));
+            st.setDate(4, Date.valueOf(transaction.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
             st.setString(5, transaction.getNote());
             st.setLong(6, transaction.getCategory().getId());
             st.executeUpdate();
@@ -80,7 +81,7 @@ public class TransactionDao {
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
             st.setString(3, transaction.getName());
-            st.setDate(4, Date.valueOf(transaction.getDate()));
+            st.setDate(4, Date.valueOf(transaction.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
             st.setString(5, transaction.getNote());
             st.setLong(6, transaction.getCategory().getId());
             st.setLong(7, transaction.getId());
@@ -104,7 +105,7 @@ public class TransactionDao {
                             rs.getString("NAME"),
                             rs.getDouble("AMOUNT"),
                             new Category(rs.getString("CATEGORY"), Color.BLACK),
-                            rs.getDate("CREATION_DATE").toLocalDate(),
+                            new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
                             rs.getString("NOTE"),
                             TransactionType.valueOf(rs.getString("TYPE")));
                     transaction.setId(rs.getLong("ID"));
