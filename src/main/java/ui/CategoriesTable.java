@@ -11,7 +11,6 @@ public class CategoriesTable extends AbstractTableModel {
 
     private final List <Category> categories;
 
-
     public CategoriesTable() {
         this.categories = new ArrayList<>();
         this.categories.add(new Category("Others", Color.GRAY));
