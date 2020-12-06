@@ -2,6 +2,7 @@ package ui;
 
 import model.Category;
 import model.Transaction;
+import model.TransactionType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ final class AddAction extends AbstractAction {
     private final JTabbedPane pane;
     private final JLabel categoryColorPanel = new JLabel();
     private JDialog dialog;
+
 
 
     public AddAction(JTabbedPane pane) {

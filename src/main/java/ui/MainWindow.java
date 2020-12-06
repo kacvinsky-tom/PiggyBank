@@ -1,5 +1,8 @@
 package ui;
 
+import data.CategoryDao;
+import data.TransactionDao;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -25,7 +28,7 @@ public class MainWindow {
     private final Action dateFromAction;
     private final Action dateToAction;
 
-    public MainWindow() {
+    public MainWindow(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
 
         addAction = new AddAction(pane);
@@ -37,8 +40,8 @@ public class MainWindow {
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
-        transactionsTable = createTable(new TransactionsTable());
-        categoriesTable = createTable(new CategoriesTable());
+        transactionsTable = createTable(new TransactionsTable(transactionDao));
+        categoriesTable = createTable(new CategoriesTable(categoryDao));
 
         frame.add(toolBar, BorderLayout.NORTH);
         frame.add(createTabbedPane(), BorderLayout.CENTER);

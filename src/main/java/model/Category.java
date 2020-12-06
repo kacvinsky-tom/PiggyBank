@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.Objects;
 
 public class Category {
+
+    private Long id;
     private String name;
     private int transactionsNumber;
     private double expenses;
@@ -14,6 +16,14 @@ public class Category {
     public Category(String name, Color color){
         setName(name);
         setColor(color);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Color getColor() {
