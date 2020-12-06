@@ -123,7 +123,7 @@ public class CategoryDao {
             st.executeUpdate("CREATE TABLE APP.CATEGORY (" +
                     "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
                     "NAME VARCHAR(100) NOT NULL," +
-                    "COLOR VARCHAR(100) NOT NULL," +
+                    "COLOR VARCHAR(100) NOT NULL" +
                     ")");
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to create CATEGORY table", ex);

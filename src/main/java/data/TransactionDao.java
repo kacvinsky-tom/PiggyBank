@@ -28,7 +28,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "INSERT INTO TRANSACTION (AMOUNT, TYPE, NAME, DATE, NOTE, CATEGORY) VALUES (?, ?, ?, ?, ?, ?)",
+                     "INSERT INTO TRANSACTIONS (AMOUNT, TYPE, NAME, CREATION_DATE, NOTE, CATEGORY) VALUES (?, ?, ?, ?, ?, ?)",
                      RETURN_GENERATED_KEYS)) {
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
@@ -55,7 +55,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "DELETE FROM TRANSACTION WHERE ID = ?"
+                     "DELETE FROM TRANSACTIONS WHERE ID = ?"
              )){
             st.setLong(1, transaction.getId());
             int updatedRowCount = st.executeUpdate();
@@ -73,7 +73,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE TRANSACTION SET AMOUNT = ? TYPE = ? NAME = ? DATE = ? NOTE = ? CATEGORY = ? WHERE ID = ?"
+                     "UPDATE TRANSACTIONS SET AMOUNT = ? TYPE = ? NAME = ? CREATION_DATE = ? NOTE = ? CATEGORY = ? WHERE ID = ?"
              )){
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
@@ -94,7 +94,7 @@ public class TransactionDao {
 
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT AMOUNT, TYPE, NAME, DATE, NOTE, CATEGORY FROM TRANSACTION")) {
+             var st = connection.prepareStatement("SELECT AMOUNT, TYPE, NAME, CREATION_DATE, NOTE, CATEGORY FROM TRANSACTIONS")) {
             List<Transaction> transactions = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -102,7 +102,7 @@ public class TransactionDao {
                             rs.getString("NAME"),
                             rs.getDouble("AMOUNT"),
                             new Category(rs.getString("CATEGORY"), Color.BLACK),
-                            rs.getDate("DATE").toLocalDate(),
+                            rs.getDate("CREATION_DATE").toLocalDate(),
                             rs.getString("NOTE"),
                             TransactionType.valueOf(rs.getString("TYPE")));
                     transaction.setId(rs.getLong("ID"));
@@ -116,7 +116,7 @@ public class TransactionDao {
     }
 
     private void initTable() {
-        if (!tableExits("APP", "TRANSACTION")) {
+        if (!tableExits("APP", "TRANSACTIONS")) {
             createTable();
         }
     }
@@ -134,17 +134,17 @@ public class TransactionDao {
         try (var connection = dataSource.getConnection();
              var st = connection.createStatement()) {
 
-            st.executeUpdate("CREATE TABLE APP.TRANSACTION (" +
+            st.executeUpdate("CREATE TABLE APP.TRANSACTIONS (" +
                     "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
-                    "AMOUNT DOUBLE(30) NOT NULL," +
+                    "AMOUNT DECIMAL(30,2) NOT NULL," +
                     "TYPE VARCHAR(8) NOT NULL CONSTRAINT TYPE_CHECK CHECK (TYPE IN ('INCOME','SPENDING'))," +
                     "NAME VARCHAR(100) NOT NULL," +
-                    "DATE DATE NOT NULL" +
-                    "NOTE VARCHAR(200)" +
+                    "CREATION_DATE DATE NOT NULL," +
+                    "NOTE VARCHAR(200)," +
                     "CATEGORY VARCHAR(100)" +
                     ")");
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to create TRANSACTION table", ex);
+            throw new DataAccessException("Failed to create TRANSACTIONS table", ex);
         }
     }
 
@@ -152,9 +152,9 @@ public class TransactionDao {
         try (var connection = dataSource.getConnection();
              var st = connection.createStatement()) {
 
-            st.executeUpdate("DROP TABLE APP.TRANSACTION");
+            st.executeUpdate("DROP TABLE APP.TRANSACTIONS");
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to drop TRANSACTION table", ex);
+            throw new DataAccessException("Failed to drop TRANSACTIONS table", ex);
         }
     }
 }

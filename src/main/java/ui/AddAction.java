@@ -2,6 +2,7 @@ package ui;
 
 import model.Category;
 import model.Transaction;
+import model.TransactionType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -103,7 +104,7 @@ final class AddAction extends AbstractAction {
             int selectedRow = rowSM.getMinSelectionIndex();
             Category category = categoriesTableModel.getCategories().get(selectedRow);
 
-            transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note));
+            transactionTableModel.addTransaction(new Transaction(name, amount, category, LocalDate.now(), note, TransactionType.SPENDING));
             category.setExpenses(category.getExpenses() + amount);
 
             dialog.dispose();

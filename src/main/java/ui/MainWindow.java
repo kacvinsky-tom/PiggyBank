@@ -1,5 +1,8 @@
 package ui;
 
+import data.CategoryDao;
+import data.TransactionDao;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
@@ -25,7 +28,7 @@ public class MainWindow {
     private final Action dateFromAction;
     private final Action dateToAction;
 
-    public MainWindow() {
+    public MainWindow(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
 
         addAction = new AddAction(pane);
