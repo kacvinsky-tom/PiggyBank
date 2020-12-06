@@ -13,7 +13,6 @@ public class MainWindow {
 
     private final JTabbedPane pane = new JTabbedPane();
 
-    private final HomePanel homePanel;
     private final JTable statisticsTable;
     private final JTable transactionsTable;
     private final JTable categoriesTable;
@@ -29,8 +28,6 @@ public class MainWindow {
     public MainWindow() {
         frame = createFrame();
 
-        homePanel = new HomePanel();
-
         addAction = new AddAction(pane);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
@@ -43,7 +40,7 @@ public class MainWindow {
         transactionsTable = createTable(new TransactionsTable());
         categoriesTable = createTable(new CategoriesTable());
 
-        frame.add(toolBar, BorderLayout.WEST);
+        frame.add(toolBar, BorderLayout.NORTH);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
@@ -62,7 +59,6 @@ public class MainWindow {
     }
 
     private JTabbedPane createTabbedPane() {
-        pane.add("Home", homePanel.getPanel());
         pane.add("Statistics", new JScrollPane(statisticsTable));
         pane.add("Transactions", new JScrollPane(transactionsTable));
         pane.add("Categories", new JScrollPane(categoriesTable));
@@ -79,7 +75,7 @@ public class MainWindow {
     }
 
     private JToolBar createToolbar() {
-        JToolBar toolBar = new JToolBar(null,SwingConstants.VERTICAL);
+        JToolBar toolBar = new JToolBar(null,SwingConstants.HORIZONTAL);
         toolBar.add(addAction);
         toolBar.add(deleteAction);
         toolBar.add(editAction);
@@ -88,26 +84,12 @@ public class MainWindow {
         toolBar.add(dateFromAction);
         toolBar.add(dateToAction);
         toolBar.setFloatable(false);
-        toolBar.setVisible(false);
+        toolBar.setVisible(true);
         return toolBar;
     }
 
     private void changeTable(ChangeEvent changeEvent){
-        var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
-        int index = sourceTabbedPane.getSelectedIndex();
-        toolBar.setVisible(index >= 1);
 
-        statisticsTable.clearSelection();
-        transactionsTable.clearSelection();
-        categoriesTable.clearSelection();
-
-        toolBar.getComponentAtIndex(0).setVisible(index == 2 || index == 3);
-        toolBar.getComponentAtIndex(1).setVisible(index == 2 || index == 3);
-        toolBar.getComponentAtIndex(2).setVisible(index == 2 || index == 3);
-        toolBar.getComponentAtIndex(3).setVisible(index == 2);
-        toolBar.getComponentAtIndex(4).setVisible(index == 1 || index == 2);
-        toolBar.getComponentAtIndex(5).setVisible(index == 1 || index == 2);
-        toolBar.getComponentAtIndex(6).setVisible(index == 1 || index == 2);
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {

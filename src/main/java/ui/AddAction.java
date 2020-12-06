@@ -47,9 +47,7 @@ final class AddAction extends AbstractAction {
         dialog = new JDialog();
         dialog.setTitle("Add " + string);
         dialog.setSize(new Dimension(width, height));
-
         dialog.setModal(true);
-        dialog.setAlwaysOnTop(true);
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setLocationRelativeTo(null);
 
@@ -66,11 +64,12 @@ final class AddAction extends AbstractAction {
     }
 
     private void createTransactionDialog() {
+
         dialog = createDialog("new transaction", 250, 330);
         dialog.setLayout(new FlowLayout());
 
-        JTable transactionsTable = getJTable(2);
-        JTable categoriesTable = getJTable(3);
+        JTable transactionsTable = getJTable(1);
+        JTable categoriesTable = getJTable(2);
 
         var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
@@ -112,13 +111,17 @@ final class AddAction extends AbstractAction {
         dialog.setVisible(true);
     }
 
-    private void createCategoryDialog() {
-        JTable categoriesTable = getJTable(3);
+    private void prepareColorPanel(JLabel colorLabel){
+        colorLabel.setBackground(Color.BLACK);
+        colorLabel.setOpaque(true);
+        colorLabel.setPreferredSize(new Dimension(40,20));
+    }
+
+    private void createCategoryDialog(){
+        JTable categoriesTable = getJTable(2);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
-        categoryColorPanel.setBackground(Color.BLACK);
-        categoryColorPanel.setOpaque(true);
-        categoryColorPanel.setPreferredSize(new Dimension(40, 20));
+        prepareColorPanel(categoryColorPanel);
 
         JDialog categoryDialog = createDialog("new category", 380, 150);
 
@@ -143,12 +146,11 @@ final class AddAction extends AbstractAction {
         confirmButton.addActionListener(e -> {
 
             String name = newCategoryName.getText();
-            categoriesTableModel.addRow(new Category(name, Color.LIGHT_GRAY));
+            categoriesTableModel.addRow(new Category(name, categoryColorPanel.getBackground()));
             categoryDialog.dispose();
         });
-
         categoryDialog.setVisible(true);
-        categoryDialog.pack();
+
     }
 
     private void colorChooser(ActionEvent e) {
@@ -173,9 +175,9 @@ final class AddAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         int index = pane.getSelectedIndex();
-        if (index == 2) {
+        if (index <= 1) {
             addTransaction();
-        } else if (index == 3) {
+        } else if (index == 2) {
             addCategory();
         }
     }
