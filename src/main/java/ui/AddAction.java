@@ -15,13 +15,15 @@ import java.util.GregorianCalendar;
 
 final class AddAction extends AbstractAction {
 
+    private final JFrame frame;
     private final JTabbedPane pane;
     private final JLabel categoryColorPanel = new JLabel();
     private JDialog dialog;
 
 
-    public AddAction(JTabbedPane pane) {
+    public AddAction(JTabbedPane pane, JFrame frame) {
         super("Add", Icons.ADD_ICON);
+        this.frame = frame;
         this.pane = pane;
         putValue(SHORT_DESCRIPTION, "Adds new row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
@@ -49,7 +51,6 @@ final class AddAction extends AbstractAction {
         dialog.setSize(new Dimension(width, height));
         dialog.setModal(true);
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        dialog.setLocationRelativeTo(null);
 
         return dialog;
     }
@@ -108,6 +109,7 @@ final class AddAction extends AbstractAction {
             dialog.dispose();
         });
         dialog.setResizable(false);
+        dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
     }
 
@@ -149,6 +151,7 @@ final class AddAction extends AbstractAction {
             categoriesTableModel.addRow(new Category(name, categoryColorPanel.getBackground()));
             categoryDialog.dispose();
         });
+        categoryDialog.setLocationRelativeTo(frame);
         categoryDialog.setVisible(true);
 
     }

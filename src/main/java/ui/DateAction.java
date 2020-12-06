@@ -8,12 +8,14 @@ import java.util.GregorianCalendar;
 
 public class DateAction extends AbstractAction {
 
+    private final JFrame frame;
     private final JTabbedPane pane;
     private final JDialog dialog = new JDialog ();
     private final String message;
 
-    DateAction(JTabbedPane pane, String message){
+    DateAction(JTabbedPane pane, String message, JFrame frame){
         super(message);
+        this.frame = frame;
         this.pane = pane;
         this.message = message;
         putValue(SHORT_DESCRIPTION, message);
@@ -45,15 +47,16 @@ public class DateAction extends AbstractAction {
         dialog.setPreferredSize(new Dimension(220, 110));
         dialog.setLayout(new FlowLayout());
 
-        dialog.setModal (true);
-        dialog.setAlwaysOnTop (true);
-        dialog.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
-        dialog.setLocationRelativeTo(null);
+        dialog.setModal(true);
+        dialog.setAlwaysOnTop(true);
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.pack();
+        dialog.setLocationRelativeTo(frame);
 
         dialog.add(createDateSpinner());
         dialog.add(createJButton());
 
-        dialog.pack();
+
         dialog.setVisible(true);
     }
 

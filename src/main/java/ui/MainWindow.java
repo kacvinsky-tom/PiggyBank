@@ -28,12 +28,12 @@ public class MainWindow {
     public MainWindow() {
         frame = createFrame();
 
-        addAction = new AddAction(pane);
+        addAction = new AddAction(pane, frame);
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
         filterAction = new FilterAction(pane);
-        dateFromAction = new DateAction(pane, "Date From");
-        dateToAction = new DateAction(pane, "Date To");
+        dateFromAction = new DateAction(pane, "Date From", frame);
+        dateToAction = new DateAction(pane, "Date To", frame);
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
@@ -62,7 +62,7 @@ public class MainWindow {
         pane.add("Statistics", new JScrollPane(statisticsTable));
         pane.add("Transactions", new JScrollPane(transactionsTable));
         pane.add("Categories", new JScrollPane(categoriesTable));
-        pane.addChangeListener(this::changeTable);
+        pane.addChangeListener(this::changeTab);
         return pane;
     }
 
@@ -88,7 +88,7 @@ public class MainWindow {
         return toolBar;
     }
 
-    private void changeTable(ChangeEvent changeEvent){
+    private void changeTab(ChangeEvent changeEvent){
 
     }
 
