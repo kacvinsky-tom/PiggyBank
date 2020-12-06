@@ -28,7 +28,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "INSERT INTO TRANSACTIONS (AMOUNT, TYPE, NAME, CREATION_DATE, NOTE, CATEGORY) VALUES (?, ?, ?, ?, ?, ?)",
+                     "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\") VALUES (?, ?, ?, ?, ?, ?)",
                      RETURN_GENERATED_KEYS)) {
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
@@ -73,7 +73,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE TRANSACTIONS SET AMOUNT = ? TYPE = ? NAME = ? CREATION_DATE = ? NOTE = ? CATEGORY = ? WHERE ID = ?"
+                     "UPDATE TRANSACTIONS SET AMOUNT = ? \"TYPE\" = ? \"NAME\" = ? CREATION_DATE = ? NOTE = ? \"CATEGORY\" = ? WHERE ID = ?"
              )){
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
@@ -94,7 +94,7 @@ public class TransactionDao {
 
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT AMOUNT, TYPE, NAME, CREATION_DATE, NOTE, CATEGORY FROM TRANSACTIONS")) {
+             var st = connection.prepareStatement("SELECT AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\" FROM TRANSACTIONS")) {
             List<Transaction> transactions = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -137,11 +137,11 @@ public class TransactionDao {
             st.executeUpdate("CREATE TABLE APP.TRANSACTIONS (" +
                     "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
                     "AMOUNT DECIMAL(30,2) NOT NULL," +
-                    "TYPE VARCHAR(8) NOT NULL CONSTRAINT TYPE_CHECK CHECK (TYPE IN ('INCOME','SPENDING'))," +
-                    "NAME VARCHAR(100) NOT NULL," +
+                    "\"TYPE\" VARCHAR(8) NOT NULL CONSTRAINT TYPE_CHECK CHECK (\"TYPE\" IN ('INCOME','SPENDING'))," +
+                    "\"NAME\" VARCHAR(100) NOT NULL," +
                     "CREATION_DATE DATE NOT NULL," +
                     "NOTE VARCHAR(200)," +
-                    "CATEGORY VARCHAR(100)" +
+                    "\"CATEGORY\" VARCHAR(100)" +
                     ")");
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to create TRANSACTIONS table", ex);

@@ -26,7 +26,7 @@ public class CategoryDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "INSERT INTO CATEGORY (NAME, COLOR) VALUES (?, ?)",
+                     "INSERT INTO CATEGORY (\"NAME\", COLOR) VALUES (?, ?)",
                      RETURN_GENERATED_KEYS)) {
             st.setString(1, category.getName());
             st.setString(2, category.getColor().toString());
@@ -67,7 +67,7 @@ public class CategoryDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE CATEGORY SET NAME = ?, COLOR = ? WHERE ID = ?"
+                     "UPDATE CATEGORY SET \"NAME\" = ?, COLOR = ? WHERE ID = ?"
              )){
             st.setString(1, category.getName());
             st.setString(2, category.getColor().toString());
@@ -84,7 +84,7 @@ public class CategoryDao {
 
     public List<Category> findAll() {
         try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT ID, NAME, COLOR FROM CATEGORY")) {
+             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORY")) {
             List<Category> categories = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -122,7 +122,7 @@ public class CategoryDao {
 
             st.executeUpdate("CREATE TABLE APP.CATEGORY (" +
                     "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
-                    "NAME VARCHAR(100) NOT NULL," +
+                    "\"NAME\" VARCHAR(100) NOT NULL," +
                     "COLOR VARCHAR(100) NOT NULL" +
                     ")");
         } catch (SQLException ex) {
