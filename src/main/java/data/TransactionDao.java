@@ -101,9 +101,15 @@ public class TransactionDao {
             List<Transaction> transactions = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
+                    TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
+                    double amount = rs.getDouble("AMOUNT");
+                    if (type == TransactionType.SPENDING) {
+                        amount = -amount;
+                    }
+
                     Transaction transaction = new Transaction(
                             rs.getString("NAME"),
-                            rs.getDouble("AMOUNT"),
+                            amount,
                             new Category(rs.getString("CATEGORY"), Color.BLACK),
                             new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
                             rs.getString("NOTE"),
