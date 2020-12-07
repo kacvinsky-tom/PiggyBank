@@ -89,7 +89,12 @@ public class MainWindow {
     }
 
     private void changeTab(ChangeEvent changeEvent){
+        var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
 
+        statisticsTable.clearSelection();
+        transactionsTable.clearSelection();
+        categoriesTable.clearSelection();
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
