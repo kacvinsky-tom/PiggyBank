@@ -16,7 +16,19 @@ public class CategoriesTable extends AbstractTableModel {
     public CategoriesTable(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
         this.categories = new ArrayList<>(categoryDao.findAll());
-        this.categories.add(new Category("Others", Color.GRAY));
+        addDefaultCategory();
+    }
+
+    private void addDefaultCategory(){
+        List<Category> categories = categoryDao.findAll();
+        for (Category category : categories){
+            if (category.getName().equals("Others")){
+                return;
+            }
+        }
+        Category others = new Category("Others", Color.GRAY);
+        this.categories.add(others);
+        categoryDao.create(others);
     }
 
     public List<Category> getCategories() {
