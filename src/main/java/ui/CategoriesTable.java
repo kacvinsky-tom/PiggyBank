@@ -40,7 +40,7 @@ public class CategoriesTable extends AbstractTableModel {
         return others;
     }
 
-    public void addRow(Category category) {
+    public int addRow(Category category) {
         int newRowIndex = categories.size();
         for (Category c : categories){
             if (c.getName().equals(category.getName())){

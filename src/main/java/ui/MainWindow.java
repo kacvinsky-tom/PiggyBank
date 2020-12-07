@@ -38,8 +38,10 @@ public class MainWindow {
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
+        statisticsTable.setDefaultRenderer(String.class, new StatisticsCellRenderer());
         var catTable = new CategoriesTable(categoryDao);
         categoriesTable = createTable(catTable);
+        categoriesTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
         transactionsTable = createTable(new TransactionsTable(transactionDao,catTable));
 
         Filter filter = new Filter(toolBar, transactionsTable);
