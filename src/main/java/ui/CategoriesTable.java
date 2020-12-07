@@ -12,7 +12,7 @@ public class CategoriesTable extends AbstractTableModel {
 
     private final List <Category> categories;
     private final CategoryDao categoryDao;
-    private final Category others;
+    private Category others;
 
     public CategoriesTable(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
@@ -27,7 +27,7 @@ public class CategoriesTable extends AbstractTableModel {
                 return;
             }
         }
-        Category others = new Category("Others", Color.GRAY);
+        others = new Category("Others", Color.GRAY);
         this.categories.add(others);
         categoryDao.create(others);
     }
