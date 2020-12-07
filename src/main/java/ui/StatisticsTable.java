@@ -37,7 +37,6 @@ public class StatisticsTable extends AbstractTableModel {
         categories.add(c1);
         categories.add(c2);
         categories.add(c3);
-
     }
 
     @Override
