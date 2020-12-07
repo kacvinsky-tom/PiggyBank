@@ -71,6 +71,7 @@ public class TransactionDao {
     }
 
     public void update(Transaction transaction) {
+        System.out.println(transaction.getType().name());
         if (transaction.getId() == null){
             throw new IllegalArgumentException("Transaction has null ID");
         }
@@ -94,6 +95,7 @@ public class TransactionDao {
             throw new DataAccessException("Failed to update transaction " + transaction, ex);
         }
     }
+
 
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();

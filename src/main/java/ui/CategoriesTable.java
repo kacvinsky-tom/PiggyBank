@@ -12,15 +12,21 @@ public class CategoriesTable extends AbstractTableModel {
 
     private final List <Category> categories;
     private final CategoryDao categoryDao;
+    private final Category others;
 
     public CategoriesTable(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
         this.categories = new ArrayList<>(categoryDao.findAll());
-        this.categories.add(new Category("Others", Color.GRAY));
+        others = new Category("Others", Color.GRAY);
+        this.categories.add(others);
     }
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    public Category getOthers(){
+        return others;
     }
 
     public void addRow(Category category) {
@@ -28,6 +34,14 @@ public class CategoriesTable extends AbstractTableModel {
         categoryDao.create(category);
         categories.add(category);
         fireTableRowsInserted(newRowIndex, newRowIndex);
+    }
+
+    public void deleteRow(int rowIndex) {
+        if(!categories.get(rowIndex).getName().equals("Others")){
+            categoryDao.delete(categories.get(rowIndex));
+            categories.remove(rowIndex);
+            fireTableRowsDeleted(rowIndex, rowIndex);
+        }
     }
 
     @Override

@@ -36,8 +36,9 @@ public class MainWindow {
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
-        transactionsTable = createTable(new TransactionsTable(transactionDao));
-        categoriesTable = createTable(new CategoriesTable(categoryDao));
+        var catTable = new CategoriesTable(categoryDao);
+        categoriesTable = createTable(catTable);
+        transactionsTable = createTable(new TransactionsTable(transactionDao,catTable));
 
         Filter filter = new Filter(toolBar, transactionsTable);
 
