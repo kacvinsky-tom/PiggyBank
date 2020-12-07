@@ -21,7 +21,6 @@ final class AddAction extends AbstractAction {
     private final JLabel categoryColorPanel = new JLabel();
     private JDialog dialog;
 
-
     public AddAction(JTabbedPane pane, JFrame frame) {
         super("Add", Icons.ADD_ICON);
         this.frame = frame;
@@ -120,6 +119,14 @@ final class AddAction extends AbstractAction {
         colorLabel.setPreferredSize(new Dimension(40,20));
     }
 
+    private void createCategoryExistsDialog(String name){
+        JOptionPane.showMessageDialog(new JFrame(), "Category " + name + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    private void createColorExistsDialog(){
+        JOptionPane.showMessageDialog(new JFrame(), "Chosen color is already taken by another category!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     private void createCategoryDialog(){
         JTable categoriesTable = getJTable(2);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
@@ -147,10 +154,16 @@ final class AddAction extends AbstractAction {
         JButton confirmButton = new JButton("Confirm");
         categoryPanel.add(confirmButton);
         confirmButton.addActionListener(e -> {
-
-            String name = newCategoryName.getText();
-            categoriesTableModel.addRow(new Category(name, categoryColorPanel.getBackground()));
             categoryDialog.dispose();
+            String name = newCategoryName.getText();
+            int result = categoriesTableModel.addRow(new Category(name, categoryColorPanel.getBackground()));
+            if (result == 1){
+                createCategoryExistsDialog(name);
+                createCategoryDialog();
+            } else if (result == 2){
+                createColorExistsDialog();
+                createCategoryDialog();
+            }
         });
         categoryDialog.setLocationRelativeTo(frame);
         categoryDialog.setVisible(true);

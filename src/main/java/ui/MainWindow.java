@@ -2,6 +2,8 @@ package ui;
 
 import data.CategoryDao;
 import data.TransactionDao;
+import model.CategoryCellRenderer;
+import model.StatisticsCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -37,7 +39,10 @@ public class MainWindow {
 
         statisticsTable = createTable(new StatisticsTable());
         transactionsTable = createTable(new TransactionsTable(transactionDao));
+        transactionsTable.setDefaultRenderer(String.class, new StatisticsCellRenderer());
+
         categoriesTable = createTable(new CategoriesTable(categoryDao));
+        categoriesTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
 
         Filter filter = new Filter(toolBar, transactionsTable);
 
