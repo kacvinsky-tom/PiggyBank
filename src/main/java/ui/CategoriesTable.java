@@ -42,9 +42,29 @@ public class CategoriesTable extends AbstractTableModel {
 
     public void addRow(Category category) {
         int newRowIndex = categories.size();
+        for (Category c : categories){
+            if (c.getName().equals(category.getName())){
+                return 1;
+            }
+            if (category.getColor().equals(c.getColor())){
+                return 2;
+            }
+        }
         categoryDao.create(category);
         categories.add(category);
         fireTableRowsInserted(newRowIndex, newRowIndex);
+        return 0;
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        switch (columnIndex){
+            case 0:
+                return String.class;
+            case 1:
+                return Color.class;
+        }
+        throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
     }
 
     public void deleteRow(int rowIndex) {
@@ -64,6 +84,7 @@ public class CategoriesTable extends AbstractTableModel {
     public int getColumnCount() {
         return 2;
     }
+
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {

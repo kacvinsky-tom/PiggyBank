@@ -2,6 +2,8 @@ package ui;
 
 import data.CategoryDao;
 import data.TransactionDao;
+import model.CategoryCellRenderer;
+import model.StatisticsCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
