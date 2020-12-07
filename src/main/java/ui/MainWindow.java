@@ -38,11 +38,9 @@ public class MainWindow {
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
-        transactionsTable = createTable(new TransactionsTable(transactionDao));
-        transactionsTable.setDefaultRenderer(String.class, new StatisticsCellRenderer());
-
-        categoriesTable = createTable(new CategoriesTable(categoryDao));
-        categoriesTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
+        var catTable = new CategoriesTable(categoryDao);
+        categoriesTable = createTable(catTable);
+        transactionsTable = createTable(new TransactionsTable(transactionDao,catTable));
 
         Filter filter = new Filter(toolBar, transactionsTable);
 
@@ -93,7 +91,12 @@ public class MainWindow {
     }
 
     private void changeTab(ChangeEvent changeEvent){
+        var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
+        int index = sourceTabbedPane.getSelectedIndex();
 
+        statisticsTable.clearSelection();
+        transactionsTable.clearSelection();
+        categoriesTable.clearSelection();
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {

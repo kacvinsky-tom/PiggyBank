@@ -12,6 +12,7 @@ public class CategoriesTable extends AbstractTableModel {
 
     private final List <Category> categories;
     private final CategoryDao categoryDao;
+    private Category others;
 
     public CategoriesTable(CategoryDao categoryDao) {
         this.categoryDao = categoryDao;
@@ -26,7 +27,7 @@ public class CategoriesTable extends AbstractTableModel {
                 return;
             }
         }
-        Category others = new Category("Others", Color.GRAY);
+        others = new Category("Others", Color.GRAY);
         this.categories.add(others);
         categoryDao.create(others);
     }
@@ -35,7 +36,11 @@ public class CategoriesTable extends AbstractTableModel {
         return categories;
     }
 
-    public int addRow(Category category) {
+    public Category getOthers(){
+        return others;
+    }
+
+    public void addRow(Category category) {
         int newRowIndex = categories.size();
         for (Category c : categories){
             if (c.getName().equals(category.getName())){
@@ -60,6 +65,14 @@ public class CategoriesTable extends AbstractTableModel {
                 return Color.class;
         }
         throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
+    }
+
+    public void deleteRow(int rowIndex) {
+        if(!categories.get(rowIndex).getName().equals("Others")){
+            categoryDao.delete(categories.get(rowIndex));
+            categories.remove(rowIndex);
+            fireTableRowsDeleted(rowIndex, rowIndex);
+        }
     }
 
     @Override

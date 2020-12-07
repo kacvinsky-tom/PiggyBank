@@ -8,11 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 final class AddAction extends AbstractAction {
 
@@ -186,7 +182,6 @@ final class AddAction extends AbstractAction {
 
     private void addCategory() {
         createCategoryDialog();
-
     }
 
     @Override
