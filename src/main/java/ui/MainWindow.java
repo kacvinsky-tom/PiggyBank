@@ -25,8 +25,6 @@ public class MainWindow {
     private final Action deleteAction;
     private final Action editAction;
     private final Action filterAction;
-    private final Action dateFromAction;
-    private final Action dateToAction;
 
     public MainWindow(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
@@ -35,13 +33,13 @@ public class MainWindow {
         deleteAction = new DeleteAction(pane);
         editAction = new EditAction(pane);
         filterAction = new FilterAction(pane);
-        dateFromAction = new DateAction(pane, "Date From", frame);
-        dateToAction = new DateAction(pane, "Date To", frame);
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());
         transactionsTable = createTable(new TransactionsTable(transactionDao));
         categoriesTable = createTable(new CategoriesTable(categoryDao));
+
+        Filter filter = new Filter(toolBar, transactionsTable);
 
         frame.add(toolBar, BorderLayout.NORTH);
         frame.add(createTabbedPane(), BorderLayout.CENTER);
@@ -84,8 +82,6 @@ public class MainWindow {
         toolBar.add(editAction);
         toolBar.addSeparator(new Dimension(0,30));
         toolBar.add(filterAction);
-        toolBar.add(dateFromAction);
-        toolBar.add(dateToAction);
         toolBar.setFloatable(false);
         toolBar.setVisible(true);
         return toolBar;
