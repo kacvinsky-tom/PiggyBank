@@ -71,6 +71,8 @@ public class StatisticsTable extends AbstractTableModel {
             case 4:
                 return category.getPercentage();
             case 5:
+                return category.getPercentage();
+            case 6:
                 return category.getTransactionsNumber();
             default:
                 throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
@@ -90,8 +92,10 @@ public class StatisticsTable extends AbstractTableModel {
             case 3:
                 return "Expenses";
             case 4:
-                return "Proportion in %";
+                return "% of income";
             case 5:
+                return "% of spending";
+            case 6:
                 return "Transactions";
             default:
                 throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
