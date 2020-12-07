@@ -70,12 +70,13 @@ public class TransactionDao {
     }
 
     public void update(Transaction transaction) {
+        System.out.println(transaction.getType().name());
         if (transaction.getId() == null){
             throw new IllegalArgumentException("Transaction has null ID");
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE TRANSACTIONS SET AMOUNT = ? \"TYPE\" = ? \"NAME\" = ? CREATION_DATE = ? NOTE = ? \"CATEGORY\" = ? WHERE ID = ?"
+                     "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ?, \"CATEGORY\" = ? WHERE ID = ?"
              )){
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
@@ -93,6 +94,7 @@ public class TransactionDao {
             throw new DataAccessException("Failed to update transaction " + transaction, ex);
         }
     }
+
 
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();

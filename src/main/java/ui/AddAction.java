@@ -169,7 +169,6 @@ final class AddAction extends AbstractAction {
 
     private void addCategory() {
         createCategoryDialog();
-
     }
 
     @Override

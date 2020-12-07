@@ -3,6 +3,8 @@ package ui;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.Comparator;
 
 final class DeleteAction extends AbstractAction {
 
@@ -17,16 +19,41 @@ final class DeleteAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl D"));
     }
 
+    private JTable getJTable(int idx) {
+        JScrollPane scrollPane = (JScrollPane) pane.getComponentAt(idx);
+        JViewport viewport = scrollPane.getViewport();
+        return (JTable) viewport.getView();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
-//        var employeeTableModel = (EmployeeTableModel) employeeTable.getModel();
-//        Arrays.stream(employeeTable.getSelectedRows())
-//                // view row index must be converted to model row index
-//                .map(employeeTable::convertRowIndexToModel)
-//                .boxed()
-//                // We need to delete rows in descending order to not change index of rows
-//                // which are not deleted yet
-//                .sorted(Comparator.reverseOrder())
-//                .forEach(employeeTableModel::deleteRow);
+        int index = pane.getSelectedIndex();
+        if (index <= 1) {
+            deleteTransaction();
+        } else if (index == 2) {
+            deleteCategory();
+        }
+    }
+
+    private void deleteCategory() {
+        var categoriesTable =  getJTable(2);
+        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
+        var transactionsTable =  getJTable(1);
+        var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
+        Arrays.stream(categoriesTable.getSelectedRows())
+                .map(categoriesTable::convertRowIndexToModel)
+                .boxed()
+                .sorted(Comparator.reverseOrder())
+                .forEach(e -> {transactionsTableModel.changeCategory(e);categoriesTableModel.deleteRow(e);});
+    }
+
+    private void deleteTransaction() {
+        var transactionsTable =  getJTable(1);
+        var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
+        Arrays.stream(transactionsTable.getSelectedRows())
+                .map(transactionsTable::convertRowIndexToModel)
+                .boxed()
+                .sorted(Comparator.reverseOrder())
+                .forEach(transactionsTableModel::deleteRow);
     }
 }

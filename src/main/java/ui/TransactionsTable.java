@@ -10,10 +10,12 @@ import java.util.List;
 public class TransactionsTable extends AbstractTableModel {
     private final TransactionDao transactionDao;
     private final List<Transaction> transactions;
+    private final  CategoriesTable categoriesTable;
 
-    TransactionsTable(TransactionDao transactionDao){
+    TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable){
         this.transactionDao = transactionDao;
         this.transactions = new ArrayList<>(transactionDao.findAll());
+        this.categoriesTable = categoriesTable;
     }
 
     @Override
@@ -24,6 +26,28 @@ public class TransactionsTable extends AbstractTableModel {
     @Override
     public int getColumnCount() {
         return 5;
+    }
+
+    public void deleteRow(int rowIndex) {
+        transactionDao.delete(transactions.get(rowIndex));
+        transactions.remove(rowIndex);
+        fireTableRowsDeleted(rowIndex, rowIndex);
+    }
+
+    public void changeCategory(int rowIndex){
+        var category = categoriesTable.getCategories().get(rowIndex);
+        if (!category.getName().equals("Others")){
+            for (var transaction : transactions) {
+                if(transaction.getCategory().getName().equals(category.getName())){
+                    transaction.setCategory(categoriesTable.getOthers());
+                    transactionDao.update(transaction);
+                }
+            }
+        }
+    }
+
+    private Transaction getTransaction(int rowIndex){
+        return transactions.get(rowIndex);
     }
 
     String editAmountFormat(double amount){
