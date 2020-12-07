@@ -37,7 +37,7 @@ public class TransactionDao {
             st.setString(3, transaction.getName());
             st.setDate(4, new Date(transaction.getDate().getTime()));
             st.setString(5, transaction.getNote());
-            st.setLong(6, transaction.getCategory().getId());
+            st.setString(6, transaction.getCategory().getName());
             st.executeUpdate();
             try (var rs = st.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -83,7 +83,7 @@ public class TransactionDao {
             st.setString(3, transaction.getName());
             st.setDate(4, new Date(transaction.getDate().getTime()));
             st.setString(5, transaction.getNote());
-            st.setLong(6, transaction.getCategory().getId());
+            st.setString(6, transaction.getCategory().getName());
             st.setLong(7, transaction.getId());
             int updatedRowCount = st.executeUpdate();
             if(updatedRowCount == 0){
