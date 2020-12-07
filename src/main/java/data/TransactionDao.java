@@ -77,7 +77,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE TRANSACTIONS SET AMOUNT = ? \"TYPE\" = ? \"NAME\" = ? CREATION_DATE = ? NOTE = ? \"CATEGORY\" = ? WHERE ID = ?"
+                     "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ?, \"CATEGORY\" = ? WHERE ID = ?"
              )){
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());

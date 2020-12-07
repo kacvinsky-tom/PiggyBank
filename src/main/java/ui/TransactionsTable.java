@@ -46,7 +46,7 @@ public class TransactionsTable extends AbstractTableModel {
             for (var transaction : transactions) {
                 if(transaction.getCategory().getName().equals(category.getName())){
                     transaction.setCategory(categoriesTable.getOthers());
-                    //transactionDao.update(transaction);
+                    transactionDao.update(transaction);
                 }
             }
         }
