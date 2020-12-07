@@ -1,5 +1,7 @@
 package ui;
 
+import model.Category;
+
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -11,7 +13,7 @@ import java.util.List;
 public class Filter {
     private final JSpinner spinner_from;
     private final JSpinner spinner_to;
-    private final JComboBox comboBox;
+    private JComboBox comboBox;
     private final JCheckBox cb_incomes;
     private final JCheckBox cb_spendings;
     private final JTable table;
@@ -26,18 +28,18 @@ public class Filter {
 
         cb_incomes = new JCheckBox("Incomes", true);
         cb_spendings = new JCheckBox("Spendings", true);
+
         toolbar.addSeparator();
         toolbar.add(cb_incomes);
         toolbar.add(cb_spendings);
         toolbar.addSeparator();
 
-        var ctb = (CategoriesTable) categories.getModel();
-        comboBox = new JComboBox<>(ctb.getCategories().toArray());
-        toolbar.add(comboBox);
+        toolbar.add(createComboBox(categories));
         toolbar.addSeparator();
 
         spinner_from = createDateSpinner();
         spinner_to = createDateSpinner();
+
         toolbar.add(new JLabel("From:"));
         toolbar.add(spinner_from);
         toolbar.addSeparator();
@@ -45,11 +47,22 @@ public class Filter {
         toolbar.add(spinner_to);
         toolbar.addSeparator();
 
-        JButton dateButton = new JButton("Confirm");
-        dateButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        dateButton.addActionListener(this::filterButtonActionPerformed);
-        toolbar.add(dateButton);
+        toolbar.add(createButton());
+    }
 
+    private JComboBox createComboBox(JTable categories) {
+        var ctb = (CategoriesTable) categories.getModel();
+        comboBox = new JComboBox(ctb.getCategories().toArray());
+        comboBox.insertItemAt(new Category("All", null), 0);
+        comboBox.setSelectedIndex(0);
+        return comboBox;
+    }
+
+    private JButton createButton() {
+        JButton button = new JButton("Confirm");
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.addActionListener(this::filterButtonActionPerformed);
+        return button;
     }
 
     private JSpinner createDateSpinner() {
@@ -61,6 +74,7 @@ public class Filter {
     }
 
     private void filterButtonActionPerformed(ActionEvent actionEvent) {
+        sorter.setRowFilter(null);
 
         Date startDate = (Date) spinner_from.getValue();
         Date endDate = (Date) spinner_to.getValue();
@@ -68,19 +82,23 @@ public class Filter {
         List<RowFilter<TransactionsTable, Integer>> filters = new ArrayList<>(4);
         filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER, startDate, 3));
         filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.BEFORE, endDate, 3));
-        filters.add(RowFilter.regexFilter(comboBox.getSelectedItem().toString(), 2));
+
+        if (comboBox.getSelectedIndex() > 0) {
+            filters.add(RowFilter.regexFilter(comboBox.getSelectedItem().toString(), 2));
+        }
         if (cb_incomes.isSelected() && !cb_spendings.isSelected()) {
-            filters.add(GreaterThan);
+            filters.add(incomeFilter);
         }
         if (!cb_incomes.isSelected() && cb_spendings.isSelected()) {
-            filters.add(LessThan);
+            filters.add(spendingFilter);
         }
+
         RowFilter<TransactionsTable, Integer> rf = RowFilter.andFilter(filters);
         sorter.setRowFilter(rf);
     }
 
 
-    RowFilter<TransactionsTable, Integer> GreaterThan = new RowFilter<>() {
+    RowFilter<TransactionsTable, Integer> incomeFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
                 return !table.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
@@ -90,7 +108,7 @@ public class Filter {
         }
     };
 
-    RowFilter<TransactionsTable, Integer> LessThan = new RowFilter<>() {
+    RowFilter<TransactionsTable, Integer> spendingFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
                 return table.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
