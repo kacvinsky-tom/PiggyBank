@@ -32,7 +32,7 @@ public class MainWindow {
 
         addAction = new AddAction(pane, frame);
         deleteAction = new DeleteAction(pane);
-        editAction = new EditAction(pane);
+        editAction = new EditAction(pane, frame);
         toolBar = createToolbar();
 
         statisticsTable = createTable(new StatisticsTable());

@@ -53,7 +53,6 @@ final class AddAction extends AbstractAction {
 
     private void createWrongInputException(){
         JOptionPane.showMessageDialog(new JFrame(), "Enter valid number into amount!", "Error", JOptionPane.ERROR_MESSAGE);
-
     }
 
     private JTextField createTextfield(String string) {
