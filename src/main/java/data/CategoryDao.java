@@ -71,7 +71,7 @@ public class CategoryDao {
              )){
             st.setString(1, category.getName());
             st.setString(2, category.getColor().toString());
-            st.setLong(5, category.getId());
+            st.setLong(3, category.getId());
             int updatedRowCount = st.executeUpdate();
             if(updatedRowCount == 0){
                 throw new DataAccessException("Failed to update non-existing category: " + category);
@@ -83,6 +83,25 @@ public class CategoryDao {
     }
 
     public List<Category> findAll() {
+        try (var connection = dataSource.getConnection();
+             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORY")) {
+            List<Category> categories = new ArrayList<>();
+            try (var rs = st.executeQuery()) {
+                while (rs.next()) {
+                    Category category = new Category(
+                            rs.getString("NAME"),
+                            Color.decode(rs.getString("COLOR")));
+                    category.setId(rs.getLong("ID"));
+                    categories.add(category);
+                }
+            }
+            return categories;
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to load all categories", ex);
+        }
+    }
+
+    public List<Category> find() {
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORY")) {
             List<Category> categories = new ArrayList<>();

@@ -1,6 +1,7 @@
 package ui;
 
 import data.CategoryDao;
+import data.TransactionDao;
 import model.Category;
 
 import java.util.ArrayList;
