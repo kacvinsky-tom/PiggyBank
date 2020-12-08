@@ -1,23 +1,32 @@
 package ui;
 
 import data.TransactionDao;
+import model.Category;
 import model.Transaction;
 
-import javax.swing.table.AbstractTableModel;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class TransactionsTable extends AbstractTableModel {
+public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
+
+    private static final List<Column<?, Transaction>> COLUMNS = List.of(
+            Column.readOnly("Name", String.class, Transaction::getName),
+            Column.readOnly("Amount", Double.class, Transaction::getAmount),
+            Column.readOnly("Category", Category.class, Transaction::getCategory),
+            Column.readOnly("Created", Date.class, Transaction::getDate),
+            Column.readOnly("Note", String.class, Transaction::getNote)
+    );
+
     private final TransactionDao transactionDao;
     private final List<Transaction> transactions;
     private final CategoriesTable categoriesTable;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy"); //NEVYMAZAVAT
 
     TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable){
+        super(COLUMNS);
         this.transactionDao = transactionDao;
-        this.transactions = new ArrayList<>(transactionDao.findAll());
         this.categoriesTable = categoriesTable;
+        this.transactions = new ArrayList<>(transactionDao.findAll());
     }
 
     public List<Transaction> getTransactions() {
@@ -27,11 +36,6 @@ public class TransactionsTable extends AbstractTableModel {
     @Override
     public int getRowCount() {
         return transactions.size();
-    }
-
-    @Override
-    public int getColumnCount() {
-        return 5;
     }
 
     public void deleteRow(int rowIndex) {
@@ -46,67 +50,16 @@ public class TransactionsTable extends AbstractTableModel {
             for (var transaction : transactions) {
                 if(transaction.getCategory().getName().equals(category.getName())){
                     transaction.setCategory(categoriesTable.getOthers());
-//                    transactionDao.update(transaction); UNCOMMENT WHEN TRANSACTIONS DATABASE WILL HAVE NAME OF CATEGORY INSTEAD OF ID
+//                   transactionDao.update(transaction); UNCOMMENT WHEN TRANSACTIONS UPDATE IN DATABASE WILL WORK
                 }
             }
         }
     }
 
-    private Transaction getTransaction(int rowIndex){
+    @Override
+    protected Transaction getEntity(int rowIndex) {
         return transactions.get(rowIndex);
     }
-
-    String editAmountFormat(double amount){
-        if (amount < 0.0){
-            return Double.toString(amount);
-        }
-        return " " + amount;
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        var transaction = transactions.get(rowIndex);
-        switch (columnIndex){
-            case 0:
-                return transaction.getName();
-            case 1:
-                return editAmountFormat(transaction.getAmount());
-            case 2:
-                return transaction.getCategory();
-            case 3:
-                //return dateFormat.format(transaction.getDate());  funguje ale ked klikned na update settings,
-                // tak sa nezobrazia ziadne transakcie...ktovie preco
-                return transaction.getDate();
-            case 4:
-                return transaction.getNote();
-            default:
-                throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
-        }
-    }
-
-    @Override
-    public String getColumnName(int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                return "Name";
-            case 1:
-                return "Amount";
-            case 2:
-                return "Category";
-            case 3:
-                return "Created";
-            case 4:
-                return "Note";
-            default:
-                throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
-        }
-    }
-
-    public void deleteTransaction(int rowIndex) {
-        transactions.remove(rowIndex);
-        fireTableRowsDeleted(rowIndex, rowIndex);
-    }
-
 
     public void addTransaction(Transaction transaction) {
         transactionDao.create(transaction);
