@@ -1,13 +1,13 @@
 package ui;
 
 import model.Category;
+import model.Transaction;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 import java.util.List;
 
 public class Filter {
@@ -16,15 +16,16 @@ public class Filter {
     private JComboBox comboBox;
     private final JCheckBox cb_incomes;
     private final JCheckBox cb_spendings;
-    private final JTable table;
     private final TableRowSorter<TransactionsTable> sorter;
+    private final JTable transactions;
+    private final TransactionsTable transactionsTableModel;
 
-    public Filter(JToolBar toolbar, JTable table, JTable categories) {
-
-        this.table = table;
-        var model = table.getModel();
+    public Filter(JToolBar toolbar, JTable transactions, JTable categories, TransactionsTable transactionsTableModel) {
+        this.transactions = transactions;
+        this.transactionsTableModel = transactionsTableModel;
+        var model = transactions.getModel();
         sorter = new TableRowSorter<>((TransactionsTable) model);
-        table.setRowSorter(sorter);
+        transactions.setRowSorter(sorter);
 
         cb_incomes = new JCheckBox("Incomes", true);
         cb_spendings = new JCheckBox("Spendings", true);
@@ -37,8 +38,8 @@ public class Filter {
         toolbar.add(createComboBox(categories));
         toolbar.addSeparator();
 
-        spinner_from = createDateSpinner();
-        spinner_to = createDateSpinner();
+        spinner_from = createDateSpinner(true);
+        spinner_to = createDateSpinner(false);
 
         toolbar.add(new JLabel("From:"));
         toolbar.add(spinner_from);
@@ -59,16 +60,31 @@ public class Filter {
     }
 
     private JButton createButton() {
-        JButton button = new JButton("Confirm");
+        JButton button = new JButton("Update settings");
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(this::filterButtonActionPerformed);
         return button;
     }
 
-    private JSpinner createDateSpinner() {
+    private JSpinner createDateSpinner(boolean from) {
         JSpinner spinner = new JSpinner();
-        spinner.setModel(new SpinnerDateModel());
+        SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
+        spinner.setModel(spinnerDateModel);
         spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
+        if (from){
+            List<Transaction> tranList = transactionsTableModel.getTransactions();
+            if (tranList.isEmpty()){
+                spinner.setVisible(true);
+                return spinner;
+            }
+            Date time = tranList.get(0).getDate();
+            for (Transaction t : tranList){
+                if (t.getDate().compareTo(time) < 0){
+                    time = t.getDate();
+                }
+            }
+            spinnerDateModel.setValue(time);
+        }
         spinner.setVisible(true);
         return spinner;
     }
@@ -97,11 +113,10 @@ public class Filter {
         sorter.setRowFilter(rf);
     }
 
-
     RowFilter<TransactionsTable, Integer> incomeFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return !table.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return !transactions.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
@@ -111,7 +126,7 @@ public class Filter {
     RowFilter<TransactionsTable, Integer> spendingFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return table.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return transactions.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }

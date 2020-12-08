@@ -37,12 +37,15 @@ public class MainWindow {
 
         statisticsTable = createTable(new StatisticsTable());
         statisticsTable.setDefaultRenderer(String.class, new StatisticsCellRenderer());
+
         var catTable = new CategoriesTable(categoryDao);
         categoriesTable = createTable(catTable);
         categoriesTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
-        transactionsTable = createTable(new TransactionsTable(transactionDao,catTable));
 
-        Filter filter = new Filter(toolBar, transactionsTable, categoriesTable);
+        TransactionsTable transactionsTableModel = new TransactionsTable(transactionDao, catTable);
+        transactionsTable = createTable(transactionsTableModel);
+
+        new Filter(toolBar, transactionsTable, categoriesTable, transactionsTableModel);
 
         frame.add(toolBar, BorderLayout.NORTH);
         frame.add(createTabbedPane(), BorderLayout.CENTER);

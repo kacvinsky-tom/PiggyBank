@@ -10,12 +10,16 @@ import java.util.List;
 public class TransactionsTable extends AbstractTableModel {
     private final TransactionDao transactionDao;
     private final List<Transaction> transactions;
-    private final  CategoriesTable categoriesTable;
+    private final CategoriesTable categoriesTable;
 
     TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable){
         this.transactionDao = transactionDao;
         this.transactions = new ArrayList<>(transactionDao.findAll());
         this.categoriesTable = categoriesTable;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
     @Override
@@ -98,6 +102,7 @@ public class TransactionsTable extends AbstractTableModel {
         transactions.remove(rowIndex);
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
+
 
     public void addTransaction(Transaction transaction) {
         transactionDao.create(transaction);

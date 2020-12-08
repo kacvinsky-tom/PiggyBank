@@ -51,6 +51,11 @@ final class AddAction extends AbstractAction {
         return dialog;
     }
 
+    private void createWrongInputException(){
+        JOptionPane.showMessageDialog(new JFrame(), "Enter valid number into amount!", "Error", JOptionPane.ERROR_MESSAGE);
+
+    }
+
     private JTextField createTextfield(String string) {
         dialog.add(new JLabel(string + ": "));
         JTextField textField = new JTextField();
@@ -61,7 +66,6 @@ final class AddAction extends AbstractAction {
     }
 
     private void createTransactionDialog() {
-
         dialog = createDialog("new transaction", 250, 330);
         dialog.setLayout(new FlowLayout());
 
@@ -92,7 +96,15 @@ final class AddAction extends AbstractAction {
         add.addActionListener(e -> {
 
             String name = nameField.getText();
-            double amount = Double.parseDouble(amountField.getText());
+            double amount;
+            try {
+                amount = Double.parseDouble(amountField.getText());
+            } catch (NumberFormatException ex){
+                dialog.dispose();
+                createWrongInputException();
+                createTransactionDialog();
+                return;
+            }
             String note = noteField.getText();
             Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
             TransactionType type = transactionType.getItemAt(transactionType.getSelectedIndex());
@@ -156,9 +168,11 @@ final class AddAction extends AbstractAction {
             if (result == 1){
                 createCategoryExistsDialog(name);
                 createCategoryDialog();
+                return;
             } else if (result == 2){
                 createColorExistsDialog();
                 createCategoryDialog();
+                return;
             }
         });
         categoryDialog.setLocationRelativeTo(frame);
