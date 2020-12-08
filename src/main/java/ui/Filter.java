@@ -89,11 +89,31 @@ public class Filter {
         return spinner;
     }
 
+    private void createWrongDateDialog(){
+        JOptionPane.showMessageDialog(new JFrame(), "Date 'From' cannot be older than date 'To'!", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     private void filterButtonActionPerformed(ActionEvent actionEvent) {
         sorter.setRowFilter(null);
 
         Date startDate = (Date) spinner_from.getValue();
+        Calendar c = Calendar.getInstance();
+        c.setTime(startDate);
+        c.add(Calendar.MILLISECOND, -1);
+        startDate = c.getTime();
+
+
         Date endDate = (Date) spinner_to.getValue();
+        c.setTime(endDate);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        c.set(Calendar.MILLISECOND, 999);
+        endDate = c.getTime();
+
+        if (startDate.after(endDate)){
+            createWrongDateDialog();
+            return;
+        }
 
         List<RowFilter<TransactionsTable, Integer>> filters = new ArrayList<>(4);
         filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER, startDate, 3));
