@@ -61,6 +61,11 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         return transactions.get(rowIndex);
     }
 
+    @Override
+    protected void updateEntity(Transaction transaction) {
+        transactionDao.update(transaction);
+    }
+
     public void addTransaction(Transaction transaction) {
         transactionDao.create(transaction);
         int newRowIndex = transactions.size();

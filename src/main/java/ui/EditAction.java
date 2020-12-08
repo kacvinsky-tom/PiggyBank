@@ -16,6 +16,10 @@ final class EditAction extends AbstractAction {
     private final JTabbedPane pane;
     private final JLabel categoryColorPanel = new JLabel();
     private JDialog dialog;
+    private JTextField nameField, amountField, noteField;
+    private JSpinner spinner;
+    private JComboBox<Object> categoryBox, transactionType;
+    private Transaction selectedTransaction;
 
     public EditAction(JTabbedPane pane, JFrame frame) {
         super("Edit", Icons.EDIT_ICON);
@@ -42,9 +46,9 @@ final class EditAction extends AbstractAction {
         return (JTable) viewport.getView();
     }
 
-    private JTextField createTextfield(String string) {
-        dialog.add(new JLabel(string + ": "));
-        JTextField textField = new JTextField();
+    private JTextField createTextfield(String label, String content) {
+        dialog.add(new JLabel("Change " + label + ": "));
+        JTextField textField = new JTextField(content);
         textField.setColumns(20);
         textField.setSize(new Dimension(150, 20));
         dialog.add(textField);
@@ -52,7 +56,6 @@ final class EditAction extends AbstractAction {
     }
 
     private JSpinner createDateSpinner() {
-        dialog.add(new JLabel("Choose date: "));
         JSpinner spinner = new JSpinner();
         spinner.setModel(new SpinnerDateModel());
         spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
@@ -60,77 +63,97 @@ final class EditAction extends AbstractAction {
         return spinner;
     }
 
-    private void createWrongInputException(){
+    private void createWrongInputException() {
         JOptionPane.showMessageDialog(new JFrame(), "Enter valid number into amount!", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void createTransactionDialog() {
-        dialog = createDialog("new transaction", 250, 330);
+    private JButton createButton() {
+        JButton button = new JButton("Edit");
+        button.addActionListener(this::editButtonActionPerformed);
+        return button;
+    }
+
+    private void editButtonActionPerformed(ActionEvent actionEvent) {
+        var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
+
+        String name = nameField.getText();
+        String note = noteField.getText();
+        double amount;
+        try {
+            amount = Double.parseDouble(amountField.getText());
+        } catch (NumberFormatException ex) {
+            dialog.dispose();
+            createWrongInputException();
+            editTransaction();
+            return;
+        }
+        Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
+        TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
+        Date date = (Date) spinner.getValue();
+
+        updateTransaction(name, amount, category, date, note, type);
+        dialog.dispose();
+    }
+
+    private void updateTransaction(String name, double amount, Category category, Date date, String note, TransactionType type) {
+        selectedTransaction.getCategory().setExpenses(selectedTransaction.getCategory().getExpenses() - selectedTransaction.getAmount());
+
+        selectedTransaction.setName(name);
+        selectedTransaction.setAmount(amount);
+        selectedTransaction.setCategory(category);
+        selectedTransaction.setDate(date);
+        selectedTransaction.setNote(note);
+        selectedTransaction.setType(type);
+
+        ((TransactionsTable) getJTable(1).getModel()).updateEntity(selectedTransaction);
+        category.setExpenses(category.getExpenses() + amount);
+    }
+
+    private void setTransactionDialog() {
         dialog.setLayout(new FlowLayout());
 
-        JTable transactionsTable = getJTable(1);
-        JTable categoriesTable = getJTable(2);
-
-        var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
-        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
-
-        JTextField nameField = createTextfield("Name");
-        JTextField amountField = createTextfield("Amount");
-        JTextField noteField = createTextfield("Note");
-
-        var categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
-        var transactionType = new JComboBox<>(TransactionType.values());
-
-        dialog.add(new JLabel("Choose category:"));
+        dialog.add(new JLabel("Change category:"));
+        categoryBox.setSelectedItem(selectedTransaction.getCategory());
         dialog.add(categoryBox);
-        dialog.add(new JLabel("Choose type:"));
+
+        dialog.add(new JLabel("Change type:"));
+        transactionType.setSelectedItem(selectedTransaction.getType());
         dialog.add(transactionType);
 
-        JSpinner spinner = createDateSpinner();
+        dialog.add(new JLabel("Change date: "));
+        spinner.setValue(selectedTransaction.getDate());
         dialog.add(spinner);
 
-        JButton add = new JButton("Add");
-        dialog.getContentPane().add(add);
+        dialog.getContentPane().add(createButton());
 
-        add.addActionListener(e -> {
-
-            String name = nameField.getText();
-            double amount;
-            try {
-                amount = Double.parseDouble(amountField.getText());
-            } catch (NumberFormatException ex){
-                dialog.dispose();
-                createWrongInputException();
-                createTransactionDialog();
-                return;
-            }
-            String note = noteField.getText();
-            Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
-            TransactionType type = transactionType.getItemAt(transactionType.getSelectedIndex());
-
-            Date date = (Date) spinner.getValue();
-            date.setHours(0);
-            date.setMinutes(0);
-            date.setSeconds(0);
-
-            transactionTableModel.addTransaction(new Transaction(name, amount, category, date, note, type));
-
-            category.setExpenses(category.getExpenses() + amount);
-
-            dialog.dispose();
-        });
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
     }
 
-    private void editTransaction(){
-        var transactionsTable =  getJTable(1);
+    private void createTransactionDialog() {
+        JTable transactionsTable = getJTable(1);
         var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
-        //createTransactionDialog(transactionsTable.getSelectedRow());
+        JTable categoriesTable = getJTable(2);
+        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
+
+        dialog = createDialog("transaction", 250, 330);
+        selectedTransaction = transactionsTableModel.getEntity(transactionsTable.getSelectedRow());
+        nameField = createTextfield("name", selectedTransaction.getName());
+        amountField = createTextfield("amount", String.valueOf(selectedTransaction.getAmount()));
+        noteField = createTextfield("note", selectedTransaction.getNote());
+        categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
+        transactionType = new JComboBox<>(TransactionType.values());
+        spinner = createDateSpinner();
+
+        setTransactionDialog();
     }
 
-    private void editCategory(){
+    private void editTransaction()  {
+        createTransactionDialog();
+    }
+
+    private void editCategory() {
 
     }
 
