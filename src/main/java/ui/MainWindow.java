@@ -60,7 +60,7 @@ public class MainWindow {
         var frame = new JFrame("Piggy Bank - Personal cash flow manager");
         frame.setIconImage(Icons.PIGGY_IMAGE);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(700, 500));
+        frame.setPreferredSize(new Dimension(800, 500));
         return frame;
     }
 
