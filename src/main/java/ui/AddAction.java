@@ -108,7 +108,11 @@ final class AddAction extends AbstractAction {
             String note = noteField.getText();
             Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
             TransactionType type = transactionType.getItemAt(transactionType.getSelectedIndex());
+
             Date date = (Date) spinner.getValue();
+            date.setHours(0);
+            date.setMinutes(0);
+            date.setSeconds(0);
 
             transactionTableModel.addTransaction(new Transaction(name, amount, category, date, note, type));
 

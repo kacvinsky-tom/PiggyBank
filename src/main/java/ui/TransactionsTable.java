@@ -4,6 +4,7 @@ import data.TransactionDao;
 import model.Transaction;
 
 import javax.swing.table.AbstractTableModel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class TransactionsTable extends AbstractTableModel {
     private final TransactionDao transactionDao;
     private final List<Transaction> transactions;
     private final CategoriesTable categoriesTable;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyy"); //NEVYMAZAVAT
 
     TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable){
         this.transactionDao = transactionDao;
@@ -72,6 +74,8 @@ public class TransactionsTable extends AbstractTableModel {
             case 2:
                 return transaction.getCategory();
             case 3:
+                //return dateFormat.format(transaction.getDate());  funguje ale ked klikned na update settings,
+                // tak sa nezobrazia ziadne transakcie...ktovie preco
                 return transaction.getDate();
             case 4:
                 return transaction.getNote();
