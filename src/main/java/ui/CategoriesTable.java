@@ -2,19 +2,23 @@ package ui;
 
 import data.CategoryDao;
 import model.Category;
-
-import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoriesTable extends AbstractTableModel {
+public class CategoriesTable extends AbstractEntityTableModel<Category> {
+
+    private static final List<Column<?, Category>> COLUMNS = List.of(
+            Column.readOnly("Name", String.class, Category::getName),
+            Column.readOnly("Color", Color.class, Category::getColor)
+    );
 
     private final List <Category> categories;
     private final CategoryDao categoryDao;
     private Category others;
 
     public CategoriesTable(CategoryDao categoryDao) {
+        super(COLUMNS);
         this.categoryDao = categoryDao;
         this.categories = new ArrayList<>(categoryDao.findAll());
         addDefaultCategory();
@@ -30,6 +34,16 @@ public class CategoriesTable extends AbstractTableModel {
         others = new Category("Others", Color.GRAY);
         this.categories.add(others);
         categoryDao.create(others);
+    }
+
+    @Override
+    public int getRowCount() {
+        return categories.size();
+    }
+
+    @Override
+    protected Category getEntity(int rowIndex) {
+        return categories.get(rowIndex);
     }
 
     public List<Category> getCategories() {
@@ -56,56 +70,11 @@ public class CategoriesTable extends AbstractTableModel {
         return 0;
     }
 
-    @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        switch (columnIndex){
-            case 0:
-                return String.class;
-            case 1:
-                return Color.class;
-        }
-        throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
-    }
-
     public void deleteRow(int rowIndex) {
         if(!categories.get(rowIndex).getName().equals("Others")){
             categoryDao.delete(categories.get(rowIndex));
             categories.remove(rowIndex);
             fireTableRowsDeleted(rowIndex, rowIndex);
         }
-    }
-
-    @Override
-    public int getRowCount() {
-        return categories.size();
-    }
-
-    @Override
-    public int getColumnCount() {
-        return 2;
-    }
-
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        var category = categories.get(rowIndex);
-        switch (columnIndex){
-            case 0:
-                return category.getName();
-            case 1:
-                return category.getColor();
-        }
-        throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
-    }
-
-    @Override
-    public String getColumnName(int columnIndex) {
-        switch (columnIndex){
-            case 0:
-                return "Name";
-            case 1:
-                return "Color";
-        }
-        throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
     }
 }
