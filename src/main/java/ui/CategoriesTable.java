@@ -2,6 +2,8 @@ package ui;
 
 import data.CategoryDao;
 import model.Category;
+import model.Transaction;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,20 +56,16 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         return others;
     }
 
-    public int addRow(Category category) {
+    public void addRow(Category category) {
         int newRowIndex = categories.size();
-        for (Category c : categories){
-            if (c.getName().equals(category.getName())){
-                return 1;
-            }
-            if (category.getColor().equals(c.getColor())){
-                return 2;
-            }
-        }
         categoryDao.create(category);
         categories.add(category);
         fireTableRowsInserted(newRowIndex, newRowIndex);
-        return 0;
+    }
+
+    @Override
+    protected void updateEntity(Category category) {
+        categoryDao.update(category);
     }
 
     public void deleteRow(int rowIndex) {

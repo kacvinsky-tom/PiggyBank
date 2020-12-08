@@ -24,6 +24,7 @@ public abstract class AbstractEntityTableModel<E> extends AbstractTableModel {
     protected abstract E getEntity(int rowIndex);
 
     protected void updateEntity(E entity) {
+
     }
 
     @Override

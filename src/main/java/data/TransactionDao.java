@@ -70,7 +70,6 @@ public class TransactionDao {
     }
 
     public void update(Transaction transaction) {
-        System.out.println(transaction.getType().name());
         if (transaction.getId() == null){
             throw new IllegalArgumentException("Transaction has null ID");
         }

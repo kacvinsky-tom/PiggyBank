@@ -21,6 +21,7 @@ final class AddAction extends AbstractAction {
     private JComboBox<Object> categoryBox, transactionType;
     private JDialog dialog;
     private JSpinner spinner;
+    private CategoriesTable categoriesTableModel;
 
     public AddAction(JTabbedPane pane, JFrame frame) {
         super("Add", Icons.ADD_ICON);
@@ -70,11 +71,11 @@ final class AddAction extends AbstractAction {
 
     private JButton createButton() {
         JButton button = new JButton("Add");
-        button.addActionListener(this::addButtonActionPerformed);
+        button.addActionListener(this::addButtonActionPerformedTransaction);
         return button;
     }
 
-    private void addButtonActionPerformed(ActionEvent actionEvent) {
+    private void addButtonActionPerformedTransaction(ActionEvent actionEvent) {
         var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
         var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
 
@@ -147,17 +148,22 @@ final class AddAction extends AbstractAction {
         colorLabel.setPreferredSize(new Dimension(40,20));
     }
 
-    private void createCategoryExistsDialog(String name){
-        JOptionPane.showMessageDialog(new JFrame(), "Category " + name + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private void createColorExistsDialog(){
-        JOptionPane.showMessageDialog(new JFrame(), "Chosen color is already taken by another category!", "Error", JOptionPane.ERROR_MESSAGE);
+    private boolean checkCategoryExistence(Category newCategory){
+        for (Category c : categoriesTableModel.getCategories()){
+            if (c.getName().equals(newCategory.getName())){
+                JOptionPane.showMessageDialog(new JFrame(), "Category " + newCategory.getName() + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            } else if (c.getColor().equals(newCategory.getColor())){
+                JOptionPane.showMessageDialog(new JFrame(), "Chosen color is already taken by another category!", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
     }
 
     private void createCategoryDialog(){
         JTable categoriesTable = getJTable(2);
-        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
+        categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
         prepareColorPanel(categoryColorPanel);
 
@@ -182,18 +188,19 @@ final class AddAction extends AbstractAction {
         JButton confirmButton = new JButton("Confirm");
         categoryPanel.add(confirmButton);
         confirmButton.addActionListener(e -> {
-            categoryDialog.dispose();
             String name = newCategoryName.getText();
-            int result = categoriesTableModel.addRow(new Category(name, categoryColorPanel.getBackground()));
-            if (result == 1){
-                createCategoryExistsDialog(name);
-                createCategoryDialog();
-            } else if (result == 2){
-                createColorExistsDialog();
-                createCategoryDialog();
+            if (name.equals("")){
+                JOptionPane.showMessageDialog(new JFrame(), "Enter name of the category!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            Category newCategory = new Category(name, categoryColorPanel.getBackground());
+            if (checkCategoryExistence(newCategory)){
+                categoriesTableModel.addRow(newCategory);
+                categoryDialog.dispose();
             }
         });
         categoryDialog.setLocationRelativeTo(frame);
+        categoryDialog.setResizable(false);
         categoryDialog.setVisible(true);
 
     }
