@@ -15,7 +15,10 @@ final class AddAction extends AbstractAction {
     private final JFrame frame;
     private final JTabbedPane pane;
     private final JLabel categoryColorPanel = new JLabel();
+    private JTextField nameField, amountField, noteField;
+    private JComboBox<Object> categoryBox, transactionType;
     private JDialog dialog;
+    private JSpinner spinner;
 
     public AddAction(JTabbedPane pane, JFrame frame) {
         super("Add", Icons.ADD_ICON);
@@ -33,7 +36,6 @@ final class AddAction extends AbstractAction {
     }
 
     private JSpinner createDateSpinner() {
-        dialog.add(new JLabel("Choose date: "));
         JSpinner spinner = new JSpinner();
         spinner.setModel(new SpinnerDateModel());
         spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
@@ -64,61 +66,62 @@ final class AddAction extends AbstractAction {
         return textField;
     }
 
+    private JButton createButton() {
+        JButton button = new JButton("Add");
+        button.addActionListener(this::addButtonActionPerformed);
+        return button;
+    }
+
+    private void addButtonActionPerformed(ActionEvent actionEvent) {
+        var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
+        var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
+
+        String name = nameField.getText();
+        String note = noteField.getText();
+        double amount;
+        try {
+            amount = Double.parseDouble(amountField.getText());
+        } catch (NumberFormatException ex){
+            dialog.dispose();
+            createWrongInputException();
+            addTransaction();
+            return;
+        }
+        Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
+        TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
+        Date date = (Date) spinner.getValue();
+
+        transactionTableModel.addTransaction(new Transaction(name, amount, category, date, note, type));
+        category.setExpenses(category.getExpenses() + amount);
+        dialog.dispose();
+    }
+
     private void createTransactionDialog() {
-        dialog = createDialog("new transaction", 250, 330);
-        dialog.setLayout(new FlowLayout());
-
-        JTable transactionsTable = getJTable(1);
         JTable categoriesTable = getJTable(2);
-
-        var transactionTableModel = (TransactionsTable) transactionsTable.getModel();
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
-        JTextField nameField = createTextfield("Name");
-        JTextField amountField = createTextfield("Amount");
-        JTextField noteField = createTextfield("Note");
+        dialog = createDialog("transaction", 250, 330);
+        nameField = createTextfield("Name");
+        amountField = createTextfield("Amount");
+        noteField = createTextfield("Note");
+        categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
+        transactionType = new JComboBox<>(TransactionType.values());
+        spinner = createDateSpinner();
 
-        var categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
-        var transactionType = new JComboBox<>(TransactionType.values());
+        setTransactionDialog();
+    }
 
-        dialog.add(new JLabel("Choose category:"));
+    private void setTransactionDialog() {
+        dialog.setLayout(new FlowLayout());
+
+        dialog.add(new JLabel("Select category:"));
         dialog.add(categoryBox);
-        dialog.add(new JLabel("Choose type:"));
+        dialog.add(new JLabel("Select type:"));
         dialog.add(transactionType);
-
-        JSpinner spinner = createDateSpinner();
+        dialog.add(new JLabel("Select date: "));
         dialog.add(spinner);
+        dialog.getContentPane().add(createButton());
 
-        JButton add = new JButton("Add");
-        dialog.getContentPane().add(add);
-
-        add.addActionListener(e -> {
-
-            String name = nameField.getText();
-            double amount;
-            try {
-                amount = Double.parseDouble(amountField.getText());
-            } catch (NumberFormatException ex){
-                dialog.dispose();
-                createWrongInputException();
-                createTransactionDialog();
-                return;
-            }
-            String note = noteField.getText();
-            Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
-            TransactionType type = transactionType.getItemAt(transactionType.getSelectedIndex());
-
-            Date date = (Date) spinner.getValue();
-            date.setHours(0);
-            date.setMinutes(0);
-            date.setSeconds(0);
-
-            transactionTableModel.addTransaction(new Transaction(name, amount, category, date, note, type));
-
-            category.setExpenses(category.getExpenses() + amount);
-
-            dialog.dispose();
-        });
         dialog.setResizable(false);
         dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
@@ -171,11 +174,9 @@ final class AddAction extends AbstractAction {
             if (result == 1){
                 createCategoryExistsDialog(name);
                 createCategoryDialog();
-                return;
             } else if (result == 2){
                 createColorExistsDialog();
                 createCategoryDialog();
-                return;
             }
         });
         categoryDialog.setLocationRelativeTo(frame);
