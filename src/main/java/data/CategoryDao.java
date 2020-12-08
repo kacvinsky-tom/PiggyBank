@@ -4,6 +4,7 @@ import model.Category;
 
 import javax.sql.DataSource;
 import java.awt.*;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,16 +62,16 @@ public class CategoryDao {
         }
     }
 
-    public void update(Category category) {
+    public void update(Category category){
         if (category.getId() == null){
-            throw new IllegalArgumentException("Category has null ID");
+            throw new IllegalArgumentException("Transaction has null ID");
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
                      "UPDATE CATEGORY SET \"NAME\" = ?, COLOR = ? WHERE ID = ?"
              )){
             st.setString(1, category.getName());
-            st.setString(2, category.getColor().toString());
+            st.setString(2, String.valueOf(category.getColor().getRGB()));
             st.setLong(3, category.getId());
             int updatedRowCount = st.executeUpdate();
             if(updatedRowCount == 0){

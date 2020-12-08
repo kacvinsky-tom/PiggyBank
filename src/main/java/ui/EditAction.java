@@ -20,6 +20,8 @@ final class EditAction extends AbstractAction {
     private JSpinner spinner;
     private JComboBox<Object> categoryBox, transactionType;
     private Transaction selectedTransaction;
+    private Category selectedCategory;
+    private  CategoriesTable categoriesTableModel;
 
     public EditAction(JTabbedPane pane, JFrame frame) {
         super("Edit", Icons.EDIT_ICON);
@@ -69,11 +71,11 @@ final class EditAction extends AbstractAction {
 
     private JButton createButton() {
         JButton button = new JButton("Edit");
-        button.addActionListener(this::editButtonActionPerformed);
+        button.addActionListener(this::editButtonActionPerformedTransaction);
         return button;
     }
 
-    private void editButtonActionPerformed(ActionEvent actionEvent) {
+    private void editButtonActionPerformedTransaction(ActionEvent actionEvent) {
         var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
 
         String name = nameField.getText();
@@ -153,12 +155,94 @@ final class EditAction extends AbstractAction {
         setTransactionDialog();
     }
 
+    private void prepareColorPanel(JLabel colorLabel){
+        colorLabel.setBackground(selectedCategory.getColor());
+        colorLabel.setOpaque(true);
+        colorLabel.setPreferredSize(new Dimension(40,20));
+    }
+
+    private void colorChooser(ActionEvent e) {
+        Color newColor = JColorChooser.showDialog(
+                null,
+                "Choose Background Color",
+                selectedCategory.getColor());
+        if (newColor != null) {
+            categoryColorPanel.setBackground(newColor);
+        }
+    }
+
+    private boolean checkCategoryExistence(String name, Color color){
+        for (Category c : categoriesTableModel.getCategories()){
+            if (c.getName().equals(name) && !c.equals(selectedCategory)){
+                JOptionPane.showMessageDialog(new JFrame(), "Category " + name + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            } else if (c.getColor().equals(color) && !c.equals(selectedCategory)){
+                JOptionPane.showMessageDialog(new JFrame(), "Chosen color is already taken by another category!", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void setCategory(String name, Color color){
+        selectedCategory.setColor(color);
+        selectedCategory.setName(name);
+    }
+
+    private void createCategoryDialog(){
+        JTable categoriesTable = getJTable(2);
+        categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
+        selectedCategory = categoriesTableModel.getEntity(categoriesTable.getSelectedRow());
+
+        prepareColorPanel(categoryColorPanel);
+
+        JDialog categoryDialog = createDialog("new category", 380, 150);
+
+        JPanel categoryPanel = new JPanel();
+        categoryPanel.setLayout(new FlowLayout());
+        JButton setColorButton = new JButton("Show Color Chooser...");
+        setColorButton.addActionListener(this::colorChooser);
+
+        categoryDialog.add(categoryPanel);
+        JTextField newCategoryName = new JTextField(selectedCategory.getName());
+        newCategoryName.setPreferredSize(new Dimension(150, 30));
+
+        if (selectedCategory.getName().equals("Others")){
+            categoryPanel.add(new JLabel("You can't change name of the default category 'Others'."));
+        } else {
+            categoryPanel.add(new JLabel("Enter name of the new category:"));
+            categoryPanel.add(newCategoryName);
+        }
+
+        categoryPanel.add(new JLabel("Color of the category:"));
+        categoryPanel.add(setColorButton);
+        categoryPanel.add(categoryColorPanel);
+
+        JButton confirmButton = new JButton("Confirm");
+        categoryPanel.add(confirmButton);
+        confirmButton.addActionListener(e -> {
+            if (newCategoryName.getText().equals("")){
+                JOptionPane.showMessageDialog(new JFrame(), "Enter name of the category!", "Error", JOptionPane.ERROR_MESSAGE);
+
+            } else if (checkCategoryExistence(newCategoryName.getText(), categoryColorPanel.getBackground())){
+                setCategory(newCategoryName.getText(), categoryColorPanel.getBackground());
+                categoriesTableModel.updateEntity(selectedCategory);
+                int rowIndex = categoriesTableModel.getCategories().indexOf(selectedCategory);
+                categoriesTableModel.fireTableRowsUpdated(rowIndex, rowIndex);
+                categoryDialog.dispose();
+            }
+        });
+        categoryDialog.setLocationRelativeTo(frame);
+        categoryDialog.setResizable(false);
+        categoryDialog.setVisible(true);
+    }
+
     private void editTransaction()  {
         createTransactionDialog();
     }
 
     private void editCategory() {
-
+        createCategoryDialog();
     }
 
     @Override
