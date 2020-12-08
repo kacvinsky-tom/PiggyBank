@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 final class AddAction extends AbstractAction {
 
@@ -96,6 +98,18 @@ final class AddAction extends AbstractAction {
         dialog.dispose();
     }
 
+    private List<Category> setDefaultCategory(List<Category> list){
+        List<Category> newList = new ArrayList<>();
+        for (Category c : list){
+            if (c.getName().equals("Others")){
+                newList.add(0, c);
+            } else {
+                newList.add(c);
+            }
+        }
+        return newList;
+    }
+
     private void createTransactionDialog() {
         JTable categoriesTable = getJTable(2);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
@@ -104,7 +118,7 @@ final class AddAction extends AbstractAction {
         nameField = createTextfield("Name");
         amountField = createTextfield("Amount");
         noteField = createTextfield("Note");
-        categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
+        categoryBox = new JComboBox<>(setDefaultCategory(categoriesTableModel.getCategories()).toArray());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = createDateSpinner();
 

@@ -105,7 +105,11 @@ final class EditAction extends AbstractAction {
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
 
-        ((TransactionsTable) getJTable(1).getModel()).updateEntity(selectedTransaction);
+        var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
+        transactionTableModel.updateEntity(selectedTransaction);
+        int rowIndex = transactionTableModel.getTransactions().indexOf(selectedTransaction);
+        transactionTableModel.fireTableRowsUpdated(rowIndex, rowIndex);
+
         category.setExpenses(category.getExpenses() + amount);
     }
 
