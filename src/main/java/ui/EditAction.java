@@ -106,6 +106,8 @@ final class EditAction extends AbstractAction {
         selectedTransaction.setDate(date);
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
+
+        ((TransactionsTable) getJTable(1).getModel()).updateEntity(selectedTransaction);
         category.setExpenses(category.getExpenses() + amount);
     }
 
