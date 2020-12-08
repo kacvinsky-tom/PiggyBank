@@ -1,42 +1,29 @@
 package ui;
 
+import data.CategoryDao;
 import model.Category;
 
-import javax.swing.table.AbstractTableModel;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StatisticsTable extends AbstractTableModel {
+public class StatisticsTable extends AbstractEntityTableModel<Category> {
 
-    private final List<Category> categories = new ArrayList<>();
 
-    StatisticsTable(){
-        // following lines are just fo testing purposes
-        Category c1 = new Category("Food", Color.BLUE);
-        c1.setExpenses(-80);
-        c1.setIncome(0);
-        c1.setSum(-80);
-        c1.setTransactionsNumber(3);
-        c1.setPercentage(0);
+    private static final List<Column<?, Category>> COLUMNS = List.of(
+            Column.readOnly("Category", String.class, Category::getName),
+            Column.readOnly("Sum", Double.class, Category::getSum),
+            Column.readOnly("Income", Double.class, Category::getIncome),
+            Column.readOnly("Expenses", Double.class, Category::getExpenses),
+            Column.readOnly("% of income", Double.class, Category::getPercentageInc),
+            Column.readOnly("% of spending", Double.class, Category::getPercentageSpend),
+            Column.readOnly("Transactions", Integer.class, Category::getTransactionsNumber)
+    );
 
-        Category c2 = new Category("Sex services", Color.CYAN);
-        c2.setExpenses(-20);
-        c2.setIncome(60);
-        c2.setSum(40);
-        c2.setTransactionsNumber(2);
-        c2.setPercentage(40);
+    private final List<Category> categories;
 
-        Category c3 = new Category("Job", Color.GREEN);
-        c3.setExpenses(0);
-        c3.setIncome(80);
-        c3.setSum(80);
-        c3.setTransactionsNumber(5);
-        c3.setPercentage(60);
-
-        categories.add(c1);
-        categories.add(c2);
-        categories.add(c3);
+    StatisticsTable(CategoryDao categoryDao){
+        super(COLUMNS);
+        this.categories = new ArrayList<>(categoryDao.findAll());
     }
 
     @Override
@@ -45,60 +32,7 @@ public class StatisticsTable extends AbstractTableModel {
     }
 
     @Override
-    public int getColumnCount() {
-        return 6;
-    }
-
-    String editAmountFormat(double amount){
-        if (amount < 0.0){
-            return Double.toString(amount);
-        }
-        return " " + amount;
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        var category = categories.get(rowIndex);
-        switch (columnIndex){
-            case 0:
-                return category.getName();
-            case 1:
-                return editAmountFormat(category.getSum());
-            case 2:
-                return editAmountFormat(category.getIncome());
-            case 3:
-                return editAmountFormat(category.getExpenses());
-            case 4:
-                return category.getPercentage();
-            case 5:
-                return category.getPercentage();
-            case 6:
-                return category.getTransactionsNumber();
-            default:
-                throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
-        }
-    }
-
-
-    @Override
-    public String getColumnName(int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                return "Category";
-            case 1:
-                return "Sum";
-            case 2:
-                return "Income";
-            case 3:
-                return "Expenses";
-            case 4:
-                return "% of income";
-            case 5:
-                return "% of spending";
-            case 6:
-                return "Transactions";
-            default:
-                throw new IndexOutOfBoundsException("Invalid column index: " + columnIndex);
-        }
+    protected Category getEntity(int rowIndex) {
+        return categories.get(rowIndex);
     }
 }

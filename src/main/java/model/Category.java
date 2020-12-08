@@ -7,11 +7,14 @@ public class Category {
 
     private Long id;
     private String name;
+    private Color color;
     private int transactionsNumber;
     private double expenses;
     private double income;
+    private double percentageInc;
+    private double percentageSpend;
     private double sum;
-    private Color color;
+
 
     public Category(String name, Color color){
         setName(name);
@@ -33,16 +36,6 @@ public class Category {
     public void setColor(Color color) {
         this.color = color;
     }
-
-    public double getPercentage() {
-        return percentage;
-    }
-
-    public void setPercentage(double percentage) {
-        this.percentage = percentage;
-    }
-
-    private double percentage;
 
     public String getName() {
         return name;
@@ -82,6 +75,22 @@ public class Category {
 
     public void setSum(double sum) {
         this.sum = sum;
+    }
+
+    public double getPercentageInc() {
+        return percentageInc;
+    }
+
+    public void setPercentageInc(double percentageInc) {
+        this.percentageInc = percentageInc;
+    }
+
+    public double getPercentageSpend() {
+        return percentageSpend;
+    }
+
+    public void setPercentageSpend(double percentageSpend) {
+        this.percentageSpend = percentageSpend;
     }
 
     @Override

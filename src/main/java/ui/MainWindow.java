@@ -35,12 +35,11 @@ public class MainWindow {
         editAction = new EditAction(pane, frame);
         toolBar = createToolbar();
 
-        statisticsTable = createTable(new StatisticsTable());
-        statisticsTable.setDefaultRenderer(String.class, new StatisticsCellRenderer());
-
         var catTable = new CategoriesTable(categoryDao);
         categoriesTable = createTable(catTable);
         categoriesTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
+
+        statisticsTable = createTable(new StatisticsTable(categoryDao));
 
         TransactionsTable transactionsTableModel = new TransactionsTable(transactionDao, catTable);
         transactionsTable = createTable(transactionsTableModel);
