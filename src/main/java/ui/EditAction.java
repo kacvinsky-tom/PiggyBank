@@ -1,6 +1,5 @@
 package ui;
 
-import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import model.TransactionType;
@@ -16,7 +15,6 @@ final class EditAction extends AbstractAction {
     private final JFrame frame;
     private final JTabbedPane pane;
     private final JLabel categoryColorPanel = new JLabel();
-    private TransactionDao transactionDao;
     private JDialog dialog;
     private JTextField nameField, amountField, noteField;
     private JSpinner spinner;
@@ -49,7 +47,7 @@ final class EditAction extends AbstractAction {
     }
 
     private JTextField createTextfield(String label, String content) {
-        dialog.add(new JLabel("Change "+ label + ": "));
+        dialog.add(new JLabel("Change " + label + ": "));
         JTextField textField = new JTextField(content);
         textField.setColumns(20);
         textField.setSize(new Dimension(150, 20));
@@ -133,16 +131,14 @@ final class EditAction extends AbstractAction {
         dialog.setVisible(true);
     }
 
-    private void editTransaction() {
+    private void createTransactionDialog() {
         JTable transactionsTable = getJTable(1);
         var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
-
         JTable categoriesTable = getJTable(2);
         var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
 
         dialog = createDialog("transaction", 250, 330);
         selectedTransaction = transactionsTableModel.getEntity(transactionsTable.getSelectedRow());
-
         nameField = createTextfield("name", selectedTransaction.getName());
         amountField = createTextfield("amount", String.valueOf(selectedTransaction.getAmount()));
         noteField = createTextfield("note", selectedTransaction.getNote());
@@ -151,6 +147,10 @@ final class EditAction extends AbstractAction {
         spinner = createDateSpinner();
 
         setTransactionDialog();
+    }
+
+    private void editTransaction()  {
+        createTransactionDialog();
     }
 
     private void editCategory() {
