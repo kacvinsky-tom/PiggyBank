@@ -29,16 +29,17 @@ public class MainWindow {
     public MainWindow(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
 
-        addAction = new AddAction(pane, frame);
-        deleteAction = new DeleteAction(pane);
-        editAction = new EditAction(pane, frame);
+        addAction = new AddAction(pane, frame, categoryDao, transactionDao);
+        deleteAction = new DeleteAction(pane, categoryDao, transactionDao);
+        editAction = new EditAction(pane, frame, categoryDao, transactionDao);
         toolBar = createToolbar();
 
-        var catTable = new CategoriesTable(categoryDao);
+        var statisticsTableModel = new StatisticsTable(categoryDao);
+        statisticsTable = createTable(statisticsTableModel);
+
+        var catTable = new CategoriesTable(categoryDao, statisticsTableModel);
         categoriesTable = createTable(catTable);
         categoriesTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
-
-        statisticsTable = createTable(new StatisticsTable(categoryDao));
 
         TransactionsTable transactionsTableModel = new TransactionsTable(transactionDao, catTable);
         transactionsTable = createTable(transactionsTableModel);

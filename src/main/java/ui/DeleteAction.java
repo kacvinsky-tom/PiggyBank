@@ -1,5 +1,9 @@
 package ui;
 
+import data.CategoryDao;
+import data.TransactionDao;
+import model.Transaction;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -9,9 +13,13 @@ import java.util.Comparator;
 final class DeleteAction extends AbstractAction {
 
     private final JTabbedPane pane;
+    private final CategoryDao categoryDao;
+    private final TransactionDao transactionDao;
 
-    public DeleteAction(JTabbedPane pane) {
+    public DeleteAction(JTabbedPane pane, CategoryDao categoryDao, TransactionDao transactionDao) {
         super("Delete", Icons.DELETE_ICON);
+        this.categoryDao = categoryDao;
+        this.transactionDao = transactionDao;
         this.pane = pane;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Deletes selected rows");
@@ -44,16 +52,21 @@ final class DeleteAction extends AbstractAction {
                 .map(categoriesTable::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(e -> {transactionsTableModel.changeCategory(e);categoriesTableModel.deleteRow(e);});
+                .forEach(e -> {transactionsTableModel.changeCategoryToDefault(e);categoriesTableModel.deleteRow(e);});
     }
 
     private void deleteTransaction() {
         var transactionsTable =  getJTable(1);
+        var categoriesTable =  getJTable(2);
         var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
+        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
         Arrays.stream(transactionsTable.getSelectedRows())
                 .map(transactionsTable::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(transactionsTableModel::deleteRow);
+                .forEach(e -> {
+                    categoriesTableModel.deleteTransactionFromCategory(transactionsTableModel.getTransaction(e).getCategory(), transactionsTableModel.getTransaction(e));
+                    transactionsTableModel.deleteRow(e);
+                });
     }
 }

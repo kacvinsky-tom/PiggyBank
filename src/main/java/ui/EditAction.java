@@ -1,5 +1,7 @@
 package ui;
 
+import data.CategoryDao;
+import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import model.TransactionType;
@@ -22,11 +24,15 @@ final class EditAction extends AbstractAction {
     private Transaction selectedTransaction;
     private Category selectedCategory;
     private  CategoriesTable categoriesTableModel;
+    private final CategoryDao categoryDao;
+    private final TransactionDao transactionDao;
 
-    public EditAction(JTabbedPane pane, JFrame frame) {
+    public EditAction(JTabbedPane pane, JFrame frame, CategoryDao categoryDao, TransactionDao transactionDao) {
         super("Edit", Icons.EDIT_ICON);
         this.pane = pane;
         this.frame = frame;
+        this.categoryDao = categoryDao;
+        this.transactionDao = transactionDao;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Edits selected row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_E);

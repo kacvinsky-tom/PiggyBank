@@ -1,5 +1,7 @@
 package ui;
 
+import data.CategoryDao;
+import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import model.TransactionType;
@@ -22,11 +24,15 @@ final class AddAction extends AbstractAction {
     private JDialog dialog;
     private JSpinner spinner;
     private CategoriesTable categoriesTableModel;
+    private final CategoryDao categoryDao;
+    private final TransactionDao transactionDao;
 
-    public AddAction(JTabbedPane pane, JFrame frame) {
+    public AddAction(JTabbedPane pane, JFrame frame, CategoryDao categoryDao, TransactionDao transactionDao) {
         super("Add", Icons.ADD_ICON);
         this.frame = frame;
         this.pane = pane;
+        this.categoryDao = categoryDao;
+        this.transactionDao = transactionDao;
         putValue(SHORT_DESCRIPTION, "Adds new row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
