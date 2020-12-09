@@ -84,16 +84,27 @@ public class MainWindow {
         toolBar.add(addAction);
         toolBar.add(deleteAction);
         toolBar.add(editAction);
-        toolBar.addSeparator(new Dimension(0,30));
         toolBar.setFloatable(false);
         toolBar.setVisible(true);
         return toolBar;
+    }
+
+    private void disableFilterSettings(){
+        toolBar.getComponentAtIndex(4).setEnabled(pane.getSelectedIndex() < 2);
+        toolBar.getComponentAtIndex(5).setEnabled(pane.getSelectedIndex() < 2);
+        toolBar.getComponentAtIndex(7).setEnabled(pane.getSelectedIndex() < 2);
+        toolBar.getComponentAtIndex(9).setEnabled(pane.getSelectedIndex() < 2);
+        toolBar.getComponentAtIndex(10).setEnabled(pane.getSelectedIndex() < 2);
+        toolBar.getComponentAtIndex(12).setEnabled(pane.getSelectedIndex() < 2);
+        toolBar.getComponentAtIndex(13).setEnabled(pane.getSelectedIndex() < 2);
+        toolBar.getComponentAtIndex(15).setEnabled(pane.getSelectedIndex() < 2);
     }
 
     private void changeTab(ChangeEvent changeEvent){
         statisticsTable.clearSelection();
         transactionsTable.clearSelection();
         categoriesTable.clearSelection();
+        disableFilterSettings();
     }
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
