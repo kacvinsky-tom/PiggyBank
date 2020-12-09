@@ -1,11 +1,9 @@
 package ui;
 
 import data.CategoryDao;
-import data.TransactionDao;
 import model.Category;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class StatisticsTable extends AbstractEntityTableModel<Category> {
@@ -32,6 +30,7 @@ public class StatisticsTable extends AbstractEntityTableModel<Category> {
 
     public void updateCategories(){
         categories = new ArrayList<>(this.categoryDao.findAll());
+        fireTableDataChanged();
     }
 
     @Override

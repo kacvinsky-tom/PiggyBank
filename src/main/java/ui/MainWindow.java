@@ -29,11 +29,6 @@ public class MainWindow {
     public MainWindow(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
 
-        addAction = new AddAction(pane, frame, categoryDao, transactionDao);
-        deleteAction = new DeleteAction(pane, categoryDao, transactionDao);
-        editAction = new EditAction(pane, frame, categoryDao, transactionDao);
-        toolBar = createToolbar();
-
         var statisticsTableModel = new StatisticsTable(categoryDao);
         statisticsTable = createTable(statisticsTableModel);
 
@@ -44,10 +39,16 @@ public class MainWindow {
         TransactionsTable transactionsTableModel = new TransactionsTable(transactionDao, catTable);
         transactionsTable = createTable(transactionsTableModel);
 
+        frame.add(createTabbedPane(), BorderLayout.CENTER);
+
+        addAction = new AddAction(pane, frame);
+        deleteAction = new DeleteAction(pane);
+        editAction = new EditAction(pane, frame);
+        toolBar = createToolbar();
+
         new Filter(toolBar, transactionsTable, categoriesTable, transactionsTableModel);
 
         frame.add(toolBar, BorderLayout.NORTH);
-        frame.add(createTabbedPane(), BorderLayout.CENTER);
         frame.pack();
         frame.setLocationRelativeTo(null);
     }

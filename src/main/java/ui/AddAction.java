@@ -24,15 +24,11 @@ final class AddAction extends AbstractAction {
     private JDialog dialog;
     private JSpinner spinner;
     private CategoriesTable categoriesTableModel;
-    private final CategoryDao categoryDao;
-    private final TransactionDao transactionDao;
 
-    public AddAction(JTabbedPane pane, JFrame frame, CategoryDao categoryDao, TransactionDao transactionDao) {
+    public AddAction(JTabbedPane pane, JFrame frame) {
         super("Add", Icons.ADD_ICON);
         this.frame = frame;
         this.pane = pane;
-        this.categoryDao = categoryDao;
-        this.transactionDao = transactionDao;
         putValue(SHORT_DESCRIPTION, "Adds new row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
@@ -96,8 +92,9 @@ final class AddAction extends AbstractAction {
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        transactionTableModel.addTransaction(new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type));
-        category.setExpenses(category.getExpenses() + amount);
+        Transaction newTransaction = new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type);
+        transactionTableModel.addTransaction(newTransaction);
+        categoriesTableModel.updateCategory(category, newTransaction, true);
         dialog.dispose();
     }
 
@@ -204,7 +201,6 @@ final class AddAction extends AbstractAction {
         categoryDialog.setLocationRelativeTo(frame);
         categoryDialog.setResizable(false);
         categoryDialog.setVisible(true);
-
     }
 
     private void colorChooser(ActionEvent e) {

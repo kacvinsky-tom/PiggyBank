@@ -1,7 +1,5 @@
 package ui;
 
-import data.CategoryDao;
-import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import model.TransactionType;
@@ -23,20 +21,19 @@ final class EditAction extends AbstractAction {
     private JComboBox<Object> categoryBox, transactionType;
     private Transaction selectedTransaction;
     private Category selectedCategory;
-    private  CategoriesTable categoriesTableModel;
-    private final CategoryDao categoryDao;
-    private final TransactionDao transactionDao;
+    private final  CategoriesTable categoriesTableModel;
+    private final JTable categoriesTable;
 
-    public EditAction(JTabbedPane pane, JFrame frame, CategoryDao categoryDao, TransactionDao transactionDao) {
+    public EditAction(JTabbedPane pane, JFrame frame) {
         super("Edit", Icons.EDIT_ICON);
         this.pane = pane;
         this.frame = frame;
-        this.categoryDao = categoryDao;
-        this.transactionDao = transactionDao;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Edits selected row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_E);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl E"));
+        this.categoriesTable = getJTable(2);
+        this.categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
     }
 
     private JDialog createDialog(String string, int width, int height) {
@@ -100,7 +97,7 @@ final class EditAction extends AbstractAction {
     }
 
     private void updateTransaction(String name, double amount, Category category, Date date, String note, TransactionType type) {
-        selectedTransaction.getCategory().setExpenses(selectedTransaction.getCategory().getExpenses() - selectedTransaction.getAmount());
+        categoriesTableModel.updateCategory(selectedTransaction.getCategory(), selectedTransaction, false);
 
         selectedTransaction.setName(name);
         selectedTransaction.setAmount(amount);
@@ -109,12 +106,12 @@ final class EditAction extends AbstractAction {
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
 
+        categoriesTableModel.updateCategory(selectedTransaction.getCategory(), selectedTransaction, true);
+
         var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
         transactionTableModel.updateEntity(selectedTransaction);
         int rowIndex = transactionTableModel.getTransactions().indexOf(selectedTransaction);
         transactionTableModel.fireTableRowsUpdated(rowIndex, rowIndex);
-
-        category.setExpenses(category.getExpenses() + amount);
     }
 
     private void setTransactionDialog() {
@@ -192,8 +189,6 @@ final class EditAction extends AbstractAction {
     }
 
     private void createCategoryDialog(){
-        JTable categoriesTable = getJTable(2);
-        categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
         selectedCategory = categoriesTableModel.getEntity(categoriesTable.getSelectedRow());
 
         prepareColorPanel(categoryColorPanel);
@@ -229,8 +224,6 @@ final class EditAction extends AbstractAction {
             } else if (checkCategoryExistence(newCategoryName.getText(), categoryColorPanel.getBackground())){
                 setCategory(newCategoryName.getText(), categoryColorPanel.getBackground());
                 categoriesTableModel.updateEntity(selectedCategory);
-                int rowIndex = categoriesTableModel.getCategories().indexOf(selectedCategory);
-                categoriesTableModel.fireTableRowsUpdated(rowIndex, rowIndex);
                 categoryDialog.dispose();
             }
         });

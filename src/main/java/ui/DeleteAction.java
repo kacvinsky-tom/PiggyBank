@@ -1,9 +1,5 @@
 package ui;
 
-import data.CategoryDao;
-import data.TransactionDao;
-import model.Transaction;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -13,13 +9,9 @@ import java.util.Comparator;
 final class DeleteAction extends AbstractAction {
 
     private final JTabbedPane pane;
-    private final CategoryDao categoryDao;
-    private final TransactionDao transactionDao;
 
-    public DeleteAction(JTabbedPane pane, CategoryDao categoryDao, TransactionDao transactionDao) {
+    public DeleteAction(JTabbedPane pane) {
         super("Delete", Icons.DELETE_ICON);
-        this.categoryDao = categoryDao;
-        this.transactionDao = transactionDao;
         this.pane = pane;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Deletes selected rows");
@@ -65,7 +57,7 @@ final class DeleteAction extends AbstractAction {
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .forEach(e -> {
-                    categoriesTableModel.deleteTransactionFromCategory(transactionsTableModel.getTransaction(e).getCategory(), transactionsTableModel.getTransaction(e));
+                    categoriesTableModel.updateCategory(transactionsTableModel.getTransaction(e).getCategory(), transactionsTableModel.getTransaction(e), false);
                     transactionsTableModel.deleteRow(e);
                 });
     }

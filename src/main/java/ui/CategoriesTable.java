@@ -46,7 +46,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         updateSpending();
         for (Category category : categories){
             updateCategoryPercentages(category);
-            updateEntity(category);
+            categoryDao.update(category);
         }
     }
 
@@ -90,6 +90,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         int newRowIndex = categories.size();
         categoryDao.create(category);
         categories.add(category);
+        statisticsTable.updateCategories();
         fireTableRowsInserted(newRowIndex, newRowIndex);
     }
 
@@ -97,14 +98,22 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
     protected void updateEntity(Category category) {
         categoryDao.update(category);
         updateCategories();
+        fireTableDataChanged();
+        statisticsTable.updateCategories();
     }
 
-    public void deleteTransactionFromCategory(Category category, Transaction transaction){
-        category.setTransactionsNumber(category.getTransactionsNumber() - 1);
-        if (transaction.getType() == TransactionType.INCOME){
-            category.setIncome(category.getIncome() - transaction.getAmount());
+    public void updateCategory(Category category, Transaction transaction, boolean add){
+        int sign;
+        if (add){
+            sign = 1;
         } else {
-            category.setExpenses(category.getExpenses() - transaction.getAmount());
+            sign = -1;
+        }
+        category.setTransactionsNumber(category.getTransactionsNumber() + sign);
+        if (transaction.getType() == TransactionType.INCOME){
+            category.setIncome(category.getIncome() + transaction.getAmount() * sign);
+        } else {
+            category.setExpenses(category.getExpenses() + transaction.getAmount() * sign);
         }
         category.setSum(category.getIncome() - category.getExpenses());
         updateCategories();
@@ -114,6 +123,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         if(!categories.get(rowIndex).getName().equals("Others")){
             categoryDao.delete(categories.get(rowIndex));
             categories.remove(rowIndex);
+            statisticsTable.updateCategories();
             fireTableRowsDeleted(rowIndex, rowIndex);
         } else {
             JOptionPane.showMessageDialog(new JFrame(), "You can't delete default category 'Others'!", "Error", JOptionPane.ERROR_MESSAGE);
