@@ -78,22 +78,18 @@ final class EditAction extends AbstractAction {
     private void editButtonActionPerformedTransaction(ActionEvent actionEvent) {
         var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
 
-        String name = nameField.getText();
-        String note = noteField.getText();
         double amount;
         try {
             amount = Double.parseDouble(amountField.getText());
         } catch (NumberFormatException ex) {
-            dialog.dispose();
             createWrongInputException();
-            editTransaction();
             return;
         }
         Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        updateTransaction(name, amount, category, date, note, type);
+        updateTransaction(nameField.getText(), amount, category, date, noteField.getText(), type);
         dialog.dispose();
     }
 
@@ -248,7 +244,7 @@ final class EditAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         int index = pane.getSelectedIndex();
-        if (index <= 1) {
+        if (index == 1) {
             editTransaction();
         } else if (index == 2) {
             editCategory();

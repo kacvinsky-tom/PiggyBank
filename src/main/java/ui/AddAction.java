@@ -79,27 +79,23 @@ final class AddAction extends AbstractAction {
         var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
         var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
 
-        String name = nameField.getText();
-        String note = noteField.getText();
         double amount;
         try {
             amount = Double.parseDouble(amountField.getText());
         } catch (NumberFormatException ex){
-            dialog.dispose();
             createWrongInputException();
-            addTransaction();
             return;
         }
         Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        transactionTableModel.addTransaction(new Transaction(name, amount, category, date, note, type));
+        transactionTableModel.addTransaction(new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type));
         category.setExpenses(category.getExpenses() + amount);
         dialog.dispose();
     }
 
-    private List<Category> setDefaultCategory(List<Category> list){
+    private List<Category> setDefaultCategoryBox(List<Category> list){
         List<Category> newList = new ArrayList<>();
         for (Category c : list){
             if (c.getName().equals("Others")){
@@ -119,7 +115,7 @@ final class AddAction extends AbstractAction {
         nameField = createTextfield("Name");
         amountField = createTextfield("Amount");
         noteField = createTextfield("Note");
-        categoryBox = new JComboBox<>(setDefaultCategory(categoriesTableModel.getCategories()).toArray());
+        categoryBox = new JComboBox<>(setDefaultCategoryBox(categoriesTableModel.getCategories()).toArray());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = createDateSpinner();
 

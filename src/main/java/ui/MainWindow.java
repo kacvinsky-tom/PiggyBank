@@ -3,7 +3,6 @@ package ui;
 import data.CategoryDao;
 import data.TransactionDao;
 import model.CategoryCellRenderer;
-import model.StatisticsCellRenderer;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -92,9 +91,6 @@ public class MainWindow {
     }
 
     private void changeTab(ChangeEvent changeEvent){
-        var sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
-        int index = sourceTabbedPane.getSelectedIndex();
-
         statisticsTable.clearSelection();
         transactionsTable.clearSelection();
         categoriesTable.clearSelection();
@@ -102,7 +98,7 @@ public class MainWindow {
 
     private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
         var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
-        deleteAction.setEnabled(selectionModel.getSelectedItemsCount() != 0);
-        editAction.setEnabled(selectionModel.getSelectedItemsCount() == 1);
+        deleteAction.setEnabled(selectionModel.getSelectedItemsCount() != 0 && pane.getSelectedIndex() > 0);
+        editAction.setEnabled(selectionModel.getSelectedItemsCount() == 1 && pane.getSelectedIndex() > 0);
     }
 }

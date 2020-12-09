@@ -28,7 +28,7 @@ final class DeleteAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         int index = pane.getSelectedIndex();
-        if (index <= 1) {
+        if (index == 1) {
             deleteTransaction();
         } else if (index == 2) {
             deleteCategory();
