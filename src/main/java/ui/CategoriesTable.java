@@ -48,11 +48,12 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
             updateCategoryPercentages(category);
             categoryDao.update(category);
         }
+        statisticsTable.updateCategories();
     }
 
     private void updateCategoryPercentages(Category category){
         category.setPercentageInc(category.getIncome() * 100 / incomeOverall);
-        category.setExpenses(category.getExpenses() * 100 / expensesOverall);
+        category.setPercentageSpend(category.getExpenses() * 100 / expensesOverall);
     }
 
     private void addDefaultCategory(){

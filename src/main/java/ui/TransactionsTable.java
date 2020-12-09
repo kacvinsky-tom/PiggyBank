@@ -12,7 +12,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
 
     private static final List<Column<?, Transaction>> COLUMNS = List.of(
             Column.readOnly("Name", String.class, Transaction::getName),
-            Column.readOnly("Amount", Double.class, Transaction::getAmount),
+            Column.readOnly("Amount", Double.class, Transaction::getAmountToPrint),
             Column.readOnly("Category", Category.class, Transaction::getCategory),
             Column.readOnly("Created", Date.class, Transaction::getDate),
             Column.readOnly("Note", String.class, Transaction::getNote)
