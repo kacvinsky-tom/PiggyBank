@@ -1,5 +1,7 @@
 package ui;
 
+import data.CategoryDao;
+import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import model.TransactionType;
@@ -90,8 +92,9 @@ final class AddAction extends AbstractAction {
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        transactionTableModel.addTransaction(new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type));
-        category.setExpenses(category.getExpenses() + amount);
+        Transaction newTransaction = new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type);
+        transactionTableModel.addTransaction(newTransaction);
+        categoriesTableModel.updateCategory(category, newTransaction, true);
         dialog.dispose();
     }
 
@@ -198,7 +201,6 @@ final class AddAction extends AbstractAction {
         categoryDialog.setLocationRelativeTo(frame);
         categoryDialog.setResizable(false);
         categoryDialog.setVisible(true);
-
     }
 
     private void colorChooser(ActionEvent e) {

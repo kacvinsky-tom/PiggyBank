@@ -44,16 +44,21 @@ final class DeleteAction extends AbstractAction {
                 .map(categoriesTable::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(e -> {transactionsTableModel.changeCategory(e);categoriesTableModel.deleteRow(e);});
+                .forEach(e -> {transactionsTableModel.changeCategoryToDefault(e);categoriesTableModel.deleteRow(e);});
     }
 
     private void deleteTransaction() {
         var transactionsTable =  getJTable(1);
+        var categoriesTable =  getJTable(2);
         var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
+        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
         Arrays.stream(transactionsTable.getSelectedRows())
                 .map(transactionsTable::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(transactionsTableModel::deleteRow);
+                .forEach(e -> {
+                    categoriesTableModel.updateCategory(transactionsTableModel.getTransaction(e).getCategory(), transactionsTableModel.getTransaction(e), false);
+                    transactionsTableModel.deleteRow(e);
+                });
     }
 }

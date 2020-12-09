@@ -9,11 +9,11 @@ public class Category {
     private String name;
     private Color color;
     private int transactionsNumber;
-    private double expenses;
-    private double income;
-    private double percentageInc;
-    private double percentageSpend;
-    private double sum;
+    private double expenses = 0;
+    private double income = 0;
+    private double percentageInc = 0;
+    private double percentageSpend = 0;
+    private double sum = 0;
 
 
     public Category(String name, Color color){

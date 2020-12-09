@@ -64,7 +64,7 @@ public class CategoryDao {
 
     public void update(Category category){
         if (category.getId() == null){
-            throw new IllegalArgumentException("Transaction has null ID");
+            throw new IllegalArgumentException("Category has null ID");
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(

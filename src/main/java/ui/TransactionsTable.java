@@ -12,7 +12,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
 
     private static final List<Column<?, Transaction>> COLUMNS = List.of(
             Column.readOnly("Name", String.class, Transaction::getName),
-            Column.readOnly("Amount", Double.class, Transaction::getAmount),
+            Column.readOnly("Amount", Double.class, Transaction::getAmountToPrint),
             Column.readOnly("Category", Category.class, Transaction::getCategory),
             Column.readOnly("Created", Date.class, Transaction::getDate),
             Column.readOnly("Note", String.class, Transaction::getNote)
@@ -33,6 +33,10 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         return transactions;
     }
 
+    public Transaction getTransaction(int index){
+        return transactions.get(index);
+    }
+
     @Override
     public int getRowCount() {
         return transactions.size();
@@ -44,13 +48,13 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
-    public void changeCategory(int rowIndex){
+    public void changeCategoryToDefault(int rowIndex){
         var category = categoriesTable.getCategories().get(rowIndex);
         if (!category.getName().equals("Others")){
             for (var transaction : transactions) {
                 if(transaction.getCategory().getName().equals(category.getName())){
                     transaction.setCategory(categoriesTable.getOthers());
-//                   transactionDao.update(transaction); UNCOMMENT WHEN TRANSACTIONS UPDATE IN DATABASE WILL WORK
+                    transactionDao.update(transaction);
                 }
             }
         }

@@ -1,7 +1,6 @@
 package ui;
 
 import data.CategoryDao;
-import data.TransactionDao;
 import model.Category;
 
 import java.util.ArrayList;
@@ -20,11 +19,18 @@ public class StatisticsTable extends AbstractEntityTableModel<Category> {
             Column.readOnly("Transactions", Integer.class, Category::getTransactionsNumber)
     );
 
-    private final List<Category> categories;
+    private List<Category> categories;
+    private final CategoryDao categoryDao;
 
     StatisticsTable(CategoryDao categoryDao){
         super(COLUMNS);
-        this.categories = new ArrayList<>(categoryDao.findAll());
+        this.categoryDao = categoryDao;
+        updateCategories();
+    }
+
+    public void updateCategories(){
+        categories = new ArrayList<>(this.categoryDao.findAll());
+        fireTableDataChanged();
     }
 
     @Override

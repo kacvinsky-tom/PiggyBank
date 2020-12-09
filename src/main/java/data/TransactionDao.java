@@ -103,17 +103,13 @@ public class TransactionDao {
                 while (rs.next()) {
                     TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
                     double amount = rs.getDouble("AMOUNT");
-                    if (type == TransactionType.SPENDING) {
-                        amount = -amount;
-                    }
-
                     Transaction transaction = new Transaction(
                             rs.getString("NAME"),
                             amount,
                             new Category(rs.getString("CATEGORY"), Color.BLACK),
                             new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
                             rs.getString("NOTE"),
-                            TransactionType.valueOf(rs.getString("TYPE")));
+                            type);
                     transaction.setId(rs.getLong("ID"));
                     transactions.add(transaction);
                 }
@@ -124,6 +120,7 @@ public class TransactionDao {
         }
     }
 
+    /*
     public int numOfTransInCateg(Category category) {
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement("SELECT ID, AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\" FROM TRANSACTIONS WHERE \"CATEGORY\" = ?")) {
@@ -153,6 +150,7 @@ public class TransactionDao {
             throw new DataAccessException("Failed to load all transactions", ex);
         }
     }
+     */
 
     private void initTable() {
         if (!tableExits("APP", "TRANSACTIONS")) {

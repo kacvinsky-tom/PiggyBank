@@ -1,5 +1,6 @@
 package model;
 
+import javax.swing.table.TableRowSorter;
 import java.util.Date;
 import java.util.Objects;
 
@@ -34,12 +35,16 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        if (this.type == TransactionType.SPENDING) {
-            this.amount = -amount;
+    public double getAmountToPrint(){
+        if (type == TransactionType.INCOME){
+            return amount;
         } else {
-            this.amount = amount;
+            return -amount;
         }
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
     }
 
     public String getName() {
