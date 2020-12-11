@@ -68,8 +68,8 @@ final class EditAction extends AbstractAction {
         return spinner;
     }
 
-    private void createWrongInputException() {
-        JOptionPane.showMessageDialog(new JFrame(), "Enter valid number into amount!", "Error", JOptionPane.ERROR_MESSAGE);
+    private void createErrorDialog(String message){
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private JButton createButton() {
@@ -85,7 +85,7 @@ final class EditAction extends AbstractAction {
         try {
             amount = Double.parseDouble(amountField.getText());
         } catch (NumberFormatException ex) {
-            createWrongInputException();
+            createErrorDialog("Enter valid number into amount!");
             return;
         }
         Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
@@ -173,10 +173,10 @@ final class EditAction extends AbstractAction {
     private boolean checkCategoryExistence(String name, Color color){
         for (Category c : categoriesTableModel.getCategories()){
             if (c.getName().equals(name) && !c.equals(selectedCategory)){
-                JOptionPane.showMessageDialog(new JFrame(), "Category " + name + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                createErrorDialog("Category " + name + " already exists!");
                 return false;
             } else if (c.getColor().equals(color) && !c.equals(selectedCategory)){
-                JOptionPane.showMessageDialog(new JFrame(), "Chosen color is already taken by another category!", "Error", JOptionPane.ERROR_MESSAGE);
+                createErrorDialog("Chosen color is already taken by another category!");
                 return false;
             }
         }
@@ -219,7 +219,7 @@ final class EditAction extends AbstractAction {
         categoryPanel.add(confirmButton);
         confirmButton.addActionListener(e -> {
             if (newCategoryName.getText().equals("")){
-                JOptionPane.showMessageDialog(new JFrame(), "Enter name of the category!", "Error", JOptionPane.ERROR_MESSAGE);
+                createErrorDialog("Enter name of the category!");
 
             } else if (checkCategoryExistence(newCategoryName.getText(), categoryColorPanel.getBackground())){
                 setCategory(newCategoryName.getText(), categoryColorPanel.getBackground());

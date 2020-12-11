@@ -1,7 +1,5 @@
 package ui;
 
-import data.CategoryDao;
-import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import model.TransactionType;
@@ -58,8 +56,8 @@ final class AddAction extends AbstractAction {
         return dialog;
     }
 
-    private void createWrongInputException(){
-        JOptionPane.showMessageDialog(new JFrame(), "Enter valid number into amount!", "Error", JOptionPane.ERROR_MESSAGE);
+    private void createErrorDialog(String message){
+        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private JTextField createTextfield(String string) {
@@ -85,7 +83,7 @@ final class AddAction extends AbstractAction {
         try {
             amount = Math.abs(Double.parseDouble(amountField.getText()));
         } catch (NumberFormatException ex){
-            createWrongInputException();
+            createErrorDialog("Enter valid number into amount!");
             return;
         }
         Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
@@ -150,10 +148,10 @@ final class AddAction extends AbstractAction {
     private boolean checkCategoryExistence(Category newCategory){
         for (Category c : categoriesTableModel.getCategories()){
             if (c.getName().equals(newCategory.getName())){
-                JOptionPane.showMessageDialog(new JFrame(), "Category " + newCategory.getName() + " already exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                createErrorDialog("Category " + newCategory.getName() + " already exists!");
                 return false;
             } else if (c.getColor().equals(newCategory.getColor())){
-                JOptionPane.showMessageDialog(new JFrame(), "Chosen color is already taken by another category!", "Error", JOptionPane.ERROR_MESSAGE);
+                createErrorDialog("Chosen color is already taken by another category!");
                 return false;
             }
         }
@@ -189,7 +187,7 @@ final class AddAction extends AbstractAction {
         confirmButton.addActionListener(e -> {
             String name = newCategoryName.getText();
             if (name.equals("")){
-                JOptionPane.showMessageDialog(new JFrame(), "Enter name of the category!", "Error", JOptionPane.ERROR_MESSAGE);
+                createErrorDialog("Enter name of the category!");
                 return;
             }
             Category newCategory = new Category(name, categoryColorPanel.getBackground());
