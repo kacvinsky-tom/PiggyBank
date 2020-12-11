@@ -17,7 +17,6 @@ public class Main {
         TransactionDao transactionDao = new TransactionDao(createDataSource());
         initNimbusLookAndFeel();
         EventQueue.invokeLater(() -> new MainWindow(categoryDao, transactionDao).show());
-
     }
 
     private static DataSource createDataSource() {

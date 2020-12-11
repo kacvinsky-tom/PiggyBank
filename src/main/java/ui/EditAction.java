@@ -51,7 +51,7 @@ final class EditAction extends AbstractAction {
         return (JTable) viewport.getView();
     }
 
-    private JTextField createTextfield(String label, String content) {
+    private JTextField createTextField(String label, String content) {
         dialog.add(new JLabel("Change " + label + ": "));
         JTextField textField = new JTextField(content);
         textField.setColumns(20);
@@ -100,7 +100,7 @@ final class EditAction extends AbstractAction {
         categoriesTableModel.updateCategory(selectedTransaction.getCategory(), selectedTransaction, false);
 
         selectedTransaction.setName(name);
-        selectedTransaction.setAmount(amount);
+        selectedTransaction.setAmount(Math.abs(amount));
         selectedTransaction.setCategory(category);
         selectedTransaction.setDate(date);
         selectedTransaction.setNote(note);
@@ -144,9 +144,9 @@ final class EditAction extends AbstractAction {
 
         dialog = createDialog("transaction", 250, 330);
         selectedTransaction = transactionsTableModel.getEntity(transactionsTable.getSelectedRow());
-        nameField = createTextfield("name", selectedTransaction.getName());
-        amountField = createTextfield("amount", String.valueOf(selectedTransaction.getAmount()));
-        noteField = createTextfield("note", selectedTransaction.getNote());
+        nameField = createTextField("name", selectedTransaction.getName());
+        amountField = createTextField("amount", String.valueOf(selectedTransaction.getAmount()));
+        noteField = createTextField("note", selectedTransaction.getNote());
         categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = createDateSpinner();

@@ -83,7 +83,7 @@ final class AddAction extends AbstractAction {
 
         double amount;
         try {
-            amount = Double.parseDouble(amountField.getText());
+            amount = Math.abs(Double.parseDouble(amountField.getText()));
         } catch (NumberFormatException ex){
             createWrongInputException();
             return;
