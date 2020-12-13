@@ -3,6 +3,7 @@ package ui;
 import data.CategoryDao;
 import model.CategoryStatistic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic> {
@@ -17,10 +18,11 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
             Column.readOnly("Transactions", Integer.class, CategoryStatistic::getTransactionsNumber)
     );
 
-    private List<CategoryStatistic> statistics;
+    private final List<CategoryStatistic> statistics;
 
-    StatisticsTable(CategoryDao categoryDao){
+    StatisticsTable(){
         super(COLUMNS);
+        statistics = new ArrayList<>();
     }
 
     @Override

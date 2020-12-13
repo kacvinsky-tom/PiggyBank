@@ -29,7 +29,7 @@ public class MainFrame {
     public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
 
-        var statisticsTableModel = new StatisticsTable(categoryDao);
+        var statisticsTableModel = new StatisticsTable();
         statisticsTable = createTable(statisticsTableModel);
 
         var catTable = new CategoriesTable(categoryDao, statisticsTableModel);

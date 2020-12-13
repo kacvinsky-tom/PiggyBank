@@ -92,7 +92,6 @@ final class AddAction extends AbstractAction {
 
         Transaction newTransaction = new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type);
         transactionTableModel.addTransaction(newTransaction);
-        categoriesTableModel.updateCategory(category, newTransaction, true);
         dialog.dispose();
     }
 
