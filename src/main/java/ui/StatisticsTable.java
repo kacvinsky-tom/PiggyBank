@@ -1,45 +1,35 @@
 package ui;
 
 import data.CategoryDao;
-import model.Category;
+import model.CategoryStatistic;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class StatisticsTable extends AbstractEntityTableModel<Category> {
+public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic> {
 
-
-    private static final List<Column<?, Category>> COLUMNS = List.of(
-            Column.readOnly("Category", String.class, Category::getName),
-            Column.readOnly("Sum", Double.class, Category::getSum),
-            Column.readOnly("Income", Double.class, Category::getIncome),
-            Column.readOnly("Expenses", Double.class, Category::getExpenses),
-            Column.readOnly("% of income", Double.class, Category::getPercentageInc),
-            Column.readOnly("% of spending", Double.class, Category::getPercentageSpend),
-            Column.readOnly("Transactions", Integer.class, Category::getTransactionsNumber)
+    private static final List<Column<?, CategoryStatistic>> COLUMNS = List.of(
+            Column.readOnly("Category", String.class, CategoryStatistic::getCategoryName),
+            Column.readOnly("Sum", Double.class, CategoryStatistic::getSum),
+            Column.readOnly("Income", Double.class, CategoryStatistic::getIncome),
+            Column.readOnly("Expenses", Double.class, CategoryStatistic::getExpenses),
+            Column.readOnly("% of income", Double.class, CategoryStatistic::getPercentageInc),
+            Column.readOnly("% of spending", Double.class, CategoryStatistic::getPercentageSpend),
+            Column.readOnly("Transactions", Integer.class, CategoryStatistic::getTransactionsNumber)
     );
 
-    private List<Category> categories;
-    private final CategoryDao categoryDao;
+    private List<CategoryStatistic> statistics;
 
     StatisticsTable(CategoryDao categoryDao){
         super(COLUMNS);
-        this.categoryDao = categoryDao;
-        updateCategories();
-    }
-
-    public void updateCategories(){
-        categories = new ArrayList<>(this.categoryDao.findAll());
-        fireTableDataChanged();
     }
 
     @Override
     public int getRowCount() {
-        return categories.size();
+        return statistics.size();
     }
 
     @Override
-    protected Category getEntity(int rowIndex) {
-        return categories.get(rowIndex);
+    protected CategoryStatistic getEntity(int rowIndex) {
+        return statistics.get(rowIndex);
     }
 }

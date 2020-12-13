@@ -15,11 +15,11 @@ final class Icons {
     }
 
     private static ImageIcon createIcon(String name) {
-        return new ImageIcon(MainWindow.class.getResource(name));
+        return new ImageIcon(MainFrame.class.getResource(name));
     }
 
     private static Image createImage(String name){
-        return new ImageIcon(MainWindow.class.getResource(name)).getImage();
+        return new ImageIcon(MainFrame.class.getResource(name)).getImage();
     }
 
 
