@@ -1,6 +1,5 @@
 package ui;
 
-import data.CategoryDao;
 import model.CategoryStatistic;
 
 import java.util.ArrayList;
