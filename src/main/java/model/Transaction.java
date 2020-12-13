@@ -34,14 +34,6 @@ public class Transaction {
         return amount;
     }
 
-    public double getAmountToPrint(){
-        if (type == TransactionType.INCOME){
-            return amount;
-        } else {
-            return -amount;
-        }
-    }
-
     public void setAmount(double amount) {
         this.amount = amount;
     }

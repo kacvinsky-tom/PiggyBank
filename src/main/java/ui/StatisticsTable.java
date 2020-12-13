@@ -12,8 +12,8 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
             Column.readOnly("Sum", Double.class, CategoryStatistic::getSum),
             Column.readOnly("Income", Double.class, CategoryStatistic::getIncome),
             Column.readOnly("Expenses", Double.class, CategoryStatistic::getExpenses),
-            Column.readOnly("% of income", Double.class, CategoryStatistic::getPercentageInc),
-            Column.readOnly("% of spending", Double.class, CategoryStatistic::getPercentageSpend),
+            Column.readOnly("% of total income", Double.class, CategoryStatistic::getPercentageInc),
+            Column.readOnly("% of total spending", Double.class, CategoryStatistic::getPercentageSpend),
             Column.readOnly("Transactions", Integer.class, CategoryStatistic::getTransactionsNumber)
     );
 
