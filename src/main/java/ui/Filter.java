@@ -56,6 +56,7 @@ public class Filter {
         comboBox = new JComboBox(ctb.getCategories().toArray());
         comboBox.insertItemAt(new Category("All", null), 0);
         comboBox.setSelectedIndex(0);
+        comboBox.firePropertyChange();
         return comboBox;
     }
 
