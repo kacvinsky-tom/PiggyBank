@@ -56,9 +56,6 @@ final class DeleteAction extends AbstractAction {
                 .map(transactionsTable::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(e -> {
-                    categoriesTableModel.updateCategory(transactionsTableModel.getTransaction(e).getCategory(), transactionsTableModel.getTransaction(e), false);
-                    transactionsTableModel.deleteRow(e);
-                });
+                .forEach(transactionsTableModel::deleteRow);
     }
 }

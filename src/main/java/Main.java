@@ -1,7 +1,7 @@
 
 import data.CategoryDao;
 import data.TransactionDao;
-import ui.MainWindow;
+import ui.MainFrame;
 
 import javax.sql.DataSource;
 import javax.swing.UIManager;
@@ -16,7 +16,7 @@ public class Main {
         CategoryDao categoryDao = new CategoryDao(createDataSource());
         TransactionDao transactionDao = new TransactionDao(createDataSource());
         initNimbusLookAndFeel();
-        EventQueue.invokeLater(() -> new MainWindow(categoryDao, transactionDao).show());
+        EventQueue.invokeLater(() -> new MainFrame(categoryDao, transactionDao).show());
     }
 
     private static DataSource createDataSource() {

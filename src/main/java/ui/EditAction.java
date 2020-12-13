@@ -97,16 +97,12 @@ final class EditAction extends AbstractAction {
     }
 
     private void updateTransaction(String name, double amount, Category category, Date date, String note, TransactionType type) {
-        categoriesTableModel.updateCategory(selectedTransaction.getCategory(), selectedTransaction, false);
-
         selectedTransaction.setName(name);
         selectedTransaction.setAmount(Math.abs(amount));
         selectedTransaction.setCategory(category);
         selectedTransaction.setDate(date);
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
-
-        categoriesTableModel.updateCategory(selectedTransaction.getCategory(), selectedTransaction, true);
 
         var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
         transactionTableModel.updateEntity(selectedTransaction);

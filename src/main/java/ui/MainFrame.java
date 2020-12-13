@@ -11,7 +11,7 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 
 
-public class MainWindow {
+public class MainFrame {
 
     private final JFrame frame;
 
@@ -26,10 +26,10 @@ public class MainWindow {
     private final Action deleteAction;
     private final Action editAction;
 
-    public MainWindow(CategoryDao categoryDao, TransactionDao transactionDao) {
+    public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
 
-        var statisticsTableModel = new StatisticsTable(categoryDao);
+        var statisticsTableModel = new StatisticsTable();
         statisticsTable = createTable(statisticsTableModel);
 
         var catTable = new CategoriesTable(categoryDao, statisticsTableModel);
