@@ -25,6 +25,7 @@ public class MainFrame {
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
+    private JTable p;
 
     public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
@@ -38,6 +39,9 @@ public class MainFrame {
 
         TransactionsTable transactionsTableModel = new TransactionsTable(transactionDao, catTable);
         transactionsTable = createTable(transactionsTableModel);
+
+        var i = new StatisticsBalanceTable();
+        p = createTable(i);
 
         frame.add(createTabbedPane(), BorderLayout.CENTER);
 
@@ -66,7 +70,14 @@ public class MainFrame {
     }
 
     private JTabbedPane createTabbedPane() {
-        pane.add("Statistics", new JScrollPane(statisticsTable));
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        panel.add(statisticsTable);
+        p.setTableHeader(null);
+        panel.add(p);
+
+
+        pane.add("Statistics", new JScrollPane(panel));
         pane.add("Transactions", new JScrollPane(transactionsTable));
         pane.add("Categories", new JScrollPane(categoriesTable));
         pane.addChangeListener(this::changeTab);

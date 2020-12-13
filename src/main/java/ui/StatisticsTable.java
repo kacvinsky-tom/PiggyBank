@@ -1,7 +1,9 @@
 package ui;
 
+import model.Category;
 import model.CategoryStatistic;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,13 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
 
     StatisticsTable(){
         super(COLUMNS);
+        Category c11 = new Category("Food", Color.BLUE);
+        CategoryStatistic c1 = new CategoryStatistic(c11);
+        Category c22 = new Category("Medicine", Color.BLACK);
+        CategoryStatistic c2 = new CategoryStatistic(c22);
         statistics = new ArrayList<>();
+        statistics.add(c1);
+        statistics.add(c2);
     }
 
     @Override
