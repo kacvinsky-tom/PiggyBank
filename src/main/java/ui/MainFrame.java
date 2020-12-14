@@ -7,6 +7,7 @@ import model.CategoryCellRenderer;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
@@ -70,10 +71,19 @@ public class MainFrame {
     }
 
     private JTabbedPane createTabbedPane() {
-        JPanel panel = new JPanel(new GridBagLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
+        panel.add(statisticsTable.getTableHeader());
         panel.add(statisticsTable);
         p.setTableHeader(null);
+        p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        p.setFont(p.getFont().deriveFont(Font.BOLD));
+
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        p.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+
         panel.add(p);
 
 
