@@ -7,6 +7,7 @@ import model.CategoryCellRenderer;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
@@ -25,6 +26,7 @@ public class MainFrame {
     private final Action addAction;
     private final Action deleteAction;
     private final Action editAction;
+    private JTable p;
 
     public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
         frame = createFrame();
@@ -38,6 +40,9 @@ public class MainFrame {
 
         TransactionsTable transactionsTableModel = new TransactionsTable(transactionDao, catTable);
         transactionsTable = createTable(transactionsTableModel);
+
+        var i = new StatisticsBalanceTable();
+        p = createTable(i);
 
         frame.add(createTabbedPane(), BorderLayout.CENTER);
 
@@ -66,7 +71,23 @@ public class MainFrame {
     }
 
     private JTabbedPane createTabbedPane() {
-        pane.add("Statistics", new JScrollPane(statisticsTable));
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        panel.add(statisticsTable.getTableHeader());
+        panel.add(statisticsTable);
+        p.setTableHeader(null);
+        p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        p.setFont(p.getFont().deriveFont(Font.BOLD));
+
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
+        p.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+
+        panel.add(p);
+
+
+        pane.add("Statistics", new JScrollPane(panel));
         pane.add("Transactions", new JScrollPane(transactionsTable));
         pane.add("Categories", new JScrollPane(categoriesTable));
         pane.addChangeListener(this::changeTab);
