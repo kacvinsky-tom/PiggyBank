@@ -30,14 +30,14 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\") VALUES (?, ?, ?, ?, ?, ?)",
+                     "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, CATEGORY_ID) VALUES (?, ?, ?, ?, ?, ?)",
                      RETURN_GENERATED_KEYS)) {
             st.setBigDecimal(1, new BigDecimal(transaction.getAmount(), MathContext.DECIMAL64));
             st.setString(2, transaction.getType().name());
             st.setString(3, transaction.getName());
             st.setDate(4, new Date(transaction.getDate().getTime()));
             st.setString(5, transaction.getNote());
-            st.setString(6, transaction.getCategory().getName());
+            st.setLong(6, transaction.getCategory().getId());
             st.executeUpdate();
             try (var rs = st.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -75,14 +75,14 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ?, \"CATEGORY\" = ? WHERE ID = ?"
+                     "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ?, CATEGORY_ID = ? WHERE ID = ?"
              )){
             st.setDouble(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
             st.setString(3, transaction.getName());
             st.setDate(4, new Date(transaction.getDate().getTime()));
             st.setString(5, transaction.getNote());
-            st.setString(6, transaction.getCategory().getName());
+            st.setLong(6, transaction.getCategory().getId());
             st.setLong(7, transaction.getId());
             int updatedRowCount = st.executeUpdate();
             if(updatedRowCount == 0){
@@ -97,20 +97,23 @@ public class TransactionDao {
 
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT ID, AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, \"CATEGORY\" FROM TRANSACTIONS")) {
+             var st = connection.prepareStatement(
+                     "SELECT TRANSACTIONS.ID AS TRANS_ID, AMOUNT, \"TYPE\", TRANSACTIONS.NAME AS TRANS_NAME, " +
+                             "CREATION_DATE, NOTE, CATEGORY_ID, CATEGORIES.NAME AS CAT_NAME" +
+                            " FROM TRANSACTIONS LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS.CATEGORY_ID")) {
             List<Transaction> transactions = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
                     TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
                     double amount = rs.getDouble("AMOUNT");
                     Transaction transaction = new Transaction(
-                            rs.getString("NAME"),
+                            rs.getString("TRANS_NAME"),
                             amount,
-                            new Category(rs.getString("CATEGORY"), Color.BLACK),    //TODO black?
+                            new Category(rs.getString("CAT_NAME"), Color.BLACK),    //TODO black?
                             new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
                             rs.getString("NOTE"),
                             type);
-                    transaction.setId(rs.getLong("ID"));
+                    transaction.setId(rs.getLong("TRANS_ID"));
                     transactions.add(transaction);
                 }
             }
@@ -145,8 +148,8 @@ public class TransactionDao {
                     "\"TYPE\" VARCHAR(8) NOT NULL CONSTRAINT TYPE_CHECK CHECK (\"TYPE\" IN ('INCOME','SPENDING'))," +
                     "\"NAME\" VARCHAR(100) NOT NULL," +
                     "CREATION_DATE DATE NOT NULL," +
-                    "TEXT," +
-                    "\"CATEGORY\" VARCHAR(100)" +
+                    "NOTE VARCHAR(255)," +
+                    "CATEGORY_ID BIGINT DEFAULT 0 FOREIGN KEY REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
                     ")");
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to create TRANSACTIONS table", ex);

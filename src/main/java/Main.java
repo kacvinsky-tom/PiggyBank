@@ -20,7 +20,7 @@ public class Main {
     }
 
     private static DataSource createDataSource() {
-        String dbPath = System.getProperty("user.home") + "/employee-evidence";
+        String dbPath = System.getProperty("user.home") + "/piggy-bank";
         EmbeddedDataSource dataSource = new EmbeddedDataSource();
         dataSource.setDatabaseName(dbPath);
         dataSource.setCreateDatabase("create");
