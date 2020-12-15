@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
-public class Filter extends JPanel {
+public class Filter {
     private final DateSpinner spinnerFrom;
     private final DateSpinner spinnerTo;
     private JComboBox<Object> comboBox;
