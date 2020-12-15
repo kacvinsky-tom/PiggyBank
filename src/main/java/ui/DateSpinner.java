@@ -7,33 +7,25 @@ import javax.swing.*;
 import java.util.Date;
 import java.util.List;
 
-public class DateSpinner {
+public class DateSpinner extends JSpinner {
 
     private final TablesManager tablesManager;
     private final DateSpinnerType type;
 
-    public JSpinner getSp() {
-        return sp;
-    }
-
-    private final JSpinner sp;
-
     public DateSpinner(TablesManager tablesManager, DateSpinnerType type){
         this.tablesManager = tablesManager;
         this.type = type;
-        sp = setDateSpinner();
+        setDateSpinner();
     }
 
-    private JSpinner setDateSpinner() {
-        JSpinner sp = new JSpinner();
+    private void setDateSpinner() {
         SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
-        sp.setModel(spinnerDateModel);
-        sp.setEditor(new JSpinner.DateEditor(sp, "dd/MM/yyyy"));
+        this.setModel(spinnerDateModel);
+        this.setEditor(new JSpinner.DateEditor(this, "dd/MM/yyyy"));
         if (type == DateSpinnerType.FROM) {
             setFromSpinner(spinnerDateModel);
         }
-        sp.setVisible(true);
-        return sp;
+        this.setVisible(true);
     }
 
     private void setFromSpinner(SpinnerDateModel spinnerDateModel) {

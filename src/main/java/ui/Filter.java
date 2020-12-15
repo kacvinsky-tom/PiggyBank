@@ -11,8 +11,8 @@ import java.util.*;
 import java.util.List;
 
 public class Filter extends JPanel {
-    private final JSpinner spinnerFrom;
-    private final JSpinner spinnerTo;
+    private final DateSpinner spinnerFrom;
+    private final DateSpinner spinnerTo;
     private JComboBox<Object> comboBox;
     private final JCheckBox cb_incomes, cb_spendings;
     private final TableRowSorter<TransactionsTable> sorter;
@@ -39,10 +39,10 @@ public class Filter extends JPanel {
         comboBox.addActionListener(this::filterActionPerformed);
         toolbar.addSeparator();
 
-        spinnerFrom = new DateSpinner(tablesManager, DateSpinnerType.FROM).getSp();
+        spinnerFrom = new DateSpinner(tablesManager, DateSpinnerType.FROM);
         spinnerFrom.addChangeListener(this::dateChangePerformed);
 
-        spinnerTo = new DateSpinner(tablesManager, DateSpinnerType.TO).getSp();
+        spinnerTo = new DateSpinner(tablesManager, DateSpinnerType.TO);
         spinnerTo.addChangeListener(this::dateChangePerformed);
 
         toolbar.add(new JLabel("From:"));
