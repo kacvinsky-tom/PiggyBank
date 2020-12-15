@@ -22,11 +22,13 @@ final class AddAction extends AbstractAction {
     private JDialog dialog;
     private JSpinner spinner;
     private int selectedTabIndex = 0;
+    private final MessageDialog messageDialog;
 
-    public AddAction(JFrame frame, TablesManager tablesManager) {
+    public AddAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super("Add", Icons.ADD_ICON);
         this.frame = frame;
         this.tablesManager = tablesManager;
+        this.messageDialog = messageDialog;
         putValue(SHORT_DESCRIPTION, "Adds new row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
@@ -54,10 +56,6 @@ final class AddAction extends AbstractAction {
         return dialog;
     }
 
-    private void createErrorDialog(String message){
-        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
     private JTextField createTextfield(String string) {
         dialog.add(new JLabel(string + ": "));
         JTextField textField = new JTextField();
@@ -78,7 +76,7 @@ final class AddAction extends AbstractAction {
         try {
             amount = Math.abs(Double.parseDouble(amountField.getText()));
         } catch (NumberFormatException ex){
-            createErrorDialog("Enter valid number into amount!");
+            messageDialog.showMessage("Enter valid number into amount!", JOptionPane.ERROR_MESSAGE);
             return;
         }
         Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
@@ -139,10 +137,11 @@ final class AddAction extends AbstractAction {
     private boolean checkCategoryExistence(Category newCategory){
         for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (c.getName().equals(newCategory.getName())){
-                createErrorDialog("Category " + newCategory.getName() + " already exists!");
+                messageDialog.showMessage("Category " + newCategory.getName() + " already exists!", JOptionPane.ERROR_MESSAGE);
                 return false;
+
             } else if (c.getColor().equals(newCategory.getColor())){
-                createErrorDialog("Chosen color is already taken by another category!");
+                messageDialog.showMessage("Chosen color is already taken by another category!", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -175,7 +174,7 @@ final class AddAction extends AbstractAction {
         confirmButton.addActionListener(e -> {
             String name = newCategoryName.getText();
             if (name.equals("")){
-                createErrorDialog("Enter name of the category!");
+                messageDialog.showMessage("Enter name of the category!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             Category newCategory = new Category(name, categoryColorPanel.getBackground());

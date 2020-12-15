@@ -18,9 +18,11 @@ public class Filter {
     private final TableRowSorter<TransactionsTable> sorter;
     private final TablesManager tablesManager;
     private int selectedTabIndex = 0;
+    private final MessageDialog messageDialog;
 
-    public Filter(JToolBar toolbar, TablesManager tablesManager) {
+    public Filter(JToolBar toolbar, TablesManager tablesManager, MessageDialog messageDialog) {
         this.tablesManager = tablesManager;
+        this.messageDialog = messageDialog;
 
         sorter = new TableRowSorter<>(this.tablesManager.getTranTableModel());
         this.tablesManager.getTranJTable().setRowSorter(sorter);
@@ -40,10 +42,10 @@ public class Filter {
         toolbar.addSeparator();
 
         spinnerFrom = new DateSpinner(this.tablesManager, DateSpinnerType.FROM);
-        spinnerFrom.addChangeListener(this::dateChangePerformedFrom);
+        spinnerFrom.addChangeListener(this::dateChangePerformed);
 
         spinnerTo = new DateSpinner(this.tablesManager, DateSpinnerType.TO);
-        spinnerTo.addChangeListener(this::dateChangePerformedTo);
+        spinnerTo.addChangeListener(this::dateChangePerformed);
 
         toolbar.add(new JLabel("From:"));
         toolbar.add(spinnerFrom);
@@ -56,11 +58,17 @@ public class Filter {
         this.selectedTabIndex = selectedTabIndex;
     }
 
-    private void dateChangePerformedFrom(ChangeEvent changeEvent) {
-        filterTable();
+    public boolean checkSpinnersValues(){
+        Date startDate = (Date) spinnerFrom.getValue();
+        Date endDate = (Date) spinnerTo.getValue();
+        if (startDate.after(endDate)) {
+            messageDialog.showMessage("Date 'From' shouldn't be older than date 'To'!", JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        return true;
     }
 
-    private void dateChangePerformedTo(ChangeEvent changeEvent) {
+    private void dateChangePerformed(ChangeEvent changeEvent) {
         filterTable();
     }
 
@@ -72,11 +80,7 @@ public class Filter {
         return comboBox;
     }
 
-    private void createWrongDateDialog() {
-        JOptionPane.showMessageDialog(new JFrame(), "Date 'From' cannot be older than date 'To'!", "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    private Date getSpinnerDate(Date date, int i) {
+    private Date editSpinnerDate(Date date, int i) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DATE, i);
@@ -87,22 +91,19 @@ public class Filter {
     }
 
     private void filterTable() {
+        checkSpinnersValues();
+
         sorter.setRowFilter(null);
 
-        Date startDate = getSpinnerDate((Date) spinnerFrom.getValue(), -1);
-        Date endDate = getSpinnerDate((Date) spinnerTo.getValue(), 1);
+        Date startDate = editSpinnerDate((Date) spinnerFrom.getValue(), -1);
+        Date endDate = editSpinnerDate((Date) spinnerTo.getValue(), 1);
 
-        if (startDate.after(endDate)) {     // TODO KONTROLOVAT ESTE PRED UPRAVENIM DATUMU
-            createWrongDateDialog();
-            return;
-        }
-
-        List<RowFilter<TransactionsTable, Integer>> filters = new ArrayList<>(4);
-        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER, startDate, 3));
-        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.BEFORE, endDate, 3));
+        List<RowFilter<TransactionsTable, Integer>> filters = new ArrayList<>(5);
+        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER, startDate, 4));
+        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.BEFORE, endDate, 4));
 
         if (comboBox.getSelectedIndex() > 0) {
-            filters.add(RowFilter.regexFilter(comboBox.getSelectedItem().toString(), 2));
+            filters.add(RowFilter.regexFilter(comboBox.getSelectedItem().toString(), 3));
         }
         if (cb_incomes.isSelected() && !cb_spendings.isSelected()) {
             filters.add(incomeFilter);
@@ -119,13 +120,10 @@ public class Filter {
         filterTable();
     }
 
-
-    // TODO CHECK IF INCOME/SPENDING FILTERS WORKS
-
     RowFilter<TransactionsTable, Integer> incomeFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return !tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 2).toString().equals("INCOME");
+                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 2).toString().equals("INCOME");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
@@ -135,7 +133,7 @@ public class Filter {
     RowFilter<TransactionsTable, Integer> spendingFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 1).toString().equals("SPENDING");
+                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 2).toString().equals("SPENDING");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
