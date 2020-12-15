@@ -6,7 +6,6 @@ import data.TransactionDao;
 import javax.swing.*;
 import java.awt.*;
 
-// Casom mozno vytvorit MainManager kde by boli vsetky hlavne classy ako MainFrame, TabbedPane, ToolBar pripadne ich presunut do Main
 
 public class MainFrame extends JFrame {
     private final ToolBar toolBar;
