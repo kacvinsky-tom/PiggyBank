@@ -11,8 +11,8 @@ import java.util.*;
 import java.util.List;
 
 public class Filter {
-    private final DateSpinner spinnerFrom;
-    private final DateSpinner spinnerTo;
+    private final JSpinner spinnerFrom;
+    private final JSpinner spinnerTo;
     private JComboBox<Object> comboBox;
     private final JCheckBox cb_incomes, cb_spendings;
     private final TableRowSorter<TransactionsTable> sorter;
@@ -22,8 +22,8 @@ public class Filter {
     public Filter(JToolBar toolbar, TablesManager tablesManager) {
         this.tablesManager = tablesManager;
 
-        sorter = new TableRowSorter<>(tablesManager.getTranTableModel());
-        tablesManager.getTranJTable().setRowSorter(sorter);
+        sorter = new TableRowSorter<>(this.tablesManager.getTranTableModel());
+        this.tablesManager.getTranJTable().setRowSorter(sorter);
 
         cb_incomes = new JCheckBox("Incomes", true);
         cb_incomes.addActionListener(this::filterActionPerformed);
@@ -35,15 +35,17 @@ public class Filter {
         toolbar.add(cb_spendings);
         toolbar.addSeparator();
 
-        toolbar.add(createComboBox(tablesManager.getCatJTable()));
+        toolbar.add(createComboBox(this.tablesManager.getCatJTable()));
         comboBox.addActionListener(this::filterActionPerformed);
         toolbar.addSeparator();
 
-        spinnerFrom = new DateSpinner(tablesManager, DateSpinnerType.FROM);
-        spinnerFrom.addChangeListener(this::dateChangePerformed);
+        //spinnerFrom = new DateSpinner(this.tablesManager, DateSpinnerType.FROM);
+        spinnerFrom = getDateSpinner();
+        spinnerFrom.addChangeListener(this::dateChangePerformedFrom);
 
-        spinnerTo = new DateSpinner(tablesManager, DateSpinnerType.TO);
-        spinnerTo.addChangeListener(this::dateChangePerformed);
+        //spinnerTo = new DateSpinner(this.tablesManager, DateSpinnerType.TO);
+        spinnerTo = getDateSpinner();
+        spinnerTo.addChangeListener(this::dateChangePerformedTo);
 
         toolbar.add(new JLabel("From:"));
         toolbar.add(spinnerFrom);
@@ -52,11 +54,24 @@ public class Filter {
         toolbar.add(spinnerTo);
     }
 
+    private JSpinner getDateSpinner() {
+        JSpinner s = new JSpinner();
+        SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
+        s.setModel(spinnerDateModel);
+        s.setEditor(new JSpinner.DateEditor(s, "dd/MM/yyyy"));
+        s.setVisible(true);
+        return s;
+    }
+
     public void setSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
     }
 
-    private void dateChangePerformed(ChangeEvent changeEvent) {
+    private void dateChangePerformedFrom(ChangeEvent changeEvent) {
+        filterTable();
+    }
+
+    private void dateChangePerformedTo(ChangeEvent changeEvent) {
         filterTable();
     }
 
@@ -73,10 +88,12 @@ public class Filter {
     }
 
     private Date getSpinnerDate(Date date, int i) {
-        System.out.println(date);
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DATE, i);
+        c.set(Calendar.HOUR, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
         return c.getTime();
     }
 
@@ -85,8 +102,10 @@ public class Filter {
 
         Date startDate = getSpinnerDate((Date) spinnerFrom.getValue(), -1);
         Date endDate = getSpinnerDate((Date) spinnerTo.getValue(), 1);
+        System.out.println(startDate);
+        System.out.println(endDate);
 
-        if (startDate.after(endDate)) {
+        if (startDate.after(endDate)) {     // TODO KONTROLOVAT ESTE PRED UPRAVENIM DATUMU
             createWrongDateDialog();
             return;
         }
