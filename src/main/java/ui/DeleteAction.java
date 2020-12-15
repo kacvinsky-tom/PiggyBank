@@ -7,27 +7,25 @@ import java.util.Arrays;
 import java.util.Comparator;
 
 final class DeleteAction extends AbstractAction {
+    private final TablesManager tablesManager;
+    private int selectedTabIndex = 0;
 
-    private final JTabbedPane pane;
-
-    public DeleteAction(JTabbedPane pane) {
+    public DeleteAction(TablesManager tablesManager) {
         super("Delete", Icons.DELETE_ICON);
-        this.pane = pane;
+        this.tablesManager = tablesManager;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Deletes selected rows");
         putValue(MNEMONIC_KEY, KeyEvent.VK_D);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl D"));
     }
 
-    private JTable getJTable(int idx) {
-        JScrollPane scrollPane = (JScrollPane) pane.getComponentAt(idx);
-        JViewport viewport = scrollPane.getViewport();
-        return (JTable) viewport.getView();
+    public void setSelectedTabIndex(int selectedTabIndex) {
+        this.selectedTabIndex = selectedTabIndex;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int index = pane.getSelectedIndex();
+        int index = selectedTabIndex;
         if (index == 1) {
             deleteTransaction();
         } else if (index == 2) {
@@ -36,26 +34,19 @@ final class DeleteAction extends AbstractAction {
     }
 
     private void deleteCategory() {
-        var categoriesTable =  getJTable(2);
-        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
-        var transactionsTable =  getJTable(1);
-        var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
-        Arrays.stream(categoriesTable.getSelectedRows())
-                .map(categoriesTable::convertRowIndexToModel)
+        Arrays.stream(tablesManager.getCatJTable().getSelectedRows())
+                .map(tablesManager.getCatJTable()::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(e -> {transactionsTableModel.changeCategoryToDefault(e);categoriesTableModel.deleteRow(e);});
+                .forEach(e -> { tablesManager.getTranTableModel().changeCategoryToDefault(e);
+                                tablesManager.getCatTableModel().deleteRow(e);});
     }
 
     private void deleteTransaction() {
-        var transactionsTable =  getJTable(1);
-        var categoriesTable =  getJTable(2);
-        var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
-        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
-        Arrays.stream(transactionsTable.getSelectedRows())
-                .map(transactionsTable::convertRowIndexToModel)
+        Arrays.stream(tablesManager.getTranJTable().getSelectedRows())
+                .map(tablesManager.getTranJTable()::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(transactionsTableModel::deleteRow);
+                .forEach(tablesManager.getTranTableModel()::deleteRow);
     }
 }

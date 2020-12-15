@@ -2,137 +2,33 @@ package ui;
 
 import data.CategoryDao;
 import data.TransactionDao;
-import model.CategoryCellRenderer;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
 import java.awt.*;
 
+// Casom mozno vytvorit MainManager kde by boli vsetky hlavne classy ako MainFrame, TabbedPane, ToolBar pripadne ich presunut do Main
 
-public class MainFrame {
-
-    private final JFrame frame;
-
-    private final JTabbedPane pane = new JTabbedPane();
-
-    private final JTable statisticsTable;
-    private final JTable transactionsTable;
-    private final JTable categoriesTable;
-
-    private final JToolBar toolBar;
-    private final Action addAction;
-    private final Action deleteAction;
-    private final Action editAction;
-    private JTable p;
+public class MainFrame extends JFrame {
+    private final TablesManager tablesManager;
+    private final TabbedPane tabbedPane;
+    private final ToolBar toolBar;
 
     public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
-        frame = createFrame();
-
-        var statisticsTableModel = new StatisticsTable();
-        statisticsTable = createTable(statisticsTableModel);
-
-        var catTable = new CategoriesTable(categoryDao, statisticsTableModel);
-        categoriesTable = createTable(catTable);
-        categoriesTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
-
-        TransactionsTable transactionsTableModel = new TransactionsTable(transactionDao, catTable);
-        transactionsTable = createTable(transactionsTableModel);
-
-        var i = new StatisticsBalanceTable();
-        p = createTable(i);
-
-        frame.add(createTabbedPane(), BorderLayout.CENTER);
-
-        addAction = new AddAction(pane, frame);
-        deleteAction = new DeleteAction(pane);
-        editAction = new EditAction(pane, frame);
-        toolBar = createToolbar();
-
-        new Filter(toolBar, transactionsTable, categoriesTable, transactionsTableModel);
-
-        frame.add(toolBar, BorderLayout.NORTH);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
+        tablesManager = new TablesManager(categoryDao, transactionDao);
+        toolBar = new ToolBar(this, tablesManager);
+        tablesManager.addListSelectionListenerToTables(toolBar);
+        tabbedPane = new TabbedPane(tablesManager, toolBar);
+        setFrame();
     }
 
-    public void show() {
-        frame.setVisible(true);
-    }
-
-    private JFrame createFrame() {
-        var frame = new JFrame("Piggy Bank - Personal cash flow manager");
-        frame.setIconImage(Icons.PIGGY_IMAGE);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(800, 500));
-        return frame;
-    }
-
-    private JTabbedPane createTabbedPane() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        panel.add(statisticsTable.getTableHeader());
-        panel.add(statisticsTable);
-        p.setTableHeader(null);
-        p.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        p.setFont(p.getFont().deriveFont(Font.BOLD));
-
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-        p.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
-
-        panel.add(p);
-
-
-        pane.add("Statistics", new JScrollPane(panel));
-        pane.add("Transactions", new JScrollPane(transactionsTable));
-        pane.add("Categories", new JScrollPane(categoriesTable));
-        pane.addChangeListener(this::changeTab);
-        return pane;
-    }
-
-    private JTable createTable(Object o){
-        var table = new JTable((TableModel) o);
-        table.setAutoCreateRowSorter(true);
-        table.getSelectionModel().addListSelectionListener(this::rowSelectionChanged);
-        table.setRowHeight(20);
-        return table;
-    }
-
-    private JToolBar createToolbar() {
-        JToolBar toolBar = new JToolBar(null,SwingConstants.HORIZONTAL);
-        toolBar.add(addAction);
-        toolBar.add(deleteAction);
-        toolBar.add(editAction);
-        toolBar.setFloatable(false);
-        toolBar.setVisible(true);
-        return toolBar;
-    }
-
-    private void disableFilterSettings(){
-        toolBar.getComponentAtIndex(4).setEnabled(pane.getSelectedIndex() < 2);
-        toolBar.getComponentAtIndex(5).setEnabled(pane.getSelectedIndex() < 2);
-        toolBar.getComponentAtIndex(7).setEnabled(pane.getSelectedIndex() < 2);
-        toolBar.getComponentAtIndex(9).setEnabled(pane.getSelectedIndex() < 2);
-        toolBar.getComponentAtIndex(10).setEnabled(pane.getSelectedIndex() < 2);
-        toolBar.getComponentAtIndex(12).setEnabled(pane.getSelectedIndex() < 2);
-        toolBar.getComponentAtIndex(13).setEnabled(pane.getSelectedIndex() < 2);
-        toolBar.getComponentAtIndex(15).setEnabled(pane.getSelectedIndex() < 2);
-    }
-
-    private void changeTab(ChangeEvent changeEvent){
-        statisticsTable.clearSelection();
-        transactionsTable.clearSelection();
-        categoriesTable.clearSelection();
-        disableFilterSettings();
-    }
-
-    private void rowSelectionChanged(ListSelectionEvent listSelectionEvent) {
-        var selectionModel = (ListSelectionModel) listSelectionEvent.getSource();
-        deleteAction.setEnabled(selectionModel.getSelectedItemsCount() != 0 && pane.getSelectedIndex() > 0);
-        editAction.setEnabled(selectionModel.getSelectedItemsCount() == 1 && pane.getSelectedIndex() > 0);
+    private void setFrame() {
+        this.setTitle("Piggy Bank - Personal cash flow manager");
+        this.setIconImage(Icons.PIGGY_IMAGE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.setPreferredSize(new Dimension(800, 500));
+        this.add(tabbedPane, BorderLayout.CENTER);
+        this.add(toolBar, BorderLayout.NORTH);
+        this.pack();
+        this.setLocationRelativeTo(null);
     }
 }

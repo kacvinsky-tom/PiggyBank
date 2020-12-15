@@ -16,7 +16,7 @@ public class Main {
         CategoryDao categoryDao = new CategoryDao(createDataSource());
         TransactionDao transactionDao = new TransactionDao(createDataSource());
         initNimbusLookAndFeel();
-        EventQueue.invokeLater(() -> new MainFrame(categoryDao, transactionDao).show());
+        EventQueue.invokeLater(() -> new MainFrame(categoryDao, transactionDao).setVisible(true));
     }
 
     private static DataSource createDataSource() {

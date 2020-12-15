@@ -17,15 +17,14 @@ public class Filter {
     private final JCheckBox cb_incomes;
     private final JCheckBox cb_spendings;
     private final TableRowSorter<TransactionsTable> sorter;
-    private final JTable transactions;
-    private final TransactionsTable transactionsTableModel;
+    private final TablesManager tablesManager;
 
-    public Filter(JToolBar toolbar, JTable transactions, JTable categories, TransactionsTable transactionsTableModel) {
-        this.transactions = transactions;
-        this.transactionsTableModel = transactionsTableModel;
-        var model = transactions.getModel();
-        sorter = new TableRowSorter<>((TransactionsTable) model);
-        transactions.setRowSorter(sorter);
+    private int selectedTabIndex = 0;
+
+    public Filter(JToolBar toolbar, TablesManager tablesManager) {
+        this.tablesManager = tablesManager;
+        sorter = new TableRowSorter<>(tablesManager.getTranTableModel());
+        tablesManager.getTranJTable().setRowSorter(sorter);
 
         cb_incomes = new JCheckBox("Incomes", true);
         cb_spendings = new JCheckBox("Spendings", true);
@@ -35,7 +34,7 @@ public class Filter {
         toolbar.add(cb_spendings);
         toolbar.addSeparator();
 
-        toolbar.add(createComboBox(categories));
+        toolbar.add(createComboBox(tablesManager.getCatJTable()));
         toolbar.addSeparator();
 
         spinner_from = createDateSpinner(true);
@@ -49,6 +48,14 @@ public class Filter {
         toolbar.addSeparator();
 
         toolbar.add(createButton());
+    }
+
+    public void setSelectedTabIndex(int selectedTabIndex) {
+        this.selectedTabIndex = selectedTabIndex;
+    }
+
+    private void disableFilterSettings(){   // dorobit vyšednutie filtra pri urcitych taboch
+
     }
 
     private JComboBox createComboBox(JTable categories) {
@@ -72,7 +79,7 @@ public class Filter {
         spinner.setModel(spinnerDateModel);
         spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
         if (from){
-            List<Transaction> tranList = transactionsTableModel.getTransactions();
+            List<Transaction> tranList = tablesManager.getTranTableModel().getTransactions();
             if (tranList.isEmpty()){
                 spinner.setVisible(true);
                 return spinner;
@@ -136,7 +143,7 @@ public class Filter {
     RowFilter<TransactionsTable, Integer> incomeFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return !transactions.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return !tablesManager.getTranTableModel().getValueAt(entry.getIdentifier(), 1).toString().contains("-");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
@@ -146,7 +153,7 @@ public class Filter {
     RowFilter<TransactionsTable, Integer> spendingFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return transactions.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return tablesManager.getTranTableModel().getValueAt(entry.getIdentifier(), 1).toString().contains("-");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
