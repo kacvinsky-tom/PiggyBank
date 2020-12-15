@@ -15,27 +15,25 @@ import java.util.List;
 final class AddAction extends AbstractAction {
 
     private final JFrame frame;
-    private final JTabbedPane pane;
+    private final TablesManager tablesManager;
     private final JLabel categoryColorPanel = new JLabel();
     private JTextField nameField, amountField, noteField;
     private JComboBox<Object> categoryBox, transactionType;
     private JDialog dialog;
     private JSpinner spinner;
-    private CategoriesTable categoriesTableModel;
+    private int selectedTabIndex = 0;
 
-    public AddAction(JTabbedPane pane, JFrame frame) {
+    public AddAction(JFrame frame, TablesManager tablesManager) {
         super("Add", Icons.ADD_ICON);
         this.frame = frame;
-        this.pane = pane;
+        this.tablesManager = tablesManager;
         putValue(SHORT_DESCRIPTION, "Adds new row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
     }
 
-    private JTable getJTable(int idx) {
-        JScrollPane scrollPane = (JScrollPane) pane.getComponentAt(idx);
-        JViewport viewport = scrollPane.getViewport();
-        return (JTable) viewport.getView();
+    public void setSelectedTabIndex(int selectedTabIndex) {
+        this.selectedTabIndex = selectedTabIndex;
     }
 
     private JSpinner createDateSpinner() {
@@ -76,9 +74,6 @@ final class AddAction extends AbstractAction {
     }
 
     private void addButtonActionPerformedTransaction(ActionEvent actionEvent) {
-        var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
-        var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
-
         double amount;
         try {
             amount = Math.abs(Double.parseDouble(amountField.getText()));
@@ -86,12 +81,12 @@ final class AddAction extends AbstractAction {
             createErrorDialog("Enter valid number into amount!");
             return;
         }
-        Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
+        Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
         Transaction newTransaction = new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type);
-        transactionTableModel.addTransaction(newTransaction);
+        tablesManager.getTranTableModel().addTransaction(newTransaction);
         dialog.dispose();
     }
 
@@ -108,14 +103,11 @@ final class AddAction extends AbstractAction {
     }
 
     private void createTransactionDialog() {
-        JTable categoriesTable = getJTable(2);
-        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
-
         dialog = createDialog("transaction", 250, 330);
         nameField = createTextfield("Name");
         amountField = createTextfield("Amount");
         noteField = createTextfield("Note");
-        categoryBox = new JComboBox<>(setDefaultCategoryBox(categoriesTableModel.getCategories()).toArray());
+        categoryBox = new JComboBox<>(setDefaultCategoryBox(tablesManager.getCatTableModel().getCategories()).toArray());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = createDateSpinner();
 
@@ -145,7 +137,7 @@ final class AddAction extends AbstractAction {
     }
 
     private boolean checkCategoryExistence(Category newCategory){
-        for (Category c : categoriesTableModel.getCategories()){
+        for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (c.getName().equals(newCategory.getName())){
                 createErrorDialog("Category " + newCategory.getName() + " already exists!");
                 return false;
@@ -158,9 +150,6 @@ final class AddAction extends AbstractAction {
     }
 
     private void createCategoryDialog(){
-        JTable categoriesTable = getJTable(2);
-        categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
-
         prepareColorPanel(categoryColorPanel);
 
         JDialog categoryDialog = createDialog("new category", 380, 150);
@@ -191,7 +180,7 @@ final class AddAction extends AbstractAction {
             }
             Category newCategory = new Category(name, categoryColorPanel.getBackground());
             if (checkCategoryExistence(newCategory)){
-                categoriesTableModel.addRow(newCategory);
+                tablesManager.getCatTableModel().addRow(newCategory);
                 categoryDialog.dispose();
             }
         });
@@ -220,7 +209,7 @@ final class AddAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int index = pane.getSelectedIndex();
+        int index = selectedTabIndex;
         if (index <= 1) {
             addTransaction();
         } else if (index == 2) {

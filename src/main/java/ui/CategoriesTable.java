@@ -17,15 +17,13 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
             Column.readOnly("Color", Color.class, Category::getColor)
     );
 
-    private final StatisticsTable statisticsTable;
     private final List <Category> categories;
     private final CategoryDao categoryDao;
     private Category others;
 
-    public CategoriesTable(CategoryDao categoryDao, StatisticsTable statisticsTable) {
+    public CategoriesTable(CategoryDao categoryDao) {
         super(COLUMNS);
         this.categoryDao = categoryDao;
-        this.statisticsTable = statisticsTable;
         this.categories = new ArrayList<>(categoryDao.findAll());
         addDefaultCategory();
     }

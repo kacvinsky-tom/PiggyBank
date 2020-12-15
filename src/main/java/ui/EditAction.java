@@ -13,7 +13,7 @@ import java.util.Date;
 final class EditAction extends AbstractAction {
 
     private final JFrame frame;
-    private final JTabbedPane pane;
+    private final TablesManager tablesManager;
     private final JLabel categoryColorPanel = new JLabel();
     private JDialog dialog;
     private JTextField nameField, amountField, noteField;
@@ -21,19 +21,20 @@ final class EditAction extends AbstractAction {
     private JComboBox<Object> categoryBox, transactionType;
     private Transaction selectedTransaction;
     private Category selectedCategory;
-    private final  CategoriesTable categoriesTableModel;
-    private final JTable categoriesTable;
+    private int selectedTabIndex = 0;
 
-    public EditAction(JTabbedPane pane, JFrame frame) {
+    public EditAction(JFrame frame, TablesManager tablesManager) {
         super("Edit", Icons.EDIT_ICON);
-        this.pane = pane;
         this.frame = frame;
+        this.tablesManager = tablesManager;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Edits selected row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_E);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl E"));
-        this.categoriesTable = getJTable(2);
-        this.categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
+    }
+
+    public void setSelectedTabIndex(int selectedTabIndex) {
+        this.selectedTabIndex = selectedTabIndex;
     }
 
     private JDialog createDialog(String string, int width, int height) {
@@ -43,12 +44,6 @@ final class EditAction extends AbstractAction {
         dialog.setModal(true);
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         return dialog;
-    }
-
-    private JTable getJTable(int idx) {
-        JScrollPane scrollPane = (JScrollPane) pane.getComponentAt(idx);
-        JViewport viewport = scrollPane.getViewport();
-        return (JTable) viewport.getView();
     }
 
     private JTextField createTextField(String label, String content) {
@@ -79,8 +74,6 @@ final class EditAction extends AbstractAction {
     }
 
     private void editButtonActionPerformedTransaction(ActionEvent actionEvent) {
-        var categoriesTableModel = (CategoriesTable) getJTable(2).getModel();
-
         double amount;
         try {
             amount = Double.parseDouble(amountField.getText());
@@ -88,7 +81,7 @@ final class EditAction extends AbstractAction {
             createErrorDialog("Enter valid number into amount!");
             return;
         }
-        Category category = categoriesTableModel.getCategories().get(categoryBox.getSelectedIndex());
+        Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
@@ -104,10 +97,9 @@ final class EditAction extends AbstractAction {
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
 
-        var transactionTableModel = (TransactionsTable) getJTable(1).getModel();
-        transactionTableModel.updateEntity(selectedTransaction);
-        int rowIndex = transactionTableModel.getTransactions().indexOf(selectedTransaction);
-        transactionTableModel.fireTableRowsUpdated(rowIndex, rowIndex);
+        tablesManager.getTranTableModel().updateEntity(selectedTransaction);
+        int rowIndex = tablesManager.getTranTableModel().getTransactions().indexOf(selectedTransaction);
+        tablesManager.getTranTableModel().fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
     private void setTransactionDialog() {
@@ -133,17 +125,12 @@ final class EditAction extends AbstractAction {
     }
 
     private void createTransactionDialog() {
-        JTable transactionsTable = getJTable(1);
-        var transactionsTableModel = (TransactionsTable) transactionsTable.getModel();
-        JTable categoriesTable = getJTable(2);
-        var categoriesTableModel = (CategoriesTable) categoriesTable.getModel();
-
         dialog = createDialog("transaction", 250, 330);
-        selectedTransaction = transactionsTableModel.getEntity(transactionsTable.getSelectedRow());
+        selectedTransaction = tablesManager.getTranTableModel().getEntity(tablesManager.getTranJTable().getSelectedRow());
         nameField = createTextField("name", selectedTransaction.getName());
         amountField = createTextField("amount", String.valueOf(selectedTransaction.getAmount()));
         noteField = createTextField("note", selectedTransaction.getNote());
-        categoryBox = new JComboBox<>(categoriesTableModel.getCategories().toArray());
+        categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = createDateSpinner();
 
@@ -167,7 +154,7 @@ final class EditAction extends AbstractAction {
     }
 
     private boolean checkCategoryExistence(String name, Color color){
-        for (Category c : categoriesTableModel.getCategories()){
+        for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (c.getName().equals(name) && !c.equals(selectedCategory)){
                 createErrorDialog("Category " + name + " already exists!");
                 return false;
@@ -185,7 +172,7 @@ final class EditAction extends AbstractAction {
     }
 
     private void createCategoryDialog(){
-        selectedCategory = categoriesTableModel.getEntity(categoriesTable.getSelectedRow());
+        selectedCategory = tablesManager.getCatTableModel().getEntity(tablesManager.getCatJTable().getSelectedRow());
 
         prepareColorPanel(categoryColorPanel);
 
@@ -219,7 +206,7 @@ final class EditAction extends AbstractAction {
 
             } else if (checkCategoryExistence(newCategoryName.getText(), categoryColorPanel.getBackground())){
                 setCategory(newCategoryName.getText(), categoryColorPanel.getBackground());
-                categoriesTableModel.updateEntity(selectedCategory);
+                tablesManager.getCatTableModel().updateEntity(selectedCategory);
                 categoryDialog.dispose();
             }
         });
@@ -238,7 +225,7 @@ final class EditAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int index = pane.getSelectedIndex();
+        int index = selectedTabIndex;
         if (index == 1) {
             editTransaction();
         } else if (index == 2) {

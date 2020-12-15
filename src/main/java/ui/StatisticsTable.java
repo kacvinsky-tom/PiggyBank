@@ -19,18 +19,23 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
             Column.readOnly("Sum", Double.class, CategoryStatistic::getSum)
     );
 
-    private final List<CategoryStatistic> statistics;
+    private final List<CategoryStatistic> statistics = new ArrayList<>();
 
-    StatisticsTable(){
+    protected StatisticsTable() {
         super(COLUMNS);
-        Category c11 = new Category("Food", Color.BLUE);
-        CategoryStatistic c1 = new CategoryStatistic(c11);
-        Category c22 = new Category("Medicine", Color.BLACK);
-        CategoryStatistic c2 = new CategoryStatistic(c22);
-        statistics = new ArrayList<>();
-        statistics.add(c1);
-        statistics.add(c2);
+
+        //tests
+        statistics.add(
+                new CategoryStatistic(new Category("Food", Color.BLACK))
+        );
+        statistics.add(
+                new CategoryStatistic(new Category("Medicine", Color.GREEN))
+        );
+        statistics.add(
+                new CategoryStatistic(new Category("Toys", Color.RED))
+        );
     }
+
 
     @Override
     public int getRowCount() {
