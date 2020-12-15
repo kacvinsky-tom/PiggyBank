@@ -16,8 +16,8 @@ public class ToolBar extends JToolBar {
         this.addAction = new AddAction(frame, tablesManager);
         this.deleteAction = new DeleteAction(tablesManager);
         this.editAction = new EditAction(frame, tablesManager);
-        this.filter = new Filter(this, tablesManager);
         setToolBar();
+        this.filter = new Filter(this, tablesManager);
     }
 
     public void updateSelectedTabIndex(int selectedTabIndex) {
@@ -30,6 +30,9 @@ public class ToolBar extends JToolBar {
 
     private void setToolBar(){
         this.setOrientation(SwingConstants.HORIZONTAL);
+        this.add(addAction);
+        this.add(deleteAction);
+        this.add(editAction);
         this.setFloatable(false);
         this.setVisible(true);
     }

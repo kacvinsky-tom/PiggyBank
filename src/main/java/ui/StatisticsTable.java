@@ -23,6 +23,17 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
 
     protected StatisticsTable() {
         super(COLUMNS);
+
+        //tests
+        statistics.add(
+                new CategoryStatistic(new Category("Food", Color.BLACK))
+        );
+        statistics.add(
+                new CategoryStatistic(new Category("Medicine", Color.GREEN))
+        );
+        statistics.add(
+                new CategoryStatistic(new Category("Toys", Color.RED))
+        );
     }
 
 
