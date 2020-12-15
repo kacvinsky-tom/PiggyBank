@@ -13,11 +13,12 @@ public class ToolBar extends JToolBar {
     private int selectedTabIndex = 0;
 
     public ToolBar(JFrame frame, TablesManager tablesManager){
-        this.addAction = new AddAction(frame, tablesManager);
-        this.deleteAction = new DeleteAction(tablesManager);
-        this.editAction = new EditAction(frame, tablesManager);
+        MessageDialog messageDialog = new MessageDialog(frame);
+        this.addAction = new AddAction(frame, tablesManager, messageDialog);
+        this.deleteAction = new DeleteAction(tablesManager, messageDialog);
+        this.editAction = new EditAction(frame, tablesManager, messageDialog);
         setToolBar();
-        this.filter = new Filter(this, tablesManager);
+        this.filter = new Filter(this, tablesManager, messageDialog);
     }
 
     public void updateSelectedTabIndex(int selectedTabIndex) {

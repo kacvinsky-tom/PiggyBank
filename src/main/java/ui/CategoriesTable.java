@@ -17,7 +17,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
             Column.readOnly("Color", Color.class, Category::getColor)
     );
 
-    private final List <Category> categories;
+    private final List<Category> categories;
     private final CategoryDao categoryDao;
     private Category others;
 
@@ -28,16 +28,16 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         addDefaultCategory();
     }
 
-    private void updateCategories(){
-        for (Category category : categories){
+    private void updateCategories() {
+        for (Category category : categories) {
             categoryDao.update(category);
         }
     }
 
-    private void addDefaultCategory(){
+    private void addDefaultCategory() {
         List<Category> categories = categoryDao.findAll();
-        for (Category category : categories){
-            if (category.getName().equals("Others")){
+        for (Category category : categories) {
+            if (category.getName().equals("Others")) {
                 others = category;
                 return;
             }
@@ -61,7 +61,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         return categories;
     }
 
-    public Category getOthers(){
+    public Category getOthers() {
         return others;
     }
 
@@ -79,14 +79,14 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         fireTableDataChanged();
     }
 
-    public void deleteRow(int rowIndex) {
-        if(!categories.get(rowIndex).getName().equals("Others")){
+    public boolean deleteRow(int rowIndex) {
+        if (!categories.get(rowIndex).getName().equals("Others")) {
             categoryDao.delete(categories.get(rowIndex));
             categories.remove(rowIndex);
             fireTableRowsDeleted(rowIndex, rowIndex);
-        } else {
-            // replace new JFrame() with parent frame
-            JOptionPane.showMessageDialog(new JFrame(), "You can't delete default category 'Others'!", "Error", JOptionPane.ERROR_MESSAGE);
+            return true;
         }
+        return false;
+
     }
 }

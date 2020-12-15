@@ -9,10 +9,12 @@ import java.util.Comparator;
 final class DeleteAction extends AbstractAction {
     private final TablesManager tablesManager;
     private int selectedTabIndex = 0;
+    private final MessageDialog messageDialog;
 
-    public DeleteAction(TablesManager tablesManager) {
+    public DeleteAction(TablesManager tablesManager, MessageDialog messageDialog) {
         super("Delete", Icons.DELETE_ICON);
         this.tablesManager = tablesManager;
+        this.messageDialog = messageDialog;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Deletes selected rows");
         putValue(MNEMONIC_KEY, KeyEvent.VK_D);
@@ -38,8 +40,12 @@ final class DeleteAction extends AbstractAction {
                 .map(tablesManager.getCatJTable()::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(e -> { tablesManager.getTranTableModel().changeCategoryToDefault(e);
-                                tablesManager.getCatTableModel().deleteRow(e);});
+                .forEach(e -> {
+                    tablesManager.getTranTableModel().changeCategoryToDefault(e);
+                    if (!tablesManager.getCatTableModel().deleteRow(e)){
+                        messageDialog.showMessage("You can't delete default category 'Others'!", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
     }
 
     private void deleteTransaction() {
