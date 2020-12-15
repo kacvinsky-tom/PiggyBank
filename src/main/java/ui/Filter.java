@@ -119,10 +119,13 @@ public class Filter {
         filterTable();
     }
 
+
+    // TODO CHECK IF INCOME/SPENDING FILTERS WORKS
+
     RowFilter<TransactionsTable, Integer> incomeFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return !tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return !tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 2).toString().equals("INCOME");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
@@ -132,7 +135,7 @@ public class Filter {
     RowFilter<TransactionsTable, Integer> spendingFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 1).toString().equals("SPENDING");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
