@@ -9,12 +9,11 @@ import java.awt.*;
 // Casom mozno vytvorit MainManager kde by boli vsetky hlavne classy ako MainFrame, TabbedPane, ToolBar pripadne ich presunut do Main
 
 public class MainFrame extends JFrame {
-    private final TablesManager tablesManager;
     private final ToolBar toolBar;
     private final TabbedPane tabbedPane;
 
     public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
-        tablesManager = new TablesManager(categoryDao, transactionDao);
+        TablesManager tablesManager = new TablesManager(categoryDao, transactionDao);
         toolBar = new ToolBar(this, tablesManager);
         tablesManager.addListSelectionListenerToTables(toolBar);
         tabbedPane = new TabbedPane(tablesManager, toolBar);

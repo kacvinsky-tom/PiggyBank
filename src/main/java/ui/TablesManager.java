@@ -10,15 +10,15 @@ import javax.swing.table.TableModel;
 import java.awt.*;
 
 public class TablesManager {
-    private StatisticsTable statisticsTableModel;
-    private StatisticsBalanceTable statisticsBalanceTableModel;
-    private CategoriesTable categoriesTableModel;
-    private TransactionsTable transactionsTableModel;
+    private final StatisticsTable statisticsTableModel;
+    private final StatisticsBalanceTable statisticsBalanceTableModel;
+    private final CategoriesTable categoriesTableModel;
+    private final TransactionsTable transactionsTableModel;
 
-    private JTable statisticsJTable;
-    private JTable statisticsBalanceJTable;
-    private JTable categoriesJTable;
-    private JTable transactionsJTable;
+    private final JTable statisticsJTable;
+    private final JTable statisticsBalanceJTable;
+    private final JTable categoriesJTable;
+    private final JTable transactionsJTable;
 
     public TablesManager(CategoryDao categoryDao, TransactionDao transactionDao){
         statisticsTableModel = new StatisticsTable();

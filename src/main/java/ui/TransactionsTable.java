@@ -35,10 +35,6 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         return transactions;
     }
 
-    public Transaction getTransaction(int index){
-        return transactions.get(index);
-    }
-
     @Override
     public int getRowCount() {
         return transactions.size();

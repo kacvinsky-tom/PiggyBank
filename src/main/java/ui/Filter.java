@@ -2,7 +2,6 @@ package ui;
 
 import model.Category;
 import model.DateSpinnerType;
-import model.Transaction;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -40,12 +39,10 @@ public class Filter {
         comboBox.addActionListener(this::filterActionPerformed);
         toolbar.addSeparator();
 
-        //spinnerFrom = new DateSpinner(this.tablesManager, DateSpinnerType.FROM);
-        spinnerFrom = getDateSpinner();
+        spinnerFrom = new DateSpinner(this.tablesManager, DateSpinnerType.FROM);
         spinnerFrom.addChangeListener(this::dateChangePerformedFrom);
 
-        //spinnerTo = new DateSpinner(this.tablesManager, DateSpinnerType.TO);
-        spinnerTo = getDateSpinner();
+        spinnerTo = new DateSpinner(this.tablesManager, DateSpinnerType.TO);
         spinnerTo.addChangeListener(this::dateChangePerformedTo);
 
         toolbar.add(new JLabel("From:"));
@@ -53,15 +50,6 @@ public class Filter {
         toolbar.addSeparator();
         toolbar.add(new JLabel("To:"));
         toolbar.add(spinnerTo);
-    }
-
-    private JSpinner getDateSpinner() {
-        JSpinner s = new JSpinner();
-        SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
-        s.setModel(spinnerDateModel);
-        s.setEditor(new JSpinner.DateEditor(s, "dd/MM/yyyy"));
-        s.setVisible(true);
-        return s;
     }
 
     public void setSelectedTabIndex(int selectedTabIndex) {
@@ -103,8 +91,6 @@ public class Filter {
 
         Date startDate = getSpinnerDate((Date) spinnerFrom.getValue(), -1);
         Date endDate = getSpinnerDate((Date) spinnerTo.getValue(), 1);
-        System.out.println(startDate);
-        System.out.println(endDate);
 
         if (startDate.after(endDate)) {     // TODO KONTROLOVAT ESTE PRED UPRAVENIM DATUMU
             createWrongDateDialog();
