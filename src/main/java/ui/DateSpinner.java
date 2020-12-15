@@ -1,5 +1,6 @@
 package ui;
 
+import model.DateSpinnerType;
 import model.Transaction;
 
 import javax.swing.*;
@@ -8,36 +9,38 @@ import java.util.List;
 
 public class DateSpinner {
 
-    private final TransactionsTable transactionsTable;
-    private final JSpinner spinner;
+    private final TablesManager tablesManager;
+    private final DateSpinnerType type;
 
-    public DateSpinner(TransactionsTable transactionsTable, boolean bool){
-        this.transactionsTable = transactionsTable;
-        this.spinner = createDateSpinner(bool);
+    public JSpinner getSp() {
+        return sp;
     }
 
-    private JSpinner createDateSpinner(boolean from) {
-        JSpinner spinner = new JSpinner();
+    private final JSpinner sp;
+
+    public DateSpinner(TablesManager tablesManager, DateSpinnerType type){
+        this.tablesManager = tablesManager;
+        this.type = type;
+        sp = setDateSpinner();
+    }
+
+    private JSpinner setDateSpinner() {
+        JSpinner sp = new JSpinner();
         SpinnerDateModel spinnerDateModel = new SpinnerDateModel();
-        spinner.setModel(spinnerDateModel);
-        spinner.setEditor(new JSpinner.DateEditor(spinner, "dd/MM/yyyy"));
-        if (from) {
-            setSpinner_from(spinnerDateModel);
+        sp.setModel(spinnerDateModel);
+        sp.setEditor(new JSpinner.DateEditor(sp, "dd/MM/yyyy"));
+        if (type == DateSpinnerType.FROM) {
+            setFromSpinner(spinnerDateModel);
         }
-        spinner.setVisible(true);
-        return spinner;
+        sp.setVisible(true);
+        return sp;
     }
 
-    private void setSpinner_from(SpinnerDateModel spinnerDateModel) {
-        List<Transaction> tranList = transactionsTable.getTransactions();
+    private void setFromSpinner(SpinnerDateModel spinnerDateModel) {
+        List<Transaction> tranList = tablesManager.getTranTableModel().getTransactions();
         if (!tranList.isEmpty()) {
             Date minDate = tranList.stream().map(Transaction::getDate).min(Date::compareTo).get();
             spinnerDateModel.setValue(minDate);
         }
     }
-
-    public JSpinner getSpinner() {
-        return spinner;
-    }
-
 }

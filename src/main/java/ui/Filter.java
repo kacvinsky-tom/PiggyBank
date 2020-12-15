@@ -1,6 +1,7 @@
 package ui;
 
 import model.Category;
+import model.DateSpinnerType;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -9,20 +10,20 @@ import java.awt.event.ActionEvent;
 import java.util.*;
 import java.util.List;
 
-public class Filter {
-    private final JSpinner spinner_from, spinner_to;
+public class Filter extends JPanel {
+    private final JSpinner spinnerFrom;
+    private final JSpinner spinnerTo;
     private JComboBox<Object> comboBox;
     private final JCheckBox cb_incomes, cb_spendings;
     private final TableRowSorter<TransactionsTable> sorter;
-    private final JTable transactions;
-    private final TransactionsTable transactionsTableModel;
+    private final TablesManager tablesManager;
+    private int selectedTabIndex = 0;
 
-    public Filter(JToolBar toolbar, JTable transactions, JTable categories, TransactionsTable transactionsTableModel) {
-        this.transactions = transactions;
-        this.transactionsTableModel = transactionsTableModel;
+    public Filter(JToolBar toolbar, TablesManager tablesManager) {
+        this.tablesManager = tablesManager;
 
-        sorter = new TableRowSorter<>(transactionsTableModel);
-        transactions.setRowSorter(sorter);
+        sorter = new TableRowSorter<>(tablesManager.getTranTableModel());
+        tablesManager.getTranJTable().setRowSorter(sorter);
 
         cb_incomes = new JCheckBox("Incomes", true);
         cb_incomes.addActionListener(this::filterActionPerformed);
@@ -34,19 +35,25 @@ public class Filter {
         toolbar.add(cb_spendings);
         toolbar.addSeparator();
 
-        toolbar.add(createComboBox(categories));
+        toolbar.add(createComboBox(tablesManager.getCatJTable()));
         comboBox.addActionListener(this::filterActionPerformed);
         toolbar.addSeparator();
 
-        spinner_from = new DateSpinner(transactionsTableModel, true).getSpinner();
-        spinner_from.addChangeListener(this::dateChangePerformed);
-        spinner_to = new DateSpinner(transactionsTableModel, false).getSpinner();
+        spinnerFrom = new DateSpinner(tablesManager, DateSpinnerType.FROM).getSp();
+        spinnerFrom.addChangeListener(this::dateChangePerformed);
+
+        spinnerTo = new DateSpinner(tablesManager, DateSpinnerType.TO).getSp();
+        spinnerTo.addChangeListener(this::dateChangePerformed);
 
         toolbar.add(new JLabel("From:"));
-        toolbar.add(spinner_from);
+        toolbar.add(spinnerFrom);
         toolbar.addSeparator();
         toolbar.add(new JLabel("To:"));
-        toolbar.add(spinner_to);
+        toolbar.add(spinnerTo);
+    }
+
+    public void setSelectedTabIndex(int selectedTabIndex) {
+        this.selectedTabIndex = selectedTabIndex;
     }
 
     private void dateChangePerformed(ChangeEvent changeEvent) {
@@ -66,6 +73,7 @@ public class Filter {
     }
 
     private Date getSpinnerDate(Date date, int i) {
+        System.out.println(date);
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.add(Calendar.DATE, i);
@@ -75,8 +83,8 @@ public class Filter {
     private void filterTable() {
         sorter.setRowFilter(null);
 
-        Date startDate = getSpinnerDate((Date) spinner_from.getValue(), -1);
-        Date endDate = getSpinnerDate((Date) spinner_to.getValue(), 1);
+        Date startDate = getSpinnerDate((Date) spinnerFrom.getValue(), -1);
+        Date endDate = getSpinnerDate((Date) spinnerTo.getValue(), 1);
 
         if (startDate.after(endDate)) {
             createWrongDateDialog();
@@ -108,7 +116,7 @@ public class Filter {
     RowFilter<TransactionsTable, Integer> incomeFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return !transactions.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return !tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 1).toString().contains("-");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
@@ -118,7 +126,7 @@ public class Filter {
     RowFilter<TransactionsTable, Integer> spendingFilter = new RowFilter<>() {
         public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
             try {
-                return transactions.getValueAt(entry.getIdentifier(), 1).toString().contains("-");
+                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 1).toString().contains("-");
             } catch (ArrayIndexOutOfBoundsException ex) {
                 return false;
             }
