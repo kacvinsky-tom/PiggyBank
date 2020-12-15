@@ -106,7 +106,7 @@ public class TransactionDao {
                     Transaction transaction = new Transaction(
                             rs.getString("NAME"),
                             amount,
-                            new Category(rs.getString("CATEGORY"), Color.BLACK),
+                            new Category(rs.getString("CATEGORY"), Color.BLACK),    //TODO black?
                             new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
                             rs.getString("NOTE"),
                             type);
@@ -145,7 +145,7 @@ public class TransactionDao {
                     "\"TYPE\" VARCHAR(8) NOT NULL CONSTRAINT TYPE_CHECK CHECK (\"TYPE\" IN ('INCOME','SPENDING'))," +
                     "\"NAME\" VARCHAR(100) NOT NULL," +
                     "CREATION_DATE DATE NOT NULL," +
-                    "NOTE VARCHAR(200)," +
+                    "TEXT," +
                     "\"CATEGORY\" VARCHAR(100)" +
                     ")");
         } catch (SQLException ex) {
