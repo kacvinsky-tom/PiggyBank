@@ -87,5 +87,7 @@ public class TablesManager {
 
     public void addListSelectionListenerToTables(ToolBar toolBar){
         statisticsJTable.getSelectionModel().addListSelectionListener(toolBar::rowSelectionChanged);
+        transactionsJTable.getSelectionModel().addListSelectionListener(toolBar::rowSelectionChanged);
+        categoriesJTable.getSelectionModel().addListSelectionListener(toolBar::rowSelectionChanged);
     }
 }

@@ -4,6 +4,16 @@ import javax.swing.table.AbstractTableModel;
 
 public class StatisticsBalanceTable extends AbstractTableModel {
 
+    private double balance = 1000;  // assigned only for testing purposes
+
+    public StatisticsBalanceTable(){
+        updateBalance();
+    }
+
+    public void updateBalance(){
+        // TODO IMPLEMENT BALANCE UPDATING
+    }
+
     @Override
     public int getRowCount() {
         return 1;
@@ -20,9 +30,9 @@ public class StatisticsBalanceTable extends AbstractTableModel {
             case 0:
                 return "Balance";
             case 1:
-                return 1000;
+                return balance;
             default:
-                return 9;
+                return null;    // add some exception
         }
     }
 }

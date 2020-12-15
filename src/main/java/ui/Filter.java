@@ -18,7 +18,6 @@ public class Filter {
     private final JCheckBox cb_spendings;
     private final TableRowSorter<TransactionsTable> sorter;
     private final TablesManager tablesManager;
-
     private int selectedTabIndex = 0;
 
     public Filter(JToolBar toolbar, TablesManager tablesManager) {
@@ -54,8 +53,8 @@ public class Filter {
         this.selectedTabIndex = selectedTabIndex;
     }
 
-    private void disableFilterSettings(){   // dorobit vyšednutie filtra pri urcitych taboch
-
+    private void disableFilterSettings(){
+        // TODO IMPLEMENT DISABLING FILTERS ON CERTAIN TABS USING 'selectedTabIndex' AND 'TableType'
     }
 
     private JComboBox createComboBox(JTable categories) {
