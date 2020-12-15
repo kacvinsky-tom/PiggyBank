@@ -1,5 +1,7 @@
 package ui;
 
-public abstract class AbstractAddAction {
+import javax.swing.*;
+
+public abstract class AbstractAddAction extends AbstractAction {
 
 }
