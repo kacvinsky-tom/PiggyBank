@@ -62,7 +62,7 @@ public class Filter {
         Date startDate = (Date) spinnerFrom.getValue();
         Date endDate = (Date) spinnerTo.getValue();
         if (startDate.after(endDate)) {
-            messageDialog.showMessage("Date 'From' shouldn't be older than date 'To'!", "Alert", JOptionPane.WARNING_MESSAGE);
+            messageDialog.showMessage("Date 'From' shouldn't be older than date 'To'!", JOptionPane.WARNING_MESSAGE);
             return false;
         }
         return true;
