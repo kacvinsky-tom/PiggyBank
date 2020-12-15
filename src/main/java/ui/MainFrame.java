@@ -9,8 +9,8 @@ import java.awt.*;
 // Casom mozno vytvorit MainManager kde by boli vsetky hlavne classy ako MainFrame, TabbedPane, ToolBar pripadne ich presunut do Main
 
 public class MainFrame extends JFrame {
-    private final TabbedPane tabbedPane;
     private final ToolBar toolBar;
+    private final TabbedPane tabbedPane;
 
     public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
         TablesManager tablesManager = new TablesManager(categoryDao, transactionDao);
