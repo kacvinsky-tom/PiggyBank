@@ -1,5 +1,6 @@
 
 import data.CategoryDao;
+import data.StatisticDao;
 import data.TransactionDao;
 import ui.MainFrame;
 
@@ -15,8 +16,9 @@ public class Main {
     public static void main(String[] args) {
         CategoryDao categoryDao = new CategoryDao(createDataSource());
         TransactionDao transactionDao = new TransactionDao(createDataSource());
+        StatisticDao statisticDao = new StatisticDao(createDataSource());
         initNimbusLookAndFeel();
-        EventQueue.invokeLater(() -> new MainFrame(categoryDao, transactionDao).setVisible(true));
+        EventQueue.invokeLater(() -> new MainFrame(categoryDao, transactionDao, statisticDao).setVisible(true));
     }
 
     private static DataSource createDataSource() {

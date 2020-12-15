@@ -52,6 +52,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
             for (var transaction : transactions) {
                 if(transaction.getCategory().getName().equals(category.getName())){
                     transaction.setCategory(categoriesTable.getOthers());
+                    fireTableRowsUpdated(rowIndex, rowIndex);
                     transactionDao.update(transaction);
                 }
             }

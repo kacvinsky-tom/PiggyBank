@@ -1,5 +1,6 @@
 package ui;
 
+import data.StatisticDao;
 import model.Category;
 import model.CategoryStatistic;
 
@@ -19,21 +20,23 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
             Column.readOnly("Sum", Double.class, CategoryStatistic::getSum)
     );
 
-    private final List<CategoryStatistic> statistics = new ArrayList<>();
+    private final List<CategoryStatistic> statistics;
+    private final StatisticDao statisticDao;
 
-    protected StatisticsTable() {
+    protected StatisticsTable(StatisticDao statisticDao) {
         super(COLUMNS);
-
+        this.statisticDao = statisticDao;
+        statistics = new ArrayList<>(statisticDao.setAll());
         //tests
-        statistics.add(
-                new CategoryStatistic(new Category("Food", Color.BLACK))
-        );
-        statistics.add(
-                new CategoryStatistic(new Category("Medicine", Color.GREEN))
-        );
-        statistics.add(
-                new CategoryStatistic(new Category("Toys", Color.RED))
-        );
+//        statistics.add(
+//                new CategoryStatistic(new Category("Food", Color.BLACK))
+//        );
+//        statistics.add(
+//                new CategoryStatistic(new Category("Medicine", Color.GREEN))
+//        );
+//        statistics.add(
+//                new CategoryStatistic(new Category("Toys", Color.RED))
+//        );
     }
 
 

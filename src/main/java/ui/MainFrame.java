@@ -1,6 +1,7 @@
 package ui;
 
 import data.CategoryDao;
+import data.StatisticDao;
 import data.TransactionDao;
 
 import javax.swing.*;
@@ -11,8 +12,8 @@ public class MainFrame extends JFrame {
     private final ToolBar toolBar;
     private final TabbedPane tabbedPane;
 
-    public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao) {
-        TablesManager tablesManager = new TablesManager(categoryDao, transactionDao);
+    public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao, StatisticDao statisticDao) {
+        TablesManager tablesManager = new TablesManager(categoryDao, transactionDao, statisticDao);
         toolBar = new ToolBar(this, tablesManager);
         tablesManager.addListSelectionListenerToTables(toolBar);
         tabbedPane = new TabbedPane(tablesManager, toolBar);
