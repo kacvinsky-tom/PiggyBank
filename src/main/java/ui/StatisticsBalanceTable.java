@@ -10,7 +10,7 @@ public class StatisticsBalanceTable extends AbstractTableModel {
     private BigDecimal balance;
 
     public StatisticsBalanceTable(StatisticDao statisticDao){
-        balance = statisticDao.getBalance();
+        balance = statisticDao.getIncome().subtract(statisticDao.getExpense());
     }
 
     public void updateBalance(){

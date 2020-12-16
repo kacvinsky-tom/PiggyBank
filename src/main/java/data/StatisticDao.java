@@ -71,10 +71,10 @@ public class StatisticDao {
                 while (rs.next()) {
                     all = (int) rs.getLong("total");
                 }
-                return all;
             }
+            return all;
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to find category " + category, ex);
+            throw new DataAccessException("Failed to get number of transactions " + category, ex);
         }
     }
 
@@ -90,10 +90,10 @@ public class StatisticDao {
                 while (rs.next()) {
                     all = rs.getLong("totalAmount");
                 }
-                return BigDecimal.valueOf(all);
             }
+            return BigDecimal.valueOf(all);
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to find category " + category, ex);
+            throw new DataAccessException("Failed to get income or expense " + category, ex);
         }
     }
 
@@ -101,37 +101,55 @@ public class StatisticDao {
         long all = 0;
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS totalIncome FROM TRANSACTIONS WHERE \"TYPE\" = ?"
+                     "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
              )){
             st.setString(1, transactionType.name());
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
-                    all = rs.getLong("totalIncome");
+                    all = rs.getLong("total");
                 }
-                return BigDecimal.valueOf(all);
             }
+            return BigDecimal.valueOf(all);
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to find category " + ex);
+            throw new DataAccessException("Failed to get total income or expense " + ex);
         }
     }
 
-    public BigDecimal getBalance(){
+    public BigDecimal getIncome(){
         long balance;
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS totalIncome FROM TRANSACTIONS GROUP BY \"TYPE\" "
+                     "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
              , ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
+            st.setString(1, TransactionType.INCOME.name());
             try (var rs = st.executeQuery()) {
                 rs.first();
-                balance = rs.getLong("totalIncome");
-                rs.last();
-                balance = balance - rs.getLong("totalIncome");
-                return BigDecimal.valueOf(balance);
+                balance = rs.getLong("total");
             } catch (SQLException ex){
                 return BigDecimal.valueOf(0);
             }
+            return BigDecimal.valueOf(balance);
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to find category " + ex);
+            throw new DataAccessException("Failed to get Income " + ex);
+        }
+    }
+
+    public BigDecimal getExpense(){
+        long balance;
+        try (var connection = dataSource.getConnection();
+             var st = connection.prepareStatement(
+                     "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
+                     , ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
+            st.setString(1, TransactionType.SPENDING.name());
+            try (var rs = st.executeQuery()) {
+                rs.first();
+                balance = rs.getLong("total");
+            } catch (SQLException ex){
+                return BigDecimal.valueOf(0);
+            }
+            return BigDecimal.valueOf(balance);
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to get Income " + ex);
         }
     }
 }
