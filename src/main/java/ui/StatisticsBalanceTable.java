@@ -4,7 +4,7 @@ import javax.swing.table.AbstractTableModel;
 
 public class StatisticsBalanceTable extends AbstractTableModel {
 
-    private double balance = 1000;  // assigned only for testing purposes
+    private double balance = 1000;
 
     public StatisticsBalanceTable(){
         updateBalance();
@@ -32,7 +32,7 @@ public class StatisticsBalanceTable extends AbstractTableModel {
             case 1:
                 return balance;
             default:
-                return null;    // add some exception
+                return null;    // TODO ADD SOME EXCEPTION HERE
         }
     }
 }

@@ -1,5 +1,8 @@
 package model;
 
+import enums.TransactionType;
+
+import java.awt.*;
 import java.util.Date;
 import java.util.Objects;
 
@@ -54,8 +57,12 @@ public class Transaction {
         this.date = date;
     }
 
-    public String getNote() {
+    public String getNote(){
         return note;
+    }
+
+    public Color getCategoryColor(){
+        return category.getColor();
     }
 
     public void setNote(String note) {

@@ -1,6 +1,6 @@
 package ui;
 
-import model.DateSpinnerType;
+import enums.DateSpinnerType;
 import model.Transaction;
 
 import javax.swing.*;

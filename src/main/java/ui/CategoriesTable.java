@@ -2,8 +2,6 @@ package ui;
 
 import data.CategoryDao;
 import model.Category;
-import model.Transaction;
-import model.TransactionType;
 
 import javax.swing.*;
 import java.awt.*;
