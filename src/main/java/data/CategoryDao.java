@@ -102,25 +102,6 @@ public class CategoryDao {
         }
     }
 
-    public List<Category> find() {
-        try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORIES")) {
-            List<Category> categories = new ArrayList<>();
-            try (var rs = st.executeQuery()) {
-                while (rs.next()) {
-                    Category category = new Category(
-                            rs.getString("NAME"),
-                            Color.decode(rs.getString("COLOR")));
-                    category.setId(rs.getLong("ID"));
-                    categories.add(category);
-                }
-            }
-            return categories;
-        } catch (SQLException ex) {
-            throw new DataAccessException("Failed to load all categories", ex);
-        }
-    }
-
     private void initTable() {
         if (!tableExits("APP", "CATEGORIES")) {
             createTable();
