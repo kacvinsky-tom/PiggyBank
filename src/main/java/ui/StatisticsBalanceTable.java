@@ -1,13 +1,16 @@
 package ui;
 
+import data.StatisticDao;
+
 import javax.swing.table.AbstractTableModel;
+import java.math.BigDecimal;
 
 public class StatisticsBalanceTable extends AbstractTableModel {
 
-    private double balance = 1000;
+    private BigDecimal balance;
 
-    public StatisticsBalanceTable(){
-        updateBalance();
+    public StatisticsBalanceTable(StatisticDao statisticDao){
+        balance = statisticDao.getBalance();
     }
 
     public void updateBalance(){

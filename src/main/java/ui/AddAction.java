@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,9 +73,9 @@ final class AddAction extends AbstractAction {
     }
 
     private void addButtonActionPerformedTransaction(ActionEvent actionEvent) {
-        double amount;
+        BigDecimal amount;
         try {
-            amount = Math.abs(Double.parseDouble(amountField.getText()));
+            amount = new BigDecimal(amountField.getText()).abs();
         } catch (NumberFormatException ex){
             messageDialog.showErrorMessage("Enter valid number into amount!");
             return;

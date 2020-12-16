@@ -1,22 +1,20 @@
 package model;
 
-import enums.TransactionType;
-
-import java.awt.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Objects;
 
 public class Transaction {
 
     private Long id;
-    private double amount;
+    private BigDecimal amount;
     private String name;
     private Date date;
     private String note;
     private Category category;
     private TransactionType type;
 
-    public Transaction(String name, double amount, Category category, Date date, String note, TransactionType type) {
+    public Transaction(String name, BigDecimal amount, Category category, Date date, String note, TransactionType type) {
         setType(type);
         setName(name);
         setAmount(amount);
@@ -33,11 +31,11 @@ public class Transaction {
         this.id = id;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

@@ -1,13 +1,15 @@
 package model;
 
+import java.math.BigDecimal;
+
 public class CategoryStatistic {
     private final Category category;
-    private int transactionsNumber = 0;
-    private double expenses = 0;
-    private double income = 0;
-    private double percentageInc = 0;
-    private double percentageSpend = 0;
-    private double sum = 0;
+    private int transactionsNumber;
+    private BigDecimal expenses;
+    private BigDecimal income;
+    private BigDecimal percentageInc;
+    private BigDecimal percentageSpend;
+    private BigDecimal sum;
 
     public CategoryStatistic(Category category){
         this.category = category;
@@ -29,43 +31,43 @@ public class CategoryStatistic {
         this.transactionsNumber = transactionsNumber;
     }
 
-    public double getExpenses() {
+    public BigDecimal getExpenses() {
         return expenses;
     }
 
-    public void setExpenses(double expenses) {
+    public void setExpenses(BigDecimal expenses) {
         this.expenses = expenses;
     }
 
-    public double getIncome() {
+    public BigDecimal getIncome() {
         return income;
     }
 
-    public void setIncome(double income) {
+    public void setIncome(BigDecimal income) {
         this.income = income;
     }
 
-    public double getPercentageInc() {
+    public BigDecimal getPercentageInc() {
         return percentageInc;
     }
 
-    public void setPercentageInc(double percentageInc) {
+    public void setPercentageInc(BigDecimal percentageInc) {
         this.percentageInc = percentageInc;
     }
 
-    public double getPercentageSpend() {
+    public BigDecimal getPercentageSpend() {
         return percentageSpend;
     }
 
-    public void setPercentageSpend(double percentageSpend) {
+    public void setPercentageSpend(BigDecimal percentageSpend) {
         this.percentageSpend = percentageSpend;
     }
 
-    public double getSum() {
+    public BigDecimal getSum() {
         return sum;
     }
 
-    public void setSum(double sum) {
+    public void setSum(BigDecimal sum) {
         this.sum = sum;
     }
 }

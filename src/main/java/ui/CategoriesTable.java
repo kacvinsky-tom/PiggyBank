@@ -17,7 +17,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
 
     private final List<Category> categories;
     private final CategoryDao categoryDao;
-    private Category others;
+    private static Category others;
 
     public CategoriesTable(CategoryDao categoryDao) {
         super(COLUMNS);
