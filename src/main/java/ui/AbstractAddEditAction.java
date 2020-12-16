@@ -3,7 +3,6 @@ package ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
 public abstract class AbstractAddEditAction extends AbstractAction {
 
@@ -18,9 +17,6 @@ public abstract class AbstractAddEditAction extends AbstractAction {
         this.frame = frame;
         this.tablesManager = tablesManager;
         this.messageDialog = messageDialog;
-        putValue(SHORT_DESCRIPTION, "Adds new row");
-        putValue(MNEMONIC_KEY, KeyEvent.VK_A);
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
     }
 
     protected void updateSelectedTabIndex(int selectedTabIndex) {
