@@ -8,13 +8,16 @@ import java.math.BigDecimal;
 public class StatisticsBalanceTable extends AbstractTableModel {
 
     private BigDecimal balance;
+    private final StatisticDao statisticDao;
 
     public StatisticsBalanceTable(StatisticDao statisticDao){
-        balance = statisticDao.getIncome().subtract(statisticDao.getExpense());
+        this.statisticDao = statisticDao;
+        update();
     }
 
-    public void updateBalance(){
-        // TODO IMPLEMENT BALANCE UPDATING
+    public void update(){
+        balance = statisticDao.getIncome().subtract(statisticDao.getExpense());
+        fireTableDataChanged();
     }
 
     @Override

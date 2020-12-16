@@ -65,6 +65,8 @@ public class EditTransaction extends AbstractAddEditTransaction {
         Date date = (Date) spinner.getValue();
 
         updateTransaction(nameField.getText(), amount, category, date, noteField.getText(), type);
+        tablesManager.getStatTableModel().update();
+        tablesManager.getStatBalTableModel().update();
         dialog.dispose();
     }
 

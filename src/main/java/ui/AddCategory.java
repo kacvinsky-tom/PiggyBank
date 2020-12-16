@@ -39,6 +39,7 @@ public class AddCategory extends AbstractAddEditCategory {
         Category newCategory = new Category(nameField.getText(), categoryColorPanel.getBackground());
         if (!checkCategoryExistence(newCategory, false, null)) {
             tablesManager.getCatTableModel().addRow(newCategory);
+            tablesManager.getStatTableModel().update();
             dialog.dispose();
         }
     }

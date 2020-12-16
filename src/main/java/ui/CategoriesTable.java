@@ -32,7 +32,6 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
     }
 
     private void addDefaultCategory() {
-        List<Category> categories = categoryDao.findAll();
         for (Category category : categories) {
             if (category.getName().equals("Others")) {
                 others = category;

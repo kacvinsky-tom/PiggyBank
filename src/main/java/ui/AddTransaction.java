@@ -48,6 +48,8 @@ public class AddTransaction extends AbstractAddEditTransaction {
 
         Transaction newTransaction = new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type);
         tablesManager.getTranTableModel().addTransaction(newTransaction);
+        tablesManager.getStatTableModel().update();
+        tablesManager.getStatBalTableModel().update();
         dialog.dispose();
     }
 }

@@ -21,15 +21,19 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
             Column.readOnly("Sum", BigDecimal.class, CategoryStatistic::getSum)
     );
 
-    private final List<CategoryStatistic> statistics;
+    private List<CategoryStatistic> statistics;
     private final StatisticDao statisticDao;
 
     protected StatisticsTable(StatisticDao statisticDao) {
         super(COLUMNS);
         this.statisticDao = statisticDao;
-        statistics = new ArrayList<>(statisticDao.setAll());
+        statistics = statisticDao.setAll();
     }
 
+    public void update(){
+        statistics = statisticDao.setAll();
+        fireTableDataChanged();
+    }
 
     @Override
     public int getRowCount() {

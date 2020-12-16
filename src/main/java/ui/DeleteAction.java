@@ -49,6 +49,7 @@ final class DeleteAction extends AbstractAction {
                         messageDialog.showErrorMessage("You can't delete default category 'Others'!");
                     }
                 });
+        tablesManager.getStatTableModel().update();
     }
 
     private String createDialogString(JTable table){
@@ -70,5 +71,7 @@ final class DeleteAction extends AbstractAction {
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .forEach(tablesManager.getTranTableModel()::deleteRow);
+        tablesManager.getStatTableModel().update();
+        tablesManager.getStatBalTableModel().update();
     }
 }
