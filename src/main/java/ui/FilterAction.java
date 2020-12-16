@@ -7,8 +7,6 @@ import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionEvent;
 
 public class FilterAction {
-    private final TablesManager tablesManager;
-    private final MessageDialog messageDialog;
     private final FilterPanel filterPanel;
     private final StatisticsFilter statisticsFilter;
     private final TransactionsFilter transactionsFilter;
@@ -16,9 +14,7 @@ public class FilterAction {
     private int selectedTabIndex = 0;
 
     public FilterAction(TablesManager tablesManager, MessageDialog messageDialog) {
-        this.tablesManager = tablesManager;
-        this.messageDialog = messageDialog;
-        this.filterPanel = new FilterPanel(tablesManager);
+        this.filterPanel = new FilterPanel(tablesManager, messageDialog);
         this.statisticsFilter = new StatisticsFilter(tablesManager, filterPanel);
         this.transactionsFilter = new TransactionsFilter(tablesManager, filterPanel);
         setActionListeners();
@@ -30,12 +26,13 @@ public class FilterAction {
 
     public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
+        filterPanel.setComponentsEnable(selectedTabIndex);
     }
 
     private void setActionListeners(){
         filterPanel.getCheckBoxIncomes().addActionListener(this::filterActionPerformed);
         filterPanel.getCheckBoxSpending().addActionListener(this::filterActionPerformed);
-        filterPanel.getComboBox().addActionListener(this::filterActionPerformed);
+        filterPanel.getCategoriesComboBox().addActionListener(this::filterActionPerformed);
         filterPanel.getSpinnerFrom().addChangeListener(this::dateChangePerformed);
         filterPanel.getSpinnerTo().addChangeListener(this::dateChangePerformed);
     }
