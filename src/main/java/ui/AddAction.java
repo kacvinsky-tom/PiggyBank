@@ -26,9 +26,9 @@ class AddAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (selectedTabIndex <= 1) {
-            this.addTransaction.start();
+            this.addTransaction.add();
         } else if (selectedTabIndex == 2) {
-            this.addCategory.start();
+            this.addCategory.add();
         }
     }
 }
