@@ -16,14 +16,16 @@ public class FilterPanel extends JPanel {
     private final JCheckBox checkBoxIncomes, checkBoxSpending;
     private JComboBox<Object> categoriesComboBox;
     private final MessageDialog messageDialog;
+    private final TablesManager tablesManager;
 
     public FilterPanel(TablesManager tablesManager, MessageDialog messageDialog){
+        this.messageDialog = messageDialog;
+        this.tablesManager = tablesManager;
         checkBoxIncomes = new JCheckBox("Income", true);
         checkBoxSpending = new JCheckBox("Spending", true);
         spinnerFrom = new DateSpinner(tablesManager, DateSpinnerType.FROM);
         spinnerTo = new DateSpinner(tablesManager, DateSpinnerType.TO);
-        categoriesComboBox = createComboBox(tablesManager);
-        this.messageDialog = messageDialog;
+        categoriesComboBox = createComboBox();
         setFilterPanel();
     }
 
@@ -109,11 +111,15 @@ public class FilterPanel extends JPanel {
         }
     }
 
-    private JComboBox<Object> createComboBox(TablesManager tablesManager) {
-        categoriesComboBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
+    private JComboBox<Object> createComboBox() {
+        categoriesComboBox = new JComboBox<>(this.tablesManager.getCatTableModel().getCategories().toArray());
         categoriesComboBox.insertItemAt(new Category("All", null), 0);
         categoriesComboBox.setSelectedIndex(0);
         categoriesComboBox.setEnabled(false);
         return categoriesComboBox;
+    }
+
+    public void updateCategoriesComboCox(){     // TODO CALL UPDATE AFTER ADD/EDIT CATEGORY
+        categoriesComboBox = new JComboBox<>(this.tablesManager.getCatTableModel().getCategories().toArray());
     }
 }
