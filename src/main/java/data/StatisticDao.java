@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +37,8 @@ public class StatisticDao {
                     setIncomeAndExpense(categoryStatistic);
                     categoryStatistics.add(categoryStatistic);
                 }
+                return categoryStatistics;
             }
-            return categoryStatistics;
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to set all CategoryStatistics", ex);
         }
@@ -71,8 +72,8 @@ public class StatisticDao {
                 while (rs.next()) {
                     all = (int) rs.getLong("total");
                 }
+                return all;
             }
-            return all;
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + category, ex);
         }
@@ -90,8 +91,8 @@ public class StatisticDao {
                 while (rs.next()) {
                     all = rs.getLong("totalAmount");
                 }
+                return BigDecimal.valueOf(all);
             }
-            return BigDecimal.valueOf(all);
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + category, ex);
         }
@@ -108,25 +109,26 @@ public class StatisticDao {
                 while (rs.next()) {
                     all = rs.getLong("totalIncome");
                 }
+                return BigDecimal.valueOf(all);
             }
-            return BigDecimal.valueOf(all);
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + ex);
         }
     }
 
     public BigDecimal getBalance(){
-        long all = 0;
+        long balance;
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
                      "SELECT SUM(AMOUNT) AS totalIncome FROM TRANSACTIONS GROUP BY \"TYPE\" "
-             )){
+             , ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
             try (var rs = st.executeQuery()) {
-                while (rs.next()) {
-                    all = rs.getLong("totalIncome");
-                }
+                rs.first();
+                balance = rs.getLong("totalIncome");
+                rs.last();
+                balance = balance - rs.getLong("totalIncome");
+                return BigDecimal.valueOf(balance);
             }
-            return BigDecimal.valueOf(all);
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + ex);
         }
