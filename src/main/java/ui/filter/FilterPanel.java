@@ -1,8 +1,8 @@
 package ui.filter;
 
 import model.Category;
-import model.DateSpinnerType;
-import model.TableType;
+import enums.DateSpinnerType;
+import enums.TableType;
 import ui.DateSpinner;
 import ui.MessageDialog;
 import ui.TablesManager;

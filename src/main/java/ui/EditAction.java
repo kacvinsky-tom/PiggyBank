@@ -2,7 +2,7 @@ package ui;
 
 import model.Category;
 import model.Transaction;
-import model.TransactionType;
+import enums.TransactionType;
 
 import javax.swing.*;
 import java.awt.*;

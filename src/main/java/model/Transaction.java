@@ -1,8 +1,8 @@
 package model;
 
-import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import enums.TransactionType;
+
+import java.awt.*;
 import java.util.Date;
 import java.util.Objects;
 
@@ -59,6 +59,10 @@ public class Transaction {
 
     public String getNote(){
         return note;
+    }
+
+    public Color getCategoryColor(){
+        return category.getColor();
     }
 
     public void setNote(String note) {

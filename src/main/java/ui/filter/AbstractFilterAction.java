@@ -2,7 +2,6 @@ package ui.filter;
 
 import ui.TablesManager;
 import ui.TransactionsTable;
-import ui.filter.FilterPanel;
 
 import javax.swing.*;
 

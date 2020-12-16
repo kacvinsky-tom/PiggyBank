@@ -1,6 +1,6 @@
 package ui;
 
-import model.TableType;
+import enums.TableType;
 import ui.filter.FilterManager;
 
 import javax.swing.*;

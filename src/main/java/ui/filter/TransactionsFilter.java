@@ -23,9 +23,9 @@ public class TransactionsFilter extends AbstractFilterAction {
         filterPanel.checkSpinnersValues();
         sorter.setRowFilter(null);
 
-        List<RowFilter<TransactionsTable, Integer>> filters = new ArrayList<>(5);
-        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER, filterPanel.getDateFrom(), 4));
-        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.BEFORE, filterPanel.getDateTo(), 4));
+        List<RowFilter<TransactionsTable, Integer>> filters = new ArrayList<>(6);
+        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.AFTER, filterPanel.getDateFrom(), 5));
+        filters.add(RowFilter.dateFilter(RowFilter.ComparisonType.BEFORE, filterPanel.getDateTo(), 5));
 
         if (filterPanel.getCategoriesComboBox().getSelectedIndex() > 0) {
             filters.add(categoriesFilter);

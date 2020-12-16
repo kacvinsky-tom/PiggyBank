@@ -1,7 +1,8 @@
 package ui.filter;
 
-import model.TableType;
+import enums.TableType;
 import ui.*;
+import ui.TablesManager;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

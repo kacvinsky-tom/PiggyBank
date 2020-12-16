@@ -4,7 +4,7 @@ import javax.swing.table.AbstractTableModel;
 
 public class StatisticsBalanceTable extends AbstractTableModel {
 
-    private double balance = 1000;  // TODO IMPLEMENT BALANCE COMPUTING
+    private double balance = 1000;
 
     public StatisticsBalanceTable(){
         updateBalance();

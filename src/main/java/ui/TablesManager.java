@@ -2,7 +2,6 @@ package ui;
 
 import data.CategoryDao;
 import data.TransactionDao;
-import model.CategoryCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -32,7 +31,7 @@ public class TablesManager {
         transactionsJTable = createJTable(transactionsTableModel);
 
         setTablesColumnsAlign();
-        categoriesJTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
+        setRenderers();
     }
 
     public JTable getStatJTable() {
@@ -65,6 +64,11 @@ public class TablesManager {
 
     public TransactionsTable getTranTableModel() {
         return transactionsTableModel;
+    }
+
+    private void setRenderers(){
+        categoriesJTable.setDefaultRenderer(Color.class, new CellColorRenderer());
+        transactionsJTable.setDefaultRenderer(Color.class, new CellColorRenderer());
     }
 
     private JTable createJTable(Object o){

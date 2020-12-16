@@ -19,7 +19,7 @@ public class StatisticsFilter extends AbstractFilterAction {
     public void filterTable(){
         filterPanel.checkSpinnersValues();
         sorter.setRowFilter(null);
-
+        // TODO IMPLEMENT STATISTICS FILTER
     }
 
 }

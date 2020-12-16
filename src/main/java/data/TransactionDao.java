@@ -2,7 +2,7 @@ package data;
 
 import model.Category;
 import model.Transaction;
-import model.TransactionType;
+import enums.TransactionType;
 
 import javax.sql.DataSource;
 import java.awt.*;
