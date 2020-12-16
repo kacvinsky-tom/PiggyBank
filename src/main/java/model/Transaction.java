@@ -1,5 +1,8 @@
 package model;
 
+import javax.swing.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Date;
 import java.util.Objects;
 
@@ -54,7 +57,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public String getNote() {
+    public String getNote(){
         return note;
     }
 

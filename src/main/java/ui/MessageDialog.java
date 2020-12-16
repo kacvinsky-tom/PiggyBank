@@ -9,13 +9,15 @@ public class MessageDialog {
         this.parentFrame = parentFrame;
     }
 
-    public void showMessage(String message, int option){
-        String title;
-        if (option == JOptionPane.ERROR_MESSAGE){
-            title = "Error";
-        } else {
-            title = "Alert";
-        }
-        JOptionPane.showMessageDialog(parentFrame, message, title, option);
+    public void showAlertMessage(String message){
+        JOptionPane.showMessageDialog(parentFrame, message, "Alert", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void showErrorMessage(String message){
+        JOptionPane.showMessageDialog(parentFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public boolean showConfirmMessage(String message, String title){
+        return JOptionPane.showConfirmDialog(parentFrame, message, title, JOptionPane.OK_CANCEL_OPTION) == 0;
     }
 }

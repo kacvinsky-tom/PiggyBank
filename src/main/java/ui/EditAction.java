@@ -35,7 +35,7 @@ final class EditAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl E"));
     }
 
-    public void setSelectedTabIndex(int selectedTabIndex) {
+    public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
     }
 
@@ -76,7 +76,7 @@ final class EditAction extends AbstractAction {
         try {
             amount = Double.parseDouble(amountField.getText());
         } catch (NumberFormatException ex) {
-            messageDialog.showMessage("Enter valid number into amount!",  JOptionPane.ERROR_MESSAGE);
+            messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
         Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
@@ -154,10 +154,10 @@ final class EditAction extends AbstractAction {
     private boolean checkCategoryExistence(String name, Color color){
         for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (c.getName().equals(name) && !c.equals(selectedCategory)){
-                messageDialog.showMessage("Category " + name + " already exists!",  JOptionPane.ERROR_MESSAGE);
+                messageDialog.showErrorMessage("Category " + name + " already exists!");
                 return false;
             } else if (c.getColor().equals(color) && !c.equals(selectedCategory)){
-                messageDialog.showMessage("Chosen color is already taken by another category!",  JOptionPane.ERROR_MESSAGE);
+                messageDialog.showErrorMessage("Chosen color is already taken by another category!");
                 return false;
             }
         }
@@ -200,7 +200,7 @@ final class EditAction extends AbstractAction {
         categoryPanel.add(confirmButton);
         confirmButton.addActionListener(e -> {
             if (newCategoryName.getText().equals("")){
-                messageDialog.showMessage("Enter name of the category!", JOptionPane.ERROR_MESSAGE);
+                messageDialog.showErrorMessage("Enter name of the category!");
 
             } else if (checkCategoryExistence(newCategoryName.getText(), categoryColorPanel.getBackground())){
                 setCategory(newCategoryName.getText(), categoryColorPanel.getBackground());

@@ -31,6 +31,7 @@ public class TablesManager {
         categoriesJTable = createJTable(categoriesTableModel);
         transactionsJTable = createJTable(transactionsTableModel);
 
+        setTablesColumnsAlign();
         categoriesJTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
     }
 
@@ -73,18 +74,26 @@ public class TablesManager {
         return table;
     }
 
+    private void setTablesColumnsAlign(){
+        setColumnAlign(transactionsJTable, JLabel.LEFT, new int[]{1});
+        setColumnAlign(statisticsBalanceJTable, JLabel.RIGHT, new int[]{1});
+        setColumnAlign(statisticsJTable, JLabel.LEFT, new int[]{1, 2, 3, 4, 5, 6});
+    }
+
+    private void setColumnAlign(JTable table, int option, int[] columns){
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(option);
+        for (int column : columns) {
+            table.getColumnModel().getColumn(column).setCellRenderer(rightRenderer);
+        }
+    }
+
     private JTable createStatisticsBalanceJTable(){
         JTable table = new JTable(statisticsBalanceTableModel);
-
         table.setTableHeader(null);
         table.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         table.setFont(table.getFont().deriveFont(Font.BOLD));
         table.setCellSelectionEnabled(false);
-
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-        table.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
-
         return table;
     }
 

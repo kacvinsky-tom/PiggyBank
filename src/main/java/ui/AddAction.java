@@ -34,7 +34,7 @@ final class AddAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
     }
 
-    public void setSelectedTabIndex(int selectedTabIndex) {
+    public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
     }
 
@@ -76,7 +76,7 @@ final class AddAction extends AbstractAction {
         try {
             amount = Math.abs(Double.parseDouble(amountField.getText()));
         } catch (NumberFormatException ex){
-            messageDialog.showMessage("Enter valid number into amount!", JOptionPane.ERROR_MESSAGE);
+            messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
         Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
@@ -137,11 +137,11 @@ final class AddAction extends AbstractAction {
     private boolean checkCategoryExistence(Category newCategory){
         for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (c.getName().equals(newCategory.getName())){
-                messageDialog.showMessage("Category " + newCategory.getName() + " already exists!", JOptionPane.ERROR_MESSAGE);
+                messageDialog.showErrorMessage("Category " + newCategory.getName() + " already exists!");
                 return false;
 
             } else if (c.getColor().equals(newCategory.getColor())){
-                messageDialog.showMessage("Chosen color is already taken by another category!", JOptionPane.ERROR_MESSAGE);
+                messageDialog.showErrorMessage("Chosen color is already taken by another category!");
                 return false;
             }
         }
@@ -174,7 +174,7 @@ final class AddAction extends AbstractAction {
         confirmButton.addActionListener(e -> {
             String name = newCategoryName.getText();
             if (name.equals("")){
-                messageDialog.showMessage("Enter name of the category!", JOptionPane.ERROR_MESSAGE);
+                messageDialog.showErrorMessage("Enter name of the category!");
                 return;
             }
             Category newCategory = new Category(name, categoryColorPanel.getBackground());

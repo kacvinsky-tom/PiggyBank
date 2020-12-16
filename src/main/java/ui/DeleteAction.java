@@ -21,7 +21,7 @@ final class DeleteAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl D"));
     }
 
-    public void setSelectedTabIndex(int selectedTabIndex) {
+    public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
     }
 
@@ -36,6 +36,9 @@ final class DeleteAction extends AbstractAction {
     }
 
     private void deleteCategory() {
+        if (!messageDialog.showConfirmMessage(createDialogString(tablesManager.getCatJTable()), "Delete")){
+            return;
+        }
         Arrays.stream(tablesManager.getCatJTable().getSelectedRows())
                 .map(tablesManager.getCatJTable()::convertRowIndexToModel)
                 .boxed()
@@ -43,12 +46,25 @@ final class DeleteAction extends AbstractAction {
                 .forEach(e -> {
                     tablesManager.getTranTableModel().changeCategoryToDefault(e);
                     if (!tablesManager.getCatTableModel().deleteRow(e)){
-                        messageDialog.showMessage("You can't delete default category 'Others'!", JOptionPane.ERROR_MESSAGE);
+                        messageDialog.showErrorMessage("You can't delete default category 'Others'!");
                     }
                 });
     }
 
+    private String createDialogString(JTable table){
+        String message = "Are you sure you want to delete following items?\n\n";
+        int count = 1;
+        for (int i : table.getSelectedRows()){
+            message += "       " + count + ". " + table.getValueAt(i, 0).toString() + "\n";
+            ++count;
+        }
+        return message;
+    }
+
     private void deleteTransaction() {
+        if (!messageDialog.showConfirmMessage(createDialogString(tablesManager.getTranJTable()), "Delete")){
+            return;
+        }
         Arrays.stream(tablesManager.getTranJTable().getSelectedRows())
                 .map(tablesManager.getTranJTable()::convertRowIndexToModel)
                 .boxed()
