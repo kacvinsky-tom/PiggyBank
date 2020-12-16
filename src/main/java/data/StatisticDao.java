@@ -66,7 +66,7 @@ public class StatisticDao {
         long all = 0;
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS totalAmount FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ? GROUP BY ID "
+                     "SELECT SUM(AMOUNT) AS totalAmount FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ?"
              )){
             st.setLong(1, category.getId());
             st.setString(2, transactionType.name());

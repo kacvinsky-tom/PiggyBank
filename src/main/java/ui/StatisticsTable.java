@@ -27,16 +27,6 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
         super(COLUMNS);
         this.statisticDao = statisticDao;
         statistics = new ArrayList<>(statisticDao.setAll());
-        //tests
-//        statistics.add(
-//                new CategoryStatistic(new Category("Food", Color.BLACK))
-//        );
-//        statistics.add(
-//                new CategoryStatistic(new Category("Medicine", Color.GREEN))
-//        );
-//        statistics.add(
-//                new CategoryStatistic(new Category("Toys", Color.RED))
-//        );
     }
 
 
