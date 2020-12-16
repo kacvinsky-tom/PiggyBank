@@ -1,19 +1,20 @@
-package ui;
+package ui.filter;
 
 import model.TableType;
+import ui.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionEvent;
 
-public class FilterAction {
+public class FilterManager {
     private final FilterPanel filterPanel;
     private final StatisticsFilter statisticsFilter;
     private final TransactionsFilter transactionsFilter;
 
     private int selectedTabIndex = 0;
 
-    public FilterAction(TablesManager tablesManager, MessageDialog messageDialog) {
+    public FilterManager(TablesManager tablesManager, MessageDialog messageDialog) {
         this.filterPanel = new FilterPanel(tablesManager, messageDialog);
         this.statisticsFilter = new StatisticsFilter(tablesManager, filterPanel);
         this.transactionsFilter = new TransactionsFilter(tablesManager, filterPanel);
@@ -52,7 +53,4 @@ public class FilterAction {
     private void filterActionPerformed(ActionEvent actionEvent) {
         determineFilter();
     }
-
-
-
 }

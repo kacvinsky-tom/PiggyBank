@@ -1,8 +1,11 @@
-package ui;
+package ui.filter;
 
 import model.Category;
 import model.DateSpinnerType;
 import model.TableType;
+import ui.DateSpinner;
+import ui.MessageDialog;
+import ui.TablesManager;
 
 import javax.swing.*;
 import java.util.Calendar;
