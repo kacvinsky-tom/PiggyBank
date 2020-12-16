@@ -35,7 +35,7 @@ public class StatisticsBalanceTable extends AbstractTableModel {
             case 1:
                 return balance;
             default:
-                return null;    // add some exception
+                return null;    // TODO ADD SOME EXCEPTION HERE
         }
     }
 }

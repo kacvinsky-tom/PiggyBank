@@ -3,7 +3,7 @@ package ui;
 import data.TransactionDao;
 import model.Category;
 import model.Transaction;
-import model.TransactionType;
+import enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
             Column.readOnly("Amount", BigDecimal.class, Transaction::getAmount),
             Column.readOnly("Type", TransactionType.class, Transaction::getType),
             Column.readOnly("Category", Category.class, Transaction::getCategory),
+            Column.readOnly("Category color", Color.class, Transaction::getCategoryColor),
             Column.readOnly("Created", Date.class, Transaction::getDate),
             Column.readOnly("Note", String.class, Transaction::getNote)
     );

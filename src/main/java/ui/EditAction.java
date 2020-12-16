@@ -2,7 +2,7 @@ package ui;
 
 import model.Category;
 import model.Transaction;
-import model.TransactionType;
+import enums.TransactionType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,18 +23,20 @@ final class EditAction extends AbstractAction {
     private Transaction selectedTransaction;
     private Category selectedCategory;
     private int selectedTabIndex = 0;
+    private final MessageDialog messageDialog;
 
-    public EditAction(JFrame frame, TablesManager tablesManager) {
+    public EditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super("Edit", Icons.EDIT_ICON);
         this.frame = frame;
         this.tablesManager = tablesManager;
+        this.messageDialog = messageDialog;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Edits selected row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_E);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl E"));
     }
 
-    public void setSelectedTabIndex(int selectedTabIndex) {
+    public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
     }
 
@@ -64,10 +66,6 @@ final class EditAction extends AbstractAction {
         return spinner;
     }
 
-    private void createErrorDialog(String message){
-        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
     private JButton createButton() {
         JButton button = new JButton("Edit");
         button.addActionListener(this::editButtonActionPerformedTransaction);
@@ -79,7 +77,7 @@ final class EditAction extends AbstractAction {
         try {
             amount = new BigDecimal(amountField.getText());
         } catch (NumberFormatException ex) {
-            createErrorDialog("Enter valid number into amount!");
+            messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
         Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
@@ -157,10 +155,10 @@ final class EditAction extends AbstractAction {
     private boolean checkCategoryExistence(String name, Color color){
         for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (c.getName().equals(name) && !c.equals(selectedCategory)){
-                createErrorDialog("Category " + name + " already exists!");
+                messageDialog.showErrorMessage("Category " + name + " already exists!");
                 return false;
             } else if (c.getColor().equals(color) && !c.equals(selectedCategory)){
-                createErrorDialog("Chosen color is already taken by another category!");
+                messageDialog.showErrorMessage("Chosen color is already taken by another category!");
                 return false;
             }
         }
@@ -203,7 +201,7 @@ final class EditAction extends AbstractAction {
         categoryPanel.add(confirmButton);
         confirmButton.addActionListener(e -> {
             if (newCategoryName.getText().equals("")){
-                createErrorDialog("Enter name of the category!");
+                messageDialog.showErrorMessage("Enter name of the category!");
 
             } else if (checkCategoryExistence(newCategoryName.getText(), categoryColorPanel.getBackground())){
                 setCategory(newCategoryName.getText(), categoryColorPanel.getBackground());

@@ -3,7 +3,6 @@ package ui;
 import data.CategoryDao;
 import data.StatisticDao;
 import data.TransactionDao;
-import model.CategoryCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -32,7 +31,8 @@ public class TablesManager {
         categoriesJTable = createJTable(categoriesTableModel);
         transactionsJTable = createJTable(transactionsTableModel);
 
-        categoriesJTable.setDefaultRenderer(Color.class, new CategoryCellRenderer());
+        setTablesColumnsAlign();
+        setRenderers();
     }
 
     public JTable getStatJTable() {
@@ -67,6 +67,11 @@ public class TablesManager {
         return transactionsTableModel;
     }
 
+    private void setRenderers(){
+        categoriesJTable.setDefaultRenderer(Color.class, new CellColorRenderer());
+        transactionsJTable.setDefaultRenderer(Color.class, new CellColorRenderer());
+    }
+
     private JTable createJTable(Object o){
         var table = new JTable((TableModel) o);
         table.setAutoCreateRowSorter(true);
@@ -74,18 +79,26 @@ public class TablesManager {
         return table;
     }
 
+    private void setTablesColumnsAlign(){
+        setColumnAlign(transactionsJTable, JLabel.LEFT, new int[]{1});
+        setColumnAlign(statisticsBalanceJTable, JLabel.RIGHT, new int[]{1});
+        setColumnAlign(statisticsJTable, JLabel.LEFT, new int[]{1, 2, 3, 4, 5, 6});
+    }
+
+    private void setColumnAlign(JTable table, int option, int[] columns){
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(option);
+        for (int column : columns) {
+            table.getColumnModel().getColumn(column).setCellRenderer(rightRenderer);
+        }
+    }
+
     private JTable createStatisticsBalanceJTable(){
         JTable table = new JTable(statisticsBalanceTableModel);
-
         table.setTableHeader(null);
         table.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         table.setFont(table.getFont().deriveFont(Font.BOLD));
         table.setCellSelectionEnabled(false);
-
-        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-        rightRenderer.setHorizontalAlignment(JLabel.RIGHT);
-        table.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
-
         return table;
     }
 

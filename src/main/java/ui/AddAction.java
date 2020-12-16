@@ -2,7 +2,7 @@ package ui;
 
 import model.Category;
 import model.Transaction;
-import model.TransactionType;
+import enums.TransactionType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,17 +23,19 @@ final class AddAction extends AbstractAction {
     private JDialog dialog;
     private JSpinner spinner;
     private int selectedTabIndex = 0;
+    private final MessageDialog messageDialog;
 
-    public AddAction(JFrame frame, TablesManager tablesManager) {
+    public AddAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super("Add", Icons.ADD_ICON);
         this.frame = frame;
         this.tablesManager = tablesManager;
+        this.messageDialog = messageDialog;
         putValue(SHORT_DESCRIPTION, "Adds new row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
     }
 
-    public void setSelectedTabIndex(int selectedTabIndex) {
+    public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
     }
 
@@ -53,10 +55,6 @@ final class AddAction extends AbstractAction {
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 
         return dialog;
-    }
-
-    private void createErrorDialog(String message){
-        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private JTextField createTextfield(String string) {
@@ -79,7 +77,7 @@ final class AddAction extends AbstractAction {
         try {
             amount = new BigDecimal(amountField.getText()).abs();
         } catch (NumberFormatException ex){
-            createErrorDialog("Enter valid number into amount!");
+            messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
         Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
@@ -140,10 +138,11 @@ final class AddAction extends AbstractAction {
     private boolean checkCategoryExistence(Category newCategory){
         for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (c.getName().equals(newCategory.getName())){
-                createErrorDialog("Category " + newCategory.getName() + " already exists!");
+                messageDialog.showErrorMessage("Category " + newCategory.getName() + " already exists!");
                 return false;
+
             } else if (c.getColor().equals(newCategory.getColor())){
-                createErrorDialog("Chosen color is already taken by another category!");
+                messageDialog.showErrorMessage("Chosen color is already taken by another category!");
                 return false;
             }
         }
@@ -176,7 +175,7 @@ final class AddAction extends AbstractAction {
         confirmButton.addActionListener(e -> {
             String name = newCategoryName.getText();
             if (name.equals("")){
-                createErrorDialog("Enter name of the category!");
+                messageDialog.showErrorMessage("Enter name of the category!");
                 return;
             }
             Category newCategory = new Category(name, categoryColorPanel.getBackground());

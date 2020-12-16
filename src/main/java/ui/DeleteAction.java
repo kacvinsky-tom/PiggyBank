@@ -9,17 +9,19 @@ import java.util.Comparator;
 final class DeleteAction extends AbstractAction {
     private final TablesManager tablesManager;
     private int selectedTabIndex = 0;
+    private final MessageDialog messageDialog;
 
-    public DeleteAction(TablesManager tablesManager) {
+    public DeleteAction(TablesManager tablesManager, MessageDialog messageDialog) {
         super("Delete", Icons.DELETE_ICON);
         this.tablesManager = tablesManager;
+        this.messageDialog = messageDialog;
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Deletes selected rows");
         putValue(MNEMONIC_KEY, KeyEvent.VK_D);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl D"));
     }
 
-    public void setSelectedTabIndex(int selectedTabIndex) {
+    public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
     }
 
@@ -34,15 +36,35 @@ final class DeleteAction extends AbstractAction {
     }
 
     private void deleteCategory() {
+        if (!messageDialog.showConfirmMessage(createDialogString(tablesManager.getCatJTable()), "Delete")){
+            return;
+        }
         Arrays.stream(tablesManager.getCatJTable().getSelectedRows())
                 .map(tablesManager.getCatJTable()::convertRowIndexToModel)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
-                .forEach(e -> { tablesManager.getTranTableModel().changeCategoryToDefault(e);
-                                tablesManager.getCatTableModel().deleteRow(e);});
+                .forEach(e -> {
+                    tablesManager.getTranTableModel().changeCategoryToDefault(e);
+                    if (!tablesManager.getCatTableModel().deleteRow(e)){
+                        messageDialog.showErrorMessage("You can't delete default category 'Others'!");
+                    }
+                });
+    }
+
+    private String createDialogString(JTable table){
+        String message = "Are you sure you want to delete following items?\n\n";
+        int count = 1;
+        for (int i : table.getSelectedRows()){
+            message += "       " + count + ". " + table.getValueAt(i, 0).toString() + "\n";
+            ++count;
+        }
+        return message;
     }
 
     private void deleteTransaction() {
+        if (!messageDialog.showConfirmMessage(createDialogString(tablesManager.getTranJTable()), "Delete")){
+            return;
+        }
         Arrays.stream(tablesManager.getTranJTable().getSelectedRows())
                 .map(tablesManager.getTranJTable()::convertRowIndexToModel)
                 .boxed()
