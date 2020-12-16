@@ -4,23 +4,32 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-class EditAction extends AbstractAddEditAction {
+class EditAction extends AbstractAction {
+
+    private final EditCategory editCategory;
+    private final EditTransaction editTransaction;
+    private int selectedTabIndex = 0;
 
     public EditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
-        super(frame, tablesManager, messageDialog, "Edit", Icons.EDIT_ICON);
+        super("Edit", Icons.EDIT_ICON);
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Edits selected row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_E);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl E"));
+        this.editCategory = new EditCategory(frame, tablesManager, messageDialog);
+        this.editTransaction = new EditTransaction(frame, tablesManager, messageDialog);
+    }
+
+    public void updateSelectedTabIndex(int selectedTabIndex) {
+        this.selectedTabIndex = selectedTabIndex;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int index = selectedTabIndex;
-        if (index <= 1) {
-            new EditTransaction(frame, tablesManager, messageDialog);
-        } else if (index == 2) {
-            new EditCategory(frame, tablesManager, messageDialog);
+        if (selectedTabIndex <= 1) {
+            this.editTransaction.createTransactionDialog();
+        } else if (selectedTabIndex == 2) {
+            this.editCategory.createCategoryDialog();
         }
     }
 

@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 
-public class AddTransaction extends AddAction {
+public class AddTransaction extends AbstractAddEditAction {
 
     private JTextField nameField, amountField, noteField;
     private JComboBox<Object> categoryBox, transactionType;
@@ -19,8 +19,6 @@ public class AddTransaction extends AddAction {
 
     public AddTransaction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
-        initializeComponents();
-        createTransactionDialog();
     }
 
     private void initializeComponents() {
@@ -35,7 +33,8 @@ public class AddTransaction extends AddAction {
 
     }
 
-    private void createTransactionDialog() {
+    public void createTransactionDialog() {
+        initializeComponents();
         dialog.setLayout(new FlowLayout());
 
         dialog.add(new JLabel("Select category:"));
@@ -57,7 +56,7 @@ public class AddTransaction extends AddAction {
         try {
             amount = Math.abs(Double.parseDouble(amountField.getText()));
         } catch (NumberFormatException ex) {
-            createErrorDialog("Enter valid number into amount!");
+            messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
         Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());

@@ -4,27 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public abstract class AbstractAddEditAction extends AbstractAction {
+public abstract class AbstractAddEditAction {
 
     protected final JFrame frame;
     protected final TablesManager tablesManager;
     protected final MessageDialog messageDialog;
     protected JDialog dialog;
-    protected int selectedTabIndex = 0;
 
-    public AbstractAddEditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog, String string, Icon icon) {
-        super(string, icon);
+    public AbstractAddEditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         this.frame = frame;
         this.tablesManager = tablesManager;
         this.messageDialog = messageDialog;
-    }
-
-    protected void updateSelectedTabIndex(int selectedTabIndex) {
-        this.selectedTabIndex = selectedTabIndex;
-    }
-
-    protected void createErrorDialog(String message){
-        JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     protected JDialog createDialog(String string, int width, int height) {

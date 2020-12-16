@@ -11,7 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 
-public class EditTransaction extends EditAction {
+public class EditTransaction extends AbstractAddEditAction {
 
     private JTextField nameField, amountField, noteField;
     private JSpinner spinner;
@@ -20,8 +20,6 @@ public class EditTransaction extends EditAction {
 
     public EditTransaction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
-        initializeComponents();
-        createTransactionDialog();
     }
 
     private void initializeComponents() {
@@ -37,7 +35,8 @@ public class EditTransaction extends EditAction {
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
     }
 
-    private void createTransactionDialog() {
+    public void createTransactionDialog() {
+        initializeComponents();
         dialog.setLayout(new FlowLayout());
 
         dialog.add(new JLabel("Change category:"));

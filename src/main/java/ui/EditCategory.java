@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class EditCategory extends EditAction{
+public class EditCategory extends AbstractAddEditAction {
 
     private final JLabel categoryColorPanel = new JLabel();
     private JTextField nameField;
@@ -14,7 +14,6 @@ public class EditCategory extends EditAction{
 
     public EditCategory(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
-        createCategoryDialog();
     }
 
     private void prepareColorPanel(JLabel colorLabel) {
@@ -51,7 +50,7 @@ public class EditCategory extends EditAction{
         selectedCategory.setName(name);
     }
 
-    private void createCategoryDialog() {
+    public void createCategoryDialog() {
         selectedCategory = tablesManager.getCatTableModel().getEntity(tablesManager.getCatJTable().getSelectedRow());
         prepareColorPanel(categoryColorPanel);
 

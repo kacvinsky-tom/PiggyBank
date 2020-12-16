@@ -6,34 +6,45 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class AddCategory extends AddAction {
+public class AddCategory extends AbstractAddEditAction {
 
     private final JLabel categoryColorPanel = new JLabel();
     private JTextField nameField;
 
     public AddCategory(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
-        createCategoryDialog();
+    }
+
+    private int getRandomNumberForColor(){
+        return (int) ((Math.random() * 255));
+    }
+
+    private Color generateRandomColor() {
+        Color color;
+        do {
+            color = new Color(getRandomNumberForColor(), getRandomNumberForColor(), getRandomNumberForColor());
+        } while (checkCategoryExistence(new Category("", color), true));
+        return color;
     }
 
     private void prepareColorPanel(JLabel colorLabel) {
-        colorLabel.setBackground(Color.BLACK);
+        colorLabel.setBackground(generateRandomColor());
         colorLabel.setOpaque(true);
         colorLabel.setPreferredSize(new Dimension(40, 20));
     }
 
-    private boolean checkCategoryExistence(Category newCategory){
+    private boolean checkCategoryExistence(Category newCategory, boolean checkOnlyByColor){
         for (Category c : tablesManager.getCatTableModel().getCategories()){
-            if (c.getName().equals(newCategory.getName())){
+            if (!checkOnlyByColor && c.getName().equals(newCategory.getName())){
                 messageDialog.showErrorMessage("Category " + newCategory.getName() + " already exists!");
-                return false;
+                return true;
 
             } else if (c.getColor().equals(newCategory.getColor())){
                 messageDialog.showErrorMessage("Chosen color is already taken by another category!");
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private void colorChooser(ActionEvent e) {
@@ -46,7 +57,7 @@ public class AddCategory extends AddAction {
         }
     }
 
-    private void createCategoryDialog() {
+    public void createCategoryDialog() {
         dialog = createDialog("new category", 380, 150);
         dialog.setLayout(new FlowLayout());
 
@@ -73,7 +84,7 @@ public class AddCategory extends AddAction {
             return;
         }
         Category newCategory = new Category(name, categoryColorPanel.getBackground());
-        if (checkCategoryExistence(newCategory)) {
+        if (!checkCategoryExistence(newCategory, false)) {
             tablesManager.getCatTableModel().addRow(newCategory);
             dialog.dispose();
         }
