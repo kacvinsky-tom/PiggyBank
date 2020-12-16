@@ -7,15 +7,11 @@ import model.Transaction;
 import ui.filter.DateSpinner;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 
-public class EditTransaction extends AbstractAddEditAction {
+public class EditTransaction extends AbstractAddEditTransaction {
 
-    private JTextField nameField, amountField, noteField;
-    private JSpinner spinner;
-    private JComboBox<Object> categoryBox, transactionType;
     private Transaction selectedTransaction;
 
     public EditTransaction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
@@ -24,33 +20,21 @@ public class EditTransaction extends AbstractAddEditAction {
 
     private void initializeComponents() {
         selectedTransaction = tablesManager.getTranTableModel().getEntity(tablesManager.getTranJTable().getSelectedRow());
-
-        dialog = createDialog("Edit transaction", 250, 330);
+        dialog = createDialog("Edit transaction", 230, 330);
         nameField = createTextField("Name:", selectedTransaction.getName(), 20);
         amountField = createTextField("Amount:", String.valueOf(selectedTransaction.getAmount()), 20);
         noteField = createTextField("Note:", selectedTransaction.getNote(), 20);
         categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
-        categoryBox.setSelectedItem(tablesManager.getCatTableModel().getOthers());
+        categoryBox.setSelectedItem(selectedTransaction.getCategory());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
+        spinner.setValue(selectedTransaction.getDate());
+        transactionType.setSelectedItem(selectedTransaction.getType());
     }
 
-    public void createTransactionDialog() {
+    public void start() {
         initializeComponents();
-
-        dialog.add(new JLabel("Select category:"));
-        categoryBox.setSelectedItem(selectedTransaction.getCategory());
-        dialog.add(categoryBox);
-        dialog.add(new JLabel("Select type:"));
-        transactionType.setSelectedItem(selectedTransaction.getType());
-        dialog.add(transactionType);
-        dialog.add(new JLabel("Select date: "));
-        spinner.setValue(selectedTransaction.getDate());
-        dialog.add(spinner);
-        dialog.getContentPane().add(createButton("Save"));
-
-        dialog.setResizable(false);
-        dialog.setVisible(true);
+        createTransactionDialog("Save");
     }
 
     private void updateTransaction(String name, double amount, Category category, Date date, String note, TransactionType type) {

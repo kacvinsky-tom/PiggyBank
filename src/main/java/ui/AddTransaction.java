@@ -7,22 +7,17 @@ import model.Transaction;
 import ui.filter.DateSpinner;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Date;
 
-public class AddTransaction extends AbstractAddEditAction {
-
-    private JTextField nameField, amountField, noteField;
-    private JComboBox<Object> categoryBox, transactionType;
-    private JSpinner spinner;
+public class AddTransaction extends AbstractAddEditTransaction {
 
     public AddTransaction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
     }
 
     private void initializeComponents() {
-        dialog = createDialog("Add transaction", 250, 330);
+        dialog = createDialog("Add transaction", 230, 330);
         nameField = createTextField("Name:", "", 20);
         amountField = createTextField("Amount:", "", 20);
         noteField = createTextField("Note:", "", 20);
@@ -32,19 +27,9 @@ public class AddTransaction extends AbstractAddEditAction {
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
     }
 
-    public void createTransactionDialog() {
+    public void start() {
         initializeComponents();
-
-        dialog.add(new JLabel("Select category:"));
-        dialog.add(categoryBox);
-        dialog.add(new JLabel("Select type:"));
-        dialog.add(transactionType);
-        dialog.add(new JLabel("Select date: "));
-        dialog.add(spinner);
-        dialog.getContentPane().add(createButton("Add"));
-
-        dialog.setResizable(false);
-        dialog.setVisible(true);
+        createTransactionDialog("Add");
     }
 
     @Override

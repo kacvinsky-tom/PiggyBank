@@ -11,7 +11,7 @@ public abstract class AbstractAddEditAction {
     protected final MessageDialog messageDialog;
     protected JDialog dialog;
 
-    public AbstractAddEditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
+    protected AbstractAddEditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         this.frame = frame;
         this.tablesManager = tablesManager;
         this.messageDialog = messageDialog;
