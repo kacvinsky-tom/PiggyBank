@@ -127,6 +127,8 @@ public class StatisticDao {
                 rs.last();
                 balance = balance - rs.getLong("totalIncome");
                 return BigDecimal.valueOf(balance);
+            } catch (SQLException ex){
+                return BigDecimal.valueOf(0);
             }
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + ex);
