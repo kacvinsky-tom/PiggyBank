@@ -8,8 +8,8 @@ import ui.MessageDialog;
 import ui.TablesManager;
 
 import javax.swing.*;
-import java.util.Calendar;
-import java.util.Date;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class FilterPanel extends JPanel {
     private final JSpinner spinnerFrom, spinnerTo;
@@ -119,7 +119,22 @@ public class FilterPanel extends JPanel {
         return categoriesComboBox;
     }
 
-    public void updateCategoriesComboCox(){     // TODO CALL UPDATE AFTER ADD/EDIT CATEGORY
-        categoriesComboBox = new JComboBox<>(this.tablesManager.getCatTableModel().getCategories().toArray());
+    public void updateCategoriesComboCox(){
+        categoriesComboBox.removeAllItems();
+        DefaultComboBoxModel  model = new DefaultComboBoxModel(fillComboBox());
+        categoriesComboBox.setModel(model);
+    }
+
+
+    public String[] fillComboBox(){
+        List<Category> categories = this.tablesManager.getCatTableModel().getCategories();
+        String[] resultArray = new String[categories.size() + 1];
+        resultArray[0] = "All";
+        for (int i = 0; i < categories.size(); i++)
+        {
+            resultArray[i + 1] = categories.get(i).getName();
+        }
+        return resultArray;
+
     }
 }

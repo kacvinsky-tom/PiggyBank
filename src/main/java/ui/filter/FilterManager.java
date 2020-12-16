@@ -28,6 +28,7 @@ public class FilterManager {
 
     public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
+        filterPanel.updateCategoriesComboCox();
         filterPanel.setComponentsEnable(selectedTabIndex);
     }
 
