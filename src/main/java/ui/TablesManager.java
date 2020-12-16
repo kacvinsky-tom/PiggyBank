@@ -23,7 +23,7 @@ public class TablesManager {
 
     public TablesManager(CategoryDao categoryDao, TransactionDao transactionDao, StatisticDao statisticDao){
         statisticsTableModel = new StatisticsTable(statisticDao);
-        statisticsBalanceTableModel = new StatisticsBalanceTable();
+        statisticsBalanceTableModel = new StatisticsBalanceTable(statisticDao);
         categoriesTableModel = new CategoriesTable(categoryDao);
         transactionsTableModel = new TransactionsTable(transactionDao, categoriesTableModel);
 

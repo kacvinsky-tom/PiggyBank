@@ -7,8 +7,8 @@ import model.TransactionType;
 import javax.sql.DataSource;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +32,7 @@ public class TransactionDao {
              var st = connection.prepareStatement(
                      "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, CATEGORY_ID) VALUES (?, ?, ?, ?, ?, ?)",
                      RETURN_GENERATED_KEYS)) {
-            st.setBigDecimal(1, transaction.getAmount());
-            st.setString(2, transaction.getType().name());
-            st.setString(3, transaction.getName());
-            st.setDate(4, new Date(transaction.getDate().getTime()));
-            st.setString(5, transaction.getNote());
-            st.setLong(6, transaction.getCategory().getId());
+            setStatementParameters(transaction, st);
             st.executeUpdate();
             try (var rs = st.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -49,6 +44,15 @@ public class TransactionDao {
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to store transaction " + transaction, ex);
         }
+    }
+
+    private void setStatementParameters(Transaction transaction, PreparedStatement st) throws SQLException {
+        st.setBigDecimal(1, transaction.getAmount());
+        st.setString(2, transaction.getType().name());
+        st.setString(3, transaction.getName());
+        st.setDate(4, new Date(transaction.getDate().getTime()));
+        st.setString(5, transaction.getNote());
+        st.setLong(6, transaction.getCategory().getId());
     }
 
     public void delete(Transaction transaction) {
@@ -77,12 +81,7 @@ public class TransactionDao {
              var st = connection.prepareStatement(
                      "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ?, CATEGORY_ID = ? WHERE ID = ?"
              )){
-            st.setBigDecimal(1, transaction.getAmount());
-            st.setString(2, transaction.getType().name());
-            st.setString(3, transaction.getName());
-            st.setDate(4, new Date(transaction.getDate().getTime()));
-            st.setString(5, transaction.getNote());
-            st.setLong(6, transaction.getCategory().getId());
+            setStatementParameters(transaction, st);
             st.setLong(7, transaction.getId());
             int updatedRowCount = st.executeUpdate();
             if(updatedRowCount == 0){

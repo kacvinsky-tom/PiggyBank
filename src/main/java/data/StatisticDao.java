@@ -114,4 +114,21 @@ public class StatisticDao {
             throw new DataAccessException("Failed to find category " + ex);
         }
     }
+
+    public BigDecimal getBalance(){
+        long all = 0;
+        try (var connection = dataSource.getConnection();
+             var st = connection.prepareStatement(
+                     "SELECT SUM(AMOUNT) AS totalIncome FROM TRANSACTIONS GROUP BY \"TYPE\" "
+             )){
+            try (var rs = st.executeQuery()) {
+                while (rs.next()) {
+                    all = rs.getLong("totalIncome");
+                }
+            }
+            return BigDecimal.valueOf(all);
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to find category " + ex);
+        }
+    }
 }
