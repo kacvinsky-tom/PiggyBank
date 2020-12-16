@@ -52,10 +52,10 @@ final class DeleteAction extends AbstractAction {
     }
 
     private String createDialogString(JTable table){
-        String message = "Are you sure you want to delete following items?\n\n";
+        String message = "Are you sure you want to delete following items?\n";
         int count = 1;
         for (int i : table.getSelectedRows()){
-            message += "       " + count + ". " + table.getValueAt(i, 0).toString() + "\n";
+            message += "\n       " + count + ". " + table.getValueAt(i, 0).toString();
             ++count;
         }
         return message;
