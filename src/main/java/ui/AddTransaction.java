@@ -37,7 +37,7 @@ public class AddTransaction extends AbstractAddEditTransaction {
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         BigDecimal amount;
         try {
-            amount = new BigDecimal(amountField.getText()).abs();
+            amount = new BigDecimal(amountField.getText().replace(",", ".")).abs();
         } catch (NumberFormatException ex) {
             messageDialog.showErrorMessage("Enter valid number into amount!");
             return;

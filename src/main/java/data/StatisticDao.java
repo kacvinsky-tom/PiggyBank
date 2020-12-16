@@ -26,7 +26,7 @@ public class StatisticDao {
             List<CategoryStatistic> categoryStatistics = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
-                    Category category = new Category(rs.getString("NAME"), new Color(10,10,10));
+                    Category category = new Category(rs.getString("NAME"), new Color(10,10,10)); // ToDo Black?
                     category.setId(rs.getLong("ID"));
                     CategoryStatistic categoryStatistic = new CategoryStatistic(category);
                     categoryStatistic.setTransactionsNumber(getNumberOfTransactions(category));

@@ -27,12 +27,11 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
     protected StatisticsTable(StatisticDao statisticDao) {
         super(COLUMNS);
         this.statisticDao = statisticDao;
-        statistics = statisticDao.setAll();
+        statistics = new ArrayList<>(statisticDao.setAll());
     }
 
     public void update(){
         statistics = statisticDao.setAll();
-        fireTableDataChanged();
     }
 
     @Override
