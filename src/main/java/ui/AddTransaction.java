@@ -8,6 +8,7 @@ import ui.filter.DateSpinner;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class AddTransaction extends AbstractAddEditTransaction {
@@ -34,9 +35,9 @@ public class AddTransaction extends AbstractAddEditTransaction {
 
     @Override
     protected void buttonActionPerformed(ActionEvent actionEvent) {
-        double amount;
+        BigDecimal amount;
         try {
-            amount = Math.abs(Double.parseDouble(amountField.getText()));
+            amount = new BigDecimal(amountField.getText()).abs();
         } catch (NumberFormatException ex) {
             messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
