@@ -27,9 +27,9 @@ class EditAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (selectedTabIndex <= 1) {
-            this.editTransaction.start();
+            this.editTransaction.edit();
         } else if (selectedTabIndex == 2) {
-            this.editCategory.start();
+            this.editCategory.edit();
         }
     }
 

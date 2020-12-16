@@ -28,7 +28,7 @@ public class AddTransaction extends AbstractAddEditTransaction {
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
     }
 
-    public void start() {
+    public void add() {
         initializeComponents();
         createTransactionDialog("Add");
     }

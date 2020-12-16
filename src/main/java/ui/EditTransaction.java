@@ -33,7 +33,7 @@ public class EditTransaction extends AbstractAddEditTransaction {
         transactionType.setSelectedItem(selectedTransaction.getType());
     }
 
-    public void start() {
+    public void edit() {
         initializeComponents();
         createTransactionDialog("Save");
     }
