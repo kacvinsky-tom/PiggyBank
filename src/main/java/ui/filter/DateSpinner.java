@@ -1,7 +1,8 @@
-package ui;
+package ui.filter;
 
 import enums.DateSpinnerType;
 import model.Transaction;
+import ui.TablesManager;
 
 import javax.swing.*;
 import java.util.Date;
