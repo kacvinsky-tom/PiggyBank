@@ -5,6 +5,7 @@ import model.Category;
 import model.Transaction;
 import enums.TransactionType;
 
+import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;

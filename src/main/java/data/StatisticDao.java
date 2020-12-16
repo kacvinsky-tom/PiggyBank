@@ -1,9 +1,8 @@
 package data;
 
+import enums.TransactionType;
 import model.Category;
 import model.CategoryStatistic;
-import model.Transaction;
-import model.TransactionType;
 
 import javax.sql.DataSource;
 import java.awt.*;
