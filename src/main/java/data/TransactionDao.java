@@ -32,7 +32,7 @@ public class TransactionDao {
              var st = connection.prepareStatement(
                      "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, CATEGORY_ID) VALUES (?, ?, ?, ?, ?, ?)",
                      RETURN_GENERATED_KEYS)) {
-            st.setBigDecimal(1, new BigDecimal(transaction.getAmount(), MathContext.DECIMAL64));
+            st.setBigDecimal(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
             st.setString(3, transaction.getName());
             st.setDate(4, new Date(transaction.getDate().getTime()));
@@ -77,7 +77,7 @@ public class TransactionDao {
              var st = connection.prepareStatement(
                      "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ?, CATEGORY_ID = ? WHERE ID = ?"
              )){
-            st.setDouble(1, transaction.getAmount());
+            st.setBigDecimal(1, transaction.getAmount());
             st.setString(2, transaction.getType().name());
             st.setString(3, transaction.getName());
             st.setDate(4, new Date(transaction.getDate().getTime()));
@@ -105,7 +105,7 @@ public class TransactionDao {
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
                     TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
-                    double amount = rs.getDouble("AMOUNT");
+                    BigDecimal amount = BigDecimal.valueOf(rs.getDouble("AMOUNT"));
                     Transaction transaction = new Transaction(
                             rs.getString("TRANS_NAME"),
                             amount,
