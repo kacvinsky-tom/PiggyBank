@@ -27,7 +27,7 @@ public class CategoryDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "INSERT INTO CATEGORY (\"NAME\", COLOR) VALUES (?, ?)",
+                     "INSERT INTO CATEGORIES (\"NAME\", COLOR) VALUES (?, ?)",
                      RETURN_GENERATED_KEYS)) {
             st.setString(1, category.getName());
             st.setString(2, String.valueOf(category.getColor().getRGB()));
@@ -50,7 +50,7 @@ public class CategoryDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "DELETE FROM CATEGORY WHERE ID = ?"
+                     "DELETE FROM CATEGORIES WHERE ID = ?"
              )){
             st.setLong(1, category.getId());
             int updatedRowCount = st.executeUpdate();
@@ -68,7 +68,7 @@ public class CategoryDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE CATEGORY SET \"NAME\" = ?, COLOR = ? WHERE ID = ?"
+                     "UPDATE CATEGORIES SET \"NAME\" = ?, COLOR = ? WHERE ID = ?"
              )){
             st.setString(1, category.getName());
             st.setString(2, String.valueOf(category.getColor().getRGB()));
@@ -85,26 +85,7 @@ public class CategoryDao {
 
     public List<Category> findAll() {
         try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORY")) {
-            List<Category> categories = new ArrayList<>();
-            try (var rs = st.executeQuery()) {
-                while (rs.next()) {
-                    Category category = new Category(
-                            rs.getString("NAME"),
-                            Color.decode(rs.getString("COLOR")));
-                    category.setId(rs.getLong("ID"));
-                    categories.add(category);
-                }
-            }
-            return categories;
-        } catch (SQLException ex) {
-            throw new DataAccessException("Failed to load all categories", ex);
-        }
-    }
-
-    public List<Category> find() {
-        try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORY")) {
+             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORIES")) {
             List<Category> categories = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -122,7 +103,7 @@ public class CategoryDao {
     }
 
     private void initTable() {
-        if (!tableExits("APP", "CATEGORY")) {
+        if (!tableExits("APP", "CATEGORIES")) {
             createTable();
         }
     }
@@ -140,13 +121,13 @@ public class CategoryDao {
         try (var connection = dataSource.getConnection();
              var st = connection.createStatement()) {
 
-            st.executeUpdate("CREATE TABLE APP.CATEGORY (" +
-                    "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
+            st.executeUpdate("CREATE TABLE APP.CATEGORIES (" +
+                    "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 0)," +
                     "\"NAME\" VARCHAR(100) NOT NULL," +
                     "COLOR VARCHAR(100) NOT NULL" +
                     ")");
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to create CATEGORY table", ex);
+            throw new DataAccessException("Failed to create CATEGORIES table", ex);
         }
     }
 
@@ -154,9 +135,9 @@ public class CategoryDao {
         try (var connection = dataSource.getConnection();
              var st = connection.createStatement()) {
 
-            st.executeUpdate("DROP TABLE APP.CATEGORY");
+            st.executeUpdate("DROP TABLE APP.CATEGORIES");
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to drop CATEGORY table", ex);
+            throw new DataAccessException("Failed to drop CATEGORIES table", ex);
         }
     }
 }

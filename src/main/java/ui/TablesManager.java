@@ -1,6 +1,7 @@
 package ui;
 
 import data.CategoryDao;
+import data.StatisticDao;
 import data.TransactionDao;
 
 import javax.swing.*;
@@ -19,9 +20,9 @@ public class TablesManager {
     private final JTable categoriesJTable;
     private final JTable transactionsJTable;
 
-    public TablesManager(CategoryDao categoryDao, TransactionDao transactionDao){
-        statisticsTableModel = new StatisticsTable();
-        statisticsBalanceTableModel = new StatisticsBalanceTable();
+    public TablesManager(CategoryDao categoryDao, TransactionDao transactionDao, StatisticDao statisticDao){
+        statisticsTableModel = new StatisticsTable(statisticDao);
+        statisticsBalanceTableModel = new StatisticsBalanceTable(statisticDao);
         categoriesTableModel = new CategoriesTable(categoryDao);
         transactionsTableModel = new TransactionsTable(transactionDao, categoriesTableModel);
 

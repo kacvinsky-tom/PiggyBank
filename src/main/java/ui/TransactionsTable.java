@@ -6,6 +6,7 @@ import model.Transaction;
 import enums.TransactionType;
 
 import java.awt.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,7 +15,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
 
     private static final List<Column<?, Transaction>> COLUMNS = List.of(
             Column.readOnly("Name", String.class, Transaction::getName),
-            Column.readOnly("Amount", Double.class, Transaction::getAmount),
+            Column.readOnly("Amount", BigDecimal.class, Transaction::getAmount),
             Column.readOnly("Type", TransactionType.class, Transaction::getType),
             Column.readOnly("Category", Category.class, Transaction::getCategory),
             Column.readOnly("Category color", Color.class, Transaction::getCategoryColor),
@@ -51,12 +52,11 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     public void changeCategoryToDefault(int rowIndex){
         var category = categoriesTable.getCategories().get(rowIndex);
         if (!category.getName().equals("Others")){
-            for (var transaction : transactions) {
-                if(transaction.getCategory().getName().equals(category.getName())){
-                    transaction.setCategory(categoriesTable.getOthers());
-                    transactionDao.update(transaction);
-                }
-            }
+            transactions.stream()
+                    .filter(t ->  t.getCategory().getName().equals(category.getName()))
+                    .forEach(t -> {t.setCategory(categoriesTable.getOthers());
+                    fireTableRowsUpdated(rowIndex, rowIndex);
+                    transactionDao.update(t);});
         }
     }
 
