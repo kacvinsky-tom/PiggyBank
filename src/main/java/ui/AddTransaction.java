@@ -22,7 +22,7 @@ public class AddTransaction extends AbstractAddEditAction {
     }
 
     private void initializeComponents() {
-        dialog = createDialog("transaction", 250, 330);
+        dialog = createDialog("Add transaction", 250, 330);
         nameField = createTextField("Name:", "", 20);
         amountField = createTextField("Amount:", "", 20);
         noteField = createTextField("Note:", "", 20);
@@ -30,12 +30,10 @@ public class AddTransaction extends AbstractAddEditAction {
         categoryBox.setSelectedItem(tablesManager.getCatTableModel().getOthers());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
-
     }
 
     public void createTransactionDialog() {
         initializeComponents();
-        dialog.setLayout(new FlowLayout());
 
         dialog.add(new JLabel("Select category:"));
         dialog.add(categoryBox);
@@ -46,7 +44,6 @@ public class AddTransaction extends AbstractAddEditAction {
         dialog.getContentPane().add(createButton("Add"));
 
         dialog.setResizable(false);
-        dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
     }
 

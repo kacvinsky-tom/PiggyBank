@@ -26,9 +26,9 @@ public class EditTransaction extends AbstractAddEditAction {
         selectedTransaction = tablesManager.getTranTableModel().getEntity(tablesManager.getTranJTable().getSelectedRow());
 
         dialog = createDialog("Edit transaction", 250, 330);
-        nameField = createTextField("Change name:", selectedTransaction.getName(), 20);
-        amountField = createTextField("Change amount:", String.valueOf(selectedTransaction.getAmount()), 20);
-        noteField = createTextField("Change note:", selectedTransaction.getNote(), 20);
+        nameField = createTextField("Name:", selectedTransaction.getName(), 20);
+        amountField = createTextField("Amount:", String.valueOf(selectedTransaction.getAmount()), 20);
+        noteField = createTextField("Note:", selectedTransaction.getNote(), 20);
         categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
         categoryBox.setSelectedItem(tablesManager.getCatTableModel().getOthers());
         transactionType = new JComboBox<>(TransactionType.values());
@@ -37,21 +37,19 @@ public class EditTransaction extends AbstractAddEditAction {
 
     public void createTransactionDialog() {
         initializeComponents();
-        dialog.setLayout(new FlowLayout());
 
-        dialog.add(new JLabel("Change category:"));
+        dialog.add(new JLabel("Select category:"));
         categoryBox.setSelectedItem(selectedTransaction.getCategory());
         dialog.add(categoryBox);
-        dialog.add(new JLabel("Change type:"));
+        dialog.add(new JLabel("Select type:"));
         transactionType.setSelectedItem(selectedTransaction.getType());
         dialog.add(transactionType);
-        dialog.add(new JLabel("Change date: "));
+        dialog.add(new JLabel("Select date: "));
         spinner.setValue(selectedTransaction.getDate());
         dialog.add(spinner);
-        dialog.getContentPane().add(createButton("Confirm"));
+        dialog.getContentPane().add(createButton("Save"));
 
         dialog.setResizable(false);
-        dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
     }
 

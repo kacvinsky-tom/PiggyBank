@@ -58,8 +58,7 @@ public class AddCategory extends AbstractAddEditAction {
     }
 
     public void createCategoryDialog() {
-        dialog = createDialog("new category", 380, 150);
-        dialog.setLayout(new FlowLayout());
+        dialog = createDialog("Add category", 380, 150);
 
         prepareColorPanel(categoryColorPanel);
         JButton setColorButton = new JButton("Show Color Chooser...");
@@ -71,7 +70,6 @@ public class AddCategory extends AbstractAddEditAction {
         dialog.add(categoryColorPanel);
         dialog.add(createButton("Add"));
 
-        dialog.setLocationRelativeTo(frame);
         dialog.setResizable(false);
         dialog.setVisible(true);
     }

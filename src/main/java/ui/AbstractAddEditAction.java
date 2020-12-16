@@ -23,6 +23,8 @@ public abstract class AbstractAddEditAction {
         dialog.setSize(new Dimension(width, height));
         dialog.setModal(true);
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setLayout(new FlowLayout());
         return dialog;
     }
 
