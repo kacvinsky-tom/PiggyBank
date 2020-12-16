@@ -149,7 +149,7 @@ public class TransactionDao {
                     "\"NAME\" VARCHAR(100) NOT NULL," +
                     "CREATION_DATE DATE NOT NULL," +
                     "NOTE VARCHAR(255)," +
-                    "CATEGORY_ID BIGINT DEFAULT 0 FOREIGN KEY REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
+                    "CATEGORY_ID BIGINT DEFAULT 0 REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
                     ")");
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to create TRANSACTIONS table", ex);

@@ -21,7 +21,7 @@ public class StatisticDao {
 
     public List<CategoryStatistic> setAll (){
         try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORY")) {
+             var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORIES")) {
             List<CategoryStatistic> categoryStatistics = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -56,7 +56,6 @@ public class StatisticDao {
                     all = (int) rs.getLong("total");
                 }
             }
-            st.executeUpdate();
             return all;
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + category, ex);
@@ -67,7 +66,7 @@ public class StatisticDao {
         long all = 0;
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS totalAmount FROM TRANSACTIONS WHERE CATEGORY_ID = ? \"TYPE\" = ? GROUP BY ID "
+                     "SELECT SUM(AMOUNT) AS totalAmount FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ? GROUP BY ID "
              )){
             st.setLong(1, category.getId());
             st.setString(2, transactionType.name());
@@ -76,7 +75,6 @@ public class StatisticDao {
                     all = rs.getLong("totalAmount");
                 }
             }
-            st.executeUpdate();
             return all;
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + category, ex);
@@ -95,7 +93,6 @@ public class StatisticDao {
                     all = rs.getLong("totalIncome");
                 }
             }
-            st.executeUpdate();
             return all;
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to find category " + ex);
