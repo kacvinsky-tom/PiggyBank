@@ -29,8 +29,9 @@ public class CategoryDao {
              var st = connection.prepareStatement(
                      "INSERT INTO CATEGORIES (\"NAME\", COLOR) VALUES (?, ?)",
                      RETURN_GENERATED_KEYS)) {
+            String hex = "#"+Integer.toHexString(category.getColor().getRGB()).substring(2);
             st.setString(1, category.getName());
-            st.setString(2, String.valueOf(category.getColor().getRGB()));
+            st.setString(2, hex);
             st.executeUpdate();
             try (var rs = st.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -70,8 +71,9 @@ public class CategoryDao {
              var st = connection.prepareStatement(
                      "UPDATE CATEGORIES SET \"NAME\" = ?, COLOR = ? WHERE ID = ?"
              )){
+            String hex = "#"+Integer.toHexString(category.getColor().getRGB()).substring(2);
             st.setString(1, category.getName());
-            st.setString(2, String.valueOf(category.getColor().getRGB()));
+            st.setString(2, hex);
             st.setLong(3, category.getId());
             int updatedRowCount = st.executeUpdate();
             if(updatedRowCount == 0){

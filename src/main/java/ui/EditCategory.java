@@ -25,7 +25,7 @@ public class EditCategory extends AbstractAddEditCategory {
         selectedCategory = tablesManager.getCatTableModel().getEntity(tablesManager.getCatJTable().getSelectedRow());
         prepareColorPanel(selectedCategory.getColor());
         dialog = createDialog("Edit category", 270, 150);
-        nameField = createTextField("Name: ", selectedCategory.getName(), 18);
+        nameField = createTextField("Name: ", selectedCategory.getName(), 17);
 
         if (selectedCategory.getName().equals("Others")) {
             nameField.setEnabled(false);
