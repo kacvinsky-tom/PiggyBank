@@ -26,8 +26,8 @@ public class AddCategory extends AbstractAddEditCategory {
 
     public void add() {
         prepareColorPanel(generateRandomColor());
-        dialog = createDialog("Add category", 340, 150);
-        nameField = createTextField("Enter name of the new category", "", 11);
+        dialog = createDialog("Add category", 270, 150);
+        nameField = createTextField("Name: ", "", 18);
         createCategoryDialog("Add");
     }
 

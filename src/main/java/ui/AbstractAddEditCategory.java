@@ -18,7 +18,7 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
     protected void createCategoryDialog(String button){
         JButton setColorButton = new JButton("Show Color Chooser...");
         setColorButton.addActionListener(this::colorChooser);
-        dialog.add(new JLabel("Color of the category:"));
+        dialog.add(new JLabel("Color: "));
         dialog.add(setColorButton);
         dialog.add(categoryColorPanel);
         dialog.add(createButton(button));
