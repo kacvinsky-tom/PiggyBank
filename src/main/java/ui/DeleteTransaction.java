@@ -14,7 +14,7 @@ public class DeleteTransaction {
 
     public void delete() {
         String message = "Are you sure you want to delete following transactions?\n";
-        message += messageDialog.createItemsString(tablesManager.getCatJTable());
+        message += messageDialog.createItemsString(tablesManager.getTranJTable());
         if (!messageDialog.showConfirmMessage(message, "Delete")){
             return;
         }
