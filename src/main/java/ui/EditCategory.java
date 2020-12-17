@@ -5,6 +5,8 @@ import model.Category;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class EditCategory extends AbstractAddEditCategory {
 
@@ -24,9 +26,18 @@ public class EditCategory extends AbstractAddEditCategory {
         prepareColorPanel(selectedCategory.getColor());
         dialog = createDialog("Edit category", 270, 150);
         nameField = createTextField("Name: ", selectedCategory.getName(), 18);
+
         if (selectedCategory.getName().equals("Others")) {
-            nameField.setEditable(false);
+            nameField.setEnabled(false);
+            nameField.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    super.mouseReleased(e);
+                    messageDialog.showAlertMessage("Name of the default category 'Others' is not editable!");
+                }
+            });
         }
+
         createCategoryDialog("Save");
     }
 
