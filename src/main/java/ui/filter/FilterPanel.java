@@ -119,7 +119,7 @@ public class FilterPanel extends JPanel {
 
     public void updateCategoriesComboCox(){
         categoriesComboBox.removeAllItems();
-        DefaultComboBoxModel  model = new DefaultComboBoxModel(fillComboBox());
+        DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<>(fillComboBox());
         categoriesComboBox.setModel(model);
     }
 
