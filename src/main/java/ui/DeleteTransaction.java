@@ -3,14 +3,19 @@ package ui;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class DeleteTransaction extends AbstractDeleteAction {
+public class DeleteTransaction {
+    private final TablesManager tablesManager;
+    private final MessageDialog messageDialog;
 
     public DeleteTransaction(TablesManager tablesManager, MessageDialog messageDialog){
-        super(tablesManager, messageDialog);
+        this.tablesManager = tablesManager;
+        this.messageDialog = messageDialog;
     }
 
     public void delete() {
-        if (!messageDialog.showConfirmMessage(createDialogString(tablesManager.getTranJTable()), "Delete")){
+        String message = "Are you sure you want to delete following transactions?\n";
+        message += messageDialog.createItemsString(tablesManager.getCatJTable());
+        if (!messageDialog.showConfirmMessage(message, "Delete")){
             return;
         }
         Arrays.stream(tablesManager.getTranJTable().getSelectedRows())
