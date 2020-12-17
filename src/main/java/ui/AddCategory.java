@@ -44,6 +44,7 @@ public class AddCategory extends AbstractAddEditCategory {
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         if (nameField.getText().equals("")) {
             messageDialog.showErrorMessage("Enter name of the category!");
+            return;
         }
         Category newCategory = new Category(nameField.getText(), categoryColorPanel.getBackground());
         if (!checkCategoryExistence(newCategory, null)) {
