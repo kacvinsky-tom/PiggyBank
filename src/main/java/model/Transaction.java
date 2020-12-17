@@ -4,6 +4,7 @@ import enums.TransactionType;
 
 import java.awt.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class Transaction {
     }
 
     public BigDecimal getAmount() {
-        return amount;
+        return amount.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void setAmount(BigDecimal amount) {

@@ -33,7 +33,7 @@ public class StatisticDao {
                     categoryStatistic.setExpenses(getIncomeExpense(category, TransactionType.SPENDING));
                     categoryStatistic.setIncome(getIncomeExpense(category, TransactionType.INCOME));
                     categoryStatistic.setSum(categoryStatistic.getIncome().subtract(categoryStatistic.getExpenses()) );
-                    setIncomeAndExpense(categoryStatistic);
+                    setPercentageIncomeAndExpense(categoryStatistic);
                     categoryStatistics.add(categoryStatistic);
                 }
                 return categoryStatistics;
@@ -43,18 +43,18 @@ public class StatisticDao {
         }
     }
 
-    private void setIncomeAndExpense(CategoryStatistic categoryStatistic) {
+    private void setPercentageIncomeAndExpense(CategoryStatistic categoryStatistic) {
         try {
-            categoryStatistic.setPercentageInc((categoryStatistic.getIncome()
-                    .divide(getTotalIncomeExpense(TransactionType.INCOME),2,RoundingMode.HALF_UP))
-                    .multiply(new BigDecimal(100)));
+            categoryStatistic.setPercentageInc(categoryStatistic.getIncome()
+                    .divide(getTotalIncomeExpense(TransactionType.INCOME),2,RoundingMode.HALF_UP)
+                    );
         } catch (ArithmeticException e){
             categoryStatistic.setPercentageInc(new BigDecimal(0));
         }
         try {
-            categoryStatistic.setPercentageSpend((categoryStatistic.getExpenses()
-                    .divide(getTotalIncomeExpense(TransactionType.SPENDING),2,RoundingMode.HALF_UP))
-                    .multiply(new BigDecimal(100)));
+            categoryStatistic.setPercentageSpend(categoryStatistic.getExpenses()
+                    .divide(getTotalIncomeExpense(TransactionType.SPENDING),2,RoundingMode.HALF_UP)
+                    );
         } catch (ArithmeticException e){
             categoryStatistic.setPercentageSpend(new BigDecimal(0));
         }
@@ -79,7 +79,7 @@ public class StatisticDao {
     }
 
     public BigDecimal getIncomeExpense(Category category, TransactionType transactionType){
-       long all = 0;
+       BigDecimal amount = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
                      "SELECT SUM(AMOUNT) AS totalAmount FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ?"
@@ -88,17 +88,18 @@ public class StatisticDao {
             st.setString(2, transactionType.name());
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
-                    all = rs.getLong("totalAmount");
+                    amount = BigDecimal.valueOf(rs.getDouble("totalAmount"));
                 }
             }
-            return BigDecimal.valueOf(all);
+
+            return amount.setScale(2,RoundingMode.HALF_UP);
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to get income or expense " + category, ex);
         }
     }
 
     public BigDecimal getTotalIncomeExpense(TransactionType transactionType){
-        long all = 0;
+        BigDecimal amount = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
                      "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
@@ -106,17 +107,17 @@ public class StatisticDao {
             st.setString(1, transactionType.name());
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
-                    all = rs.getLong("total");
+                    amount = BigDecimal.valueOf(rs.getDouble("total"));
                 }
             }
-            return BigDecimal.valueOf(all);
+            return amount;
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to get total income or expense " + ex);
         }
     }
 
     public BigDecimal getIncome(){
-        long balance;
+        BigDecimal income = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
                      "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
@@ -124,18 +125,18 @@ public class StatisticDao {
             st.setString(1, TransactionType.INCOME.name());
             try (var rs = st.executeQuery()) {
                 rs.first();
-                balance = rs.getLong("total");
+                income = BigDecimal.valueOf(rs.getDouble("total"));
             } catch (SQLException ex){
-                return BigDecimal.valueOf(0);
+                return income.setScale(2,RoundingMode.HALF_UP);
             }
-            return BigDecimal.valueOf(balance);
+            return income.setScale(2,RoundingMode.HALF_UP);
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to get Income " + ex);
         }
     }
 
     public BigDecimal getExpense(){
-        long balance;
+        BigDecimal expense = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
                      "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
@@ -143,13 +144,13 @@ public class StatisticDao {
             st.setString(1, TransactionType.SPENDING.name());
             try (var rs = st.executeQuery()) {
                 rs.first();
-                balance = rs.getLong("total");
+                expense = BigDecimal.valueOf(rs.getDouble("total"));
             } catch (SQLException ex){
-                return BigDecimal.valueOf(0);
+                return expense.setScale(2,RoundingMode.HALF_UP);
             }
-            return BigDecimal.valueOf(balance);
+            return expense.setScale(2,RoundingMode.HALF_UP);
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to get Income " + ex);
+            throw new DataAccessException("Failed to get Expense " + ex);
         }
     }
 }
