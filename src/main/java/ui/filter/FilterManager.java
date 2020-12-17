@@ -41,9 +41,9 @@ public class FilterManager {
     }
 
     private void determineFilter(){
-        if (selectedTabIndex == TableType.STATISTICS_TABLE.ordinal()){
+        if (selectedTabIndex == TableType.STATISTICS.ordinal()){
             statisticsFilter.filterTable();
-        } else if (selectedTabIndex == TableType.TRANSACTIONS_TABLE.ordinal()){
+        } else if (selectedTabIndex == TableType.TRANSACTIONS.ordinal()){
             transactionsFilter.filterTable();
         }
     }
