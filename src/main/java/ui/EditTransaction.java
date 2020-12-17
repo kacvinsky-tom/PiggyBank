@@ -45,10 +45,7 @@ public class EditTransaction extends AbstractAddEditTransaction {
         selectedTransaction.setDate(date);
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
-
         tablesManager.getTranTableModel().updateEntity(selectedTransaction);
-        int rowIndex = tablesManager.getTranTableModel().getTransactions().indexOf(selectedTransaction);
-        tablesManager.getTranTableModel().fireTableRowsUpdated(rowIndex, rowIndex);
     }
 
     @Override

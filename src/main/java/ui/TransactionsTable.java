@@ -24,14 +24,14 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     );
 
     private final TransactionDao transactionDao;
-    private final List<Transaction> transactions;
+    private List<Transaction> transactions;
     private final CategoriesTable categoriesTable;
 
     TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable){
         super(COLUMNS);
         this.transactionDao = transactionDao;
         this.categoriesTable = categoriesTable;
-        this.transactions = new ArrayList<>(transactionDao.findAll());
+        this.transactions = transactionDao.findAll();
     }
 
     public List<Transaction> getTransactions() {
@@ -50,6 +50,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     }
 
     public void update(){
+        this.transactions = transactionDao.findAll();
         fireTableDataChanged();
     }
 
@@ -72,12 +73,12 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     @Override
     protected void updateEntity(Transaction transaction) {
         transactionDao.update(transaction);
+        fireTableDataChanged();
     }
 
     public void addTransaction(Transaction transaction) {
         transactionDao.create(transaction);
-        int newRowIndex = transactions.size();
         transactions.add(transaction);
-        fireTableRowsInserted(newRowIndex, newRowIndex);
+        fireTableDataChanged();
     }
 }

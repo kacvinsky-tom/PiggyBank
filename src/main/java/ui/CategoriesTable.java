@@ -62,10 +62,9 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
     }
 
     public void addRow(Category category) {
-        int newRowIndex = categories.size();
         categoryDao.create(category);
         categories.add(category);
-        fireTableRowsInserted(newRowIndex, newRowIndex);
+        fireTableDataChanged();
     }
 
     @Override
@@ -79,7 +78,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         if (!categories.get(rowIndex).getName().equals("Others")) {
             categoryDao.delete(categories.get(rowIndex));
             categories.remove(rowIndex);
-            fireTableRowsDeleted(rowIndex, rowIndex);
+            fireTableDataChanged();
             return true;
         }
         return false;
