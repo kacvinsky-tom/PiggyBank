@@ -8,15 +8,16 @@ import javax.swing.table.TableRowSorter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionsFilter extends AbstractFilterAction {
+public class TransactionsFilter {
     private final TableRowSorter<TransactionsTable> sorter;
+    private final TablesManager tablesManager;
     private final FilterPanel filterPanel;
 
     public TransactionsFilter(TablesManager tablesManager, FilterPanel filterPanel) {
-        super(tablesManager, filterPanel);
+        this.tablesManager = tablesManager;
+        this.filterPanel = filterPanel;
         sorter = new TableRowSorter<>(tablesManager.getTranTableModel());
         tablesManager.getTranJTable().setRowSorter(sorter);
-        this.filterPanel = filterPanel;
     }
 
     public void filterTable() {
@@ -40,4 +41,35 @@ public class TransactionsFilter extends AbstractFilterAction {
         RowFilter<TransactionsTable, Integer> rf = RowFilter.andFilter(filters);
         sorter.setRowFilter(rf);
     }
+
+    RowFilter<TransactionsTable, Integer> categoriesFilter = new RowFilter<>() {
+        public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
+            try {
+                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 3).toString().equals(filterPanel.getCategoriesComboBox().getSelectedItem().toString());
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                return false;
+            }
+        }
+
+    };
+
+    RowFilter<TransactionsTable, Integer> incomeFilter = new RowFilter<>() {
+        public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
+            try {
+                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 2).toString().equals("INCOME");
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                return false;
+            }
+        }
+    };
+
+    RowFilter<TransactionsTable, Integer> spendingFilter = new RowFilter<>() {
+        public boolean include(Entry<? extends TransactionsTable, ? extends Integer> entry) {
+            try {
+                return tablesManager.getTranJTable().getValueAt(entry.getIdentifier(), 2).toString().equals("SPENDING");
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                return false;
+            }
+        }
+    };
 }
