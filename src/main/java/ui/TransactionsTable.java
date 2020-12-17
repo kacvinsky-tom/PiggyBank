@@ -60,7 +60,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
             transactions.stream()
                     .filter(t ->  t.getCategory().getName().equals(category.getName()))
                     .forEach(t -> {t.setCategory(categoriesTable.getOthers());
-                    fireTableRowsUpdated(rowIndex, rowIndex);
+                    fireTableDataChanged();
                     transactionDao.update(t);});
         }
     }
