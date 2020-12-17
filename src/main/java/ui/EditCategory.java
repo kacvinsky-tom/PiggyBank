@@ -50,6 +50,7 @@ public class EditCategory extends AbstractAddEditCategory {
             setCategory(nameField.getText(), categoryColorPanel.getBackground());
             tablesManager.getCatTableModel().updateEntity(selectedCategory);
             tablesManager.getStatTableModel().update();
+            tablesManager.getTranTableModel().update();
             dialog.dispose();
         }
 

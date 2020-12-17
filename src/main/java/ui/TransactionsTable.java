@@ -49,6 +49,10 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
+    public void update(){
+        fireTableDataChanged();
+    }
+
     public void changeCategoryToDefault(int rowIndex){
         var category = categoriesTable.getCategories().get(rowIndex);
         if (!category.getName().equals("Others")){
