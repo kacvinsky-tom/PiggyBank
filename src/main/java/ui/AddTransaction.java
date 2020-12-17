@@ -19,9 +19,9 @@ public class AddTransaction extends AbstractAddEditTransaction {
 
     private void initializeComponents() {
         dialog = createDialog("Add transaction", 230, 330);
-        nameField = createTextField("Name:", "", 20);
-        amountField = createTextField("Amount:", "", 20);
-        noteField = createTextField("Note:", "", 20);
+        nameField = createTextField("Name:", "", 17);
+        amountField = createTextField("Amount:", "", 17);
+        noteField = createTextField("Note:", "", 17);
         categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
         categoryBox.setSelectedItem(tablesManager.getCatTableModel().getOthers());
         transactionType = new JComboBox<>(TransactionType.values());

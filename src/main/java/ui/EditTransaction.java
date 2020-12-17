@@ -22,9 +22,9 @@ public class EditTransaction extends AbstractAddEditTransaction {
     private void initializeComponents() {
         selectedTransaction = tablesManager.getTranTableModel().getEntity(tablesManager.getTranJTable().getSelectedRow());
         dialog = createDialog("Edit transaction", 230, 330);
-        nameField = createTextField("Name:", selectedTransaction.getName(), 20);
-        amountField = createTextField("Amount:", String.valueOf(selectedTransaction.getAmount()), 20);
-        noteField = createTextField("Note:", selectedTransaction.getNote(), 20);
+        nameField = createTextField("Name:", selectedTransaction.getName(), 17);
+        amountField = createTextField("Amount:", String.valueOf(selectedTransaction.getAmount()), 17);
+        noteField = createTextField("Note:", selectedTransaction.getNote(), 17);
         categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
         categoryBox.setSelectedItem(selectedTransaction.getCategory());
         transactionType = new JComboBox<>(TransactionType.values());
