@@ -16,11 +16,20 @@ public class AddCategory extends AbstractAddEditCategory {
         return (int) ((Math.random() * 255));
     }
 
-    protected Color generateRandomColor() {
+    private boolean checkColorExistence(Color color){
+        for (Category c : tablesManager.getCatTableModel().getCategories()){
+            if (c.getColor().equals(color)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Color generateRandomColor() {
         Color color;
         do {
             color = new Color(getRandomNumberInRGBRange(), getRandomNumberInRGBRange(), getRandomNumberInRGBRange());
-        } while (checkCategoryExistence(new Category("", color), true, null));
+        } while (checkColorExistence(color));
         return color;
     }
 
@@ -37,7 +46,7 @@ public class AddCategory extends AbstractAddEditCategory {
             messageDialog.showErrorMessage("Enter name of the category!");
         }
         Category newCategory = new Category(nameField.getText(), categoryColorPanel.getBackground());
-        if (!checkCategoryExistence(newCategory, false, null)) {
+        if (!checkCategoryExistence(newCategory, null)) {
             tablesManager.getCatTableModel().addRow(newCategory);
             tablesManager.getStatTableModel().update();
             dialog.dispose();

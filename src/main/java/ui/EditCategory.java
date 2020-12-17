@@ -46,7 +46,7 @@ public class EditCategory extends AbstractAddEditCategory {
         if (nameField.getText().equals("")){
             messageDialog.showErrorMessage("Enter name of the category!");
 
-        } else if (!checkCategoryExistence(new Category(nameField.getText(), categoryColorPanel.getBackground()), false, selectedCategory)){
+        } else if (!checkCategoryExistence(new Category(nameField.getText(), categoryColorPanel.getBackground()), selectedCategory)){
             setCategory(nameField.getText(), categoryColorPanel.getBackground());
             tablesManager.getCatTableModel().updateEntity(selectedCategory);
             tablesManager.getStatTableModel().update();

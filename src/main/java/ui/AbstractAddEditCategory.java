@@ -28,14 +28,14 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
         dialog.setVisible(true);
     }
 
-    protected boolean checkCategoryExistence(Category newCategory, boolean checkOnlyByColor, Category except){
+    protected boolean checkCategoryExistence(Category newCategory, Category except){
         for (Category c : tablesManager.getCatTableModel().getCategories()){
             if (except != null){
                 if (except.getColor().equals(c.getColor()) && except.getName().equals(c.getName())){
                     continue;
                 }
             }
-            if (!checkOnlyByColor && c.getName().equals(newCategory.getName())){
+            if (c.getName().equals(newCategory.getName())){
                 messageDialog.showErrorMessage("Category " + newCategory.getName() + " already exists!");
                 return true;
 
