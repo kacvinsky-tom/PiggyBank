@@ -46,7 +46,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     public void deleteRow(int rowIndex) {
         transactionDao.delete(transactions.get(rowIndex));
         transactions.remove(rowIndex);
-        fireTableRowsDeleted(rowIndex, rowIndex);
+        fireTableDataChanged();
     }
 
     public void update(){
