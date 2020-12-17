@@ -150,7 +150,7 @@ public class StatisticDao {
             }
             return expense.setScale(2,RoundingMode.HALF_UP);
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to get Income " + ex);
+            throw new DataAccessException("Failed to get Expense " + ex);
         }
     }
 }
