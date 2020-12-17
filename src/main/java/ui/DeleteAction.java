@@ -1,5 +1,7 @@
 package ui;
 
+import enums.TableType;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -12,7 +14,6 @@ final class DeleteAction extends AbstractAction {
     public DeleteAction(TablesManager tablesManager, MessageDialog messageDialog) {
         super("Delete", Icons.DELETE_ICON);
         this.setEnabled(false);
-        putValue(SHORT_DESCRIPTION, "Deletes selected rows");
         putValue(MNEMONIC_KEY, KeyEvent.VK_D);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl D"));
         this.deleteCategory = new DeleteCategory(tablesManager, messageDialog);
@@ -21,6 +22,13 @@ final class DeleteAction extends AbstractAction {
 
     public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
+        if (selectedTabIndex == TableType.TRANSACTIONS.ordinal()){
+            putValue(SHORT_DESCRIPTION, "Deletes selected transactions");
+        } else if (selectedTabIndex == TableType.STATISTICS.ordinal()){
+            putValue(SHORT_DESCRIPTION, null);
+        } else {
+            putValue(SHORT_DESCRIPTION, "Deletes selected categories");
+        }
     }
 
     @Override

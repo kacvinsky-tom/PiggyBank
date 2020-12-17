@@ -78,21 +78,21 @@ public class FilterPanel extends JPanel {
     }
 
     public void setComponentsEnable(int selectedTable){
-        if (selectedTable == TableType.TRANSACTIONS_TABLE.ordinal()){
+        if (selectedTable == TableType.TRANSACTIONS.ordinal()){
             checkBoxIncomes.setEnabled(true);
             checkBoxSpending.setEnabled(true);
             spinnerFrom.setEnabled(true);
             spinnerTo.setEnabled(true);
             categoriesComboBox.setEnabled(true);
 
-        } else if (selectedTable == TableType.STATISTICS_TABLE.ordinal()){
+        } else if (selectedTable == TableType.STATISTICS.ordinal()){
             checkBoxIncomes.setEnabled(true);
             checkBoxSpending.setEnabled(true);
             spinnerFrom.setEnabled(true);
             spinnerTo.setEnabled(true);
             categoriesComboBox.setEnabled(false);
 
-        } else if (selectedTable == TableType.CATEGORIES_TABLE.ordinal()){
+        } else if (selectedTable == TableType.CATEGORIES.ordinal()){
             checkBoxIncomes.setEnabled(false);
             checkBoxSpending.setEnabled(false);
             spinnerFrom.setEnabled(false);

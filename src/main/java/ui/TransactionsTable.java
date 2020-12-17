@@ -7,7 +7,6 @@ import enums.TransactionType;
 
 import java.awt.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -60,8 +59,8 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
             transactions.stream()
                     .filter(t ->  t.getCategory().getName().equals(category.getName()))
                     .forEach(t -> {t.setCategory(categoriesTable.getOthers());
-                    fireTableDataChanged();
                     transactionDao.update(t);});
+            fireTableDataChanged();
         }
     }
 
