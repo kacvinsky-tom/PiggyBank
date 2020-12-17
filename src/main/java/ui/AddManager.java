@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-class AddAction extends AbstractAction {
+class AddManager extends AbstractAction {
 
     private final AddTransaction addTransaction;
     private final AddCategory addCategory;
     private int selectedTabIndex = 0;
 
-    public AddAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
+    public AddManager(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super("Add", Icons.ADD_ICON);
         putValue(SHORT_DESCRIPTION, "Adds new row");
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);

@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-class EditAction extends AbstractAction {
+class EditManager extends AbstractAction {
 
     private final EditCategory editCategory;
     private final EditTransaction editTransaction;
     private int selectedTabIndex = 0;
 
-    public EditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
+    public EditManager(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super("Edit", Icons.EDIT_ICON);
         this.setEnabled(false);
         putValue(SHORT_DESCRIPTION, "Edits selected row");

@@ -8,35 +8,35 @@ import javax.swing.event.ListSelectionEvent;
 import java.awt.*;
 
 public class ToolBar extends JToolBar {
-    private final AddAction addAction;
+    private final AddManager addManager;
     private final DeleteAction deleteAction;
-    private final EditAction editAction;
+    private final EditManager editManager;
     private final FilterManager filterManager;
     private int selectedTabIndex = 0;
 
     public ToolBar(JFrame frame, TablesManager tablesManager){
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         MessageDialog messageDialog = new MessageDialog(frame);
-        this.addAction = new AddAction(frame, tablesManager, messageDialog);
+        this.addManager = new AddManager(frame, tablesManager, messageDialog);
         this.deleteAction = new DeleteAction(tablesManager, messageDialog);
-        this.editAction = new EditAction(frame, tablesManager, messageDialog);
+        this.editManager = new EditManager(frame, tablesManager, messageDialog);
         this.filterManager = new FilterManager(tablesManager, messageDialog);
         setToolBar();
     }
 
     public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
-        addAction.updateSelectedTabIndex(selectedTabIndex);
+        addManager.updateSelectedTabIndex(selectedTabIndex);
         deleteAction.updateSelectedTabIndex(selectedTabIndex);
-        editAction.updateSelectedTabIndex(selectedTabIndex);
+        editManager.updateSelectedTabIndex(selectedTabIndex);
         filterManager.updateSelectedTabIndex(selectedTabIndex);
     }
 
     private void setToolBar(){
         this.setOrientation(SwingConstants.HORIZONTAL);
-        this.add(addAction);
+        this.add(addManager);
         this.add(deleteAction);
-        this.add(editAction);
+        this.add(editManager);
         this.add(filterManager.getFilterPanel());
         this.setFloatable(false);
         this.setVisible(true);
@@ -50,7 +50,7 @@ public class ToolBar extends JToolBar {
                 && selectedTabIndex != TableType.STATISTICS_TABLE.ordinal()
         );
 
-        editAction.setEnabled(
+        editManager.setEnabled(
                 selectionModel.getSelectedItemsCount() == 1
                 && selectedTabIndex != TableType.STATISTICS_TABLE.ordinal()
         );
