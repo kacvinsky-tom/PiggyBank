@@ -12,14 +12,16 @@ public abstract class AbstractAddEditTransaction extends AbstractAddEditAction {
         super(frame, tablesManager, messageDialog);
     }
 
-    protected void createTransactionDialog(String button){
+    protected void createTransactionDialog(String buttonTitle){
         dialog.add(new JLabel("Select category: "));
         dialog.add(categoryBox);
         dialog.add(new JLabel("Select type: "));
         dialog.add(transactionType);
         dialog.add(new JLabel("Select date: "));
         dialog.add(spinner);
-        dialog.getContentPane().add(createButton(button));
+        JButton button = createButton(buttonTitle);
+        dialog.getContentPane().add(button);
+        dialog.getRootPane().setDefaultButton(button);
         dialog.setResizable(false);
         dialog.setVisible(true);
     }

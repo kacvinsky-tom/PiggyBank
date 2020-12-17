@@ -15,13 +15,15 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
         super(frame, tablesManager, messageDialog);
     }
 
-    protected void createCategoryDialog(String button){
+    protected void createCategoryDialog(String buttonTitle){
         JButton setColorButton = new JButton("Show Color Chooser...");
         setColorButton.addActionListener(this::colorChooser);
         dialog.add(new JLabel("Color: "));
         dialog.add(setColorButton);
         dialog.add(categoryColorPanel);
-        dialog.add(createButton(button));
+        JButton button = createButton(buttonTitle);
+        dialog.add(button);
+        dialog.getRootPane().setDefaultButton(button);
         dialog.setResizable(false);
         dialog.setVisible(true);
     }
