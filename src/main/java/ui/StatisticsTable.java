@@ -30,6 +30,7 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
     protected StatisticsTable(StatisticDao statisticDao) {
         super(COLUMNS);
         this.statisticDao = statisticDao;
+        statistics = new ArrayList<>();
     }
 
     public void setDateFrom(Date dateFrom) {

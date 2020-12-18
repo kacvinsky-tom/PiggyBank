@@ -64,7 +64,7 @@ public class StatisticDao {
         int number = 0;
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT FROM TRANSACTIONS WHERE CATEGORY_ID = ?")) {
+                     "SELECT CATEGORY_ID, CREATION_DATE FROM TRANSACTIONS WHERE CATEGORY_ID = ?")) {
             st.setLong(1, category.getId());
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -85,7 +85,7 @@ public class StatisticDao {
        BigDecimal amount = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ?"
+                     "SELECT CATEGORY_ID, \"TYPE\", CREATION_DATE, AMOUNT FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ?"
              )){
             st.setLong(1, category.getId());
             st.setString(2, transactionType.name());
@@ -108,7 +108,7 @@ public class StatisticDao {
         BigDecimal amount = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT FROM TRANSACTIONS WHERE \"TYPE\" = ?"
+                     "SELECT \"TYPE\", CREATION_DATE, AMOUNT FROM TRANSACTIONS WHERE \"TYPE\" = ?"
              )){
             st.setString(1, transactionType.name());
             try (var rs = st.executeQuery()) {
@@ -130,7 +130,7 @@ public class StatisticDao {
         BigDecimal balance = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT * FROM TRANSACTIONS")) {
+                     "SELECT CREATION_DATE, \"TYPE\", AMOUNT FROM TRANSACTIONS")) {
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
                     Date creationDate = new java.util.Date(rs.getDate("CREATION_DATE").getTime());
