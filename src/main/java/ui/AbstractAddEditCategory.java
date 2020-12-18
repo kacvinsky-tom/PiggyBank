@@ -10,6 +10,7 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
 
     protected final JLabel categoryColorPanel = new JLabel();
     protected JTextField nameField;
+    protected Color preselectedColor;
 
     protected AbstractAddEditCategory(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog){
         super(frame, tablesManager, messageDialog);
@@ -51,7 +52,7 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
         Color newColor = JColorChooser.showDialog(
                 null,
                 "Choose Background Color",
-                Color.BLACK);
+                preselectedColor);
         if (newColor != null) {
             categoryColorPanel.setBackground(newColor);
         }

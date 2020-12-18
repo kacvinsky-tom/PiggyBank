@@ -23,7 +23,8 @@ public class EditCategory extends AbstractAddEditCategory {
 
     public void edit() {
         selectedCategory = tablesManager.getCatTableModel().getEntity(tablesManager.getCatJTable().getSelectedRow());
-        prepareColorPanel(selectedCategory.getColor());
+        preselectedColor = selectedCategory.getColor();
+        prepareColorPanel(preselectedColor);
         dialog = createDialog("Edit category", 270, 150);
         nameField = createTextField("Name: ", selectedCategory.getName(), 17);
 

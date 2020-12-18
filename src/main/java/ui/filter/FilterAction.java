@@ -38,13 +38,12 @@ public class FilterAction {
 
     private void dateChangePerformed(ChangeEvent changeEvent) {
         filterPanel.checkSpinnersValues();
-        transactionsFilter.filterTables();
+        transactionsFilter.filterTable();
         statisticsFilter.filterTable();
-
     }
 
     private void filterActionPerformed(ActionEvent actionEvent) {
         filterPanel.checkSpinnersValues();
-        transactionsFilter.filterTables();
+        transactionsFilter.filterTable();
     }
 }

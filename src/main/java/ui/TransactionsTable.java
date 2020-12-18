@@ -30,7 +30,8 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         super(COLUMNS);
         this.transactionDao = transactionDao;
         this.categoriesTable = categoriesTable;
-        this.transactions = transactionDao.findAll();
+        loadTransactions()
+        update();
     }
 
     public List<Transaction> getTransactions() {
@@ -44,12 +45,14 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
 
     public void deleteRow(int rowIndex) {
         transactionDao.delete(transactions.get(rowIndex));
-        transactions.remove(rowIndex);
-        fireTableDataChanged();
+        update();
+    }
+
+    public void loadTransactions(){
+        this.transactions = transactionDao.findAll();
     }
 
     public void update(){
-        this.transactions = transactionDao.findAll();
         fireTableDataChanged();
     }
 
