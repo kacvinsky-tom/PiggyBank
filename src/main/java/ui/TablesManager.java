@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.util.List;
 
 public class TablesManager {
     private final StatisticsTable statisticsTableModel;
@@ -30,6 +31,7 @@ public class TablesManager {
         statisticsBalanceJTable = createStatisticsBalanceJTable();
         categoriesJTable = createJTable(categoriesTableModel);
         transactionsJTable = createJTable(transactionsTableModel);
+        disableSorters();
 
         setTablesColumnsAlign();
         setRenderers();
@@ -65,6 +67,13 @@ public class TablesManager {
 
     public TransactionsTable getTranTableModel() {
         return transactionsTableModel;
+    }
+
+    private void disableSorters(){
+        transactionsJTable.setRowSorter(null);
+        categoriesJTable.setRowSorter(null);
+        statisticsBalanceJTable.setRowSorter(null);
+        statisticsJTable.setRowSorter(null);
     }
 
     private void setRenderers(){
