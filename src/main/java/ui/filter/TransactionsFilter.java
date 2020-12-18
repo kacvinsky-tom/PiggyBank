@@ -11,24 +11,32 @@ public class TransactionsFilter {
     public TransactionsFilter(TablesManager tablesManager, FilterPanel filterPanel) {
         this.tablesManager = tablesManager;
         this.filterPanel = filterPanel;
+        this.tablesManager.getTranTableModel().setFilter(this);
+    }
+
+    public boolean checkTransaction(Transaction t){
+        return checkDate(t) && checkType(t) && checkType(t) && checkCategory(t);
     }
 
     public void filterTable() {
-        tablesManager.getTranTableModel().loadTransactions();
-        for (Transaction t : tablesManager.getTranTableModel().getTransactions()){
-            if (checkDate(t) && checkType(t) && checkType(t) && ){
-                continue;
-            }
-
-        }
+        tablesManager.getTranTableModel().filterTransactions();
     }
 
     private boolean checkCategory(Transaction transaction){
-        if (transaction.getCategory().getName().equals())
+        try {
+            if (filterPanel.getCategoriesComboBox().getSelectedItem().toString().equals("All")) {
+                return true;
+            }
+        } catch (NullPointerException e){
+            return true;
+        }
+        return transaction.getCategory().getName().equals(filterPanel.getCategoriesComboBox().getSelectedItem().toString());
     }
 
     private boolean checkType(Transaction transaction){
-        if (filterPanel.getCheckBoxIncomes().isSelected() && transaction.getType() == TransactionType.INCOME){
+        if (!filterPanel.getCheckBoxIncomes().isSelected() && !filterPanel.getCheckBoxSpending().isSelected()){
+            return true;
+        } else if (filterPanel.getCheckBoxIncomes().isSelected() && transaction.getType() == TransactionType.INCOME){
             return true;
         } else if (filterPanel.getCheckBoxSpending().isSelected() && transaction.getType() == TransactionType.SPENDING){
             return true;

@@ -50,6 +50,7 @@ public class AddTransaction extends AbstractAddEditTransaction {
         tablesManager.getTranTableModel().addTransaction(newTransaction);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();
+        tablesManager.getTranTableModel().filterTransactions();
         dialog.dispose();
     }
 }
