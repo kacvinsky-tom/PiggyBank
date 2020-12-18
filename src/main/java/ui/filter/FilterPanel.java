@@ -106,7 +106,7 @@ public class FilterPanel extends JPanel {
         Date startDate = (Date) spinnerFrom.getValue();
         Date endDate = (Date) spinnerTo.getValue();
         if (startDate.after(endDate)) {
-            messageDialog.showAlertMessage("Date 'From' shouldn't be older than date 'To'!");
+            spinnerFrom.setValue(spinnerTo.getValue());
         }
     }
 
