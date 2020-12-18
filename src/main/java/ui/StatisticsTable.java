@@ -7,6 +7,7 @@ import model.CategoryStatistic;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic> {
@@ -23,15 +24,24 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
 
     private List<CategoryStatistic> statistics;
     private final StatisticDao statisticDao;
+    private Date dateFrom;
+    private Date dateTo;
 
     protected StatisticsTable(StatisticDao statisticDao) {
         super(COLUMNS);
         this.statisticDao = statisticDao;
-        statistics = new ArrayList<>(statisticDao.setAll());
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
 
     public void update(){
-        statistics = statisticDao.setAll();
+        statistics = statisticDao.setAll(dateFrom, dateTo);
         fireTableDataChanged();
     }
 

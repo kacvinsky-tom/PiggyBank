@@ -20,8 +20,7 @@ public class TransactionsFilter {
         tablesManager.getTranJTable().setRowSorter(sorter);
     }
 
-    public void filterTable() {
-        filterPanel.checkSpinnersValues();
+    public void filterTables() {
         sorter.setRowFilter(null);
 
         List<RowFilter<TransactionsTable, Integer>> filters = new ArrayList<>(6);

@@ -4,19 +4,29 @@ import data.StatisticDao;
 
 import javax.swing.table.AbstractTableModel;
 import java.math.BigDecimal;
+import java.util.Date;
 
 public class StatisticsBalanceTable extends AbstractTableModel {
 
     private BigDecimal balance;
     private final StatisticDao statisticDao;
+    private Date dateFrom;
+    private Date dateTo;
 
     public StatisticsBalanceTable(StatisticDao statisticDao){
         this.statisticDao = statisticDao;
-        update();
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
 
     public void update(){
-        balance = statisticDao.getIncome().subtract(statisticDao.getExpense());
+        balance = statisticDao.getBalance(dateFrom, dateTo);
         fireTableDataChanged();
     }
 
