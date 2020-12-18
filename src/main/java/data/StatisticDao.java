@@ -8,9 +8,9 @@ import javax.sql.DataSource;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StatisticDao {
@@ -20,7 +20,7 @@ public class StatisticDao {
         this.dataSource = dataSource;
     }
 
-    public List<CategoryStatistic> setAll (){
+    public List<CategoryStatistic> setAll(Date from, Date to){
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement("SELECT ID, \"NAME\", COLOR FROM CATEGORIES")) {
             List<CategoryStatistic> categoryStatistics = new ArrayList<>();
@@ -29,11 +29,11 @@ public class StatisticDao {
                     Category category = new Category(rs.getString("NAME"), Color.decode(rs.getString("COLOR")));
                     category.setId(rs.getLong("ID"));
                     CategoryStatistic categoryStatistic = new CategoryStatistic(category);
-                    categoryStatistic.setTransactionsNumber(getNumberOfTransactions(category));
-                    categoryStatistic.setExpenses(getIncomeExpense(category, TransactionType.SPENDING));
-                    categoryStatistic.setIncome(getIncomeExpense(category, TransactionType.INCOME));
+                    categoryStatistic.setTransactionsNumber(getNumberOfTransactions(category, from, to));
+                    categoryStatistic.setExpenses(getIncomeExpense(category, TransactionType.SPENDING, from, to));
+                    categoryStatistic.setIncome(getIncomeExpense(category, TransactionType.INCOME, from, to));
                     categoryStatistic.setSum(categoryStatistic.getIncome().subtract(categoryStatistic.getExpenses()) );
-                    setPercentageIncomeAndExpense(categoryStatistic);
+                    setPercentageIncomeAndExpense(categoryStatistic, from, to);
                     categoryStatistics.add(categoryStatistic);
                 }
                 return categoryStatistics;
@@ -43,71 +43,81 @@ public class StatisticDao {
         }
     }
 
-    private void setPercentageIncomeAndExpense(CategoryStatistic categoryStatistic) {
+    private void setPercentageIncomeAndExpense(CategoryStatistic categoryStatistic, Date from, Date to) {
         try {
             categoryStatistic.setPercentageInc(categoryStatistic.getIncome()
-                    .divide(getTotalIncomeExpense(TransactionType.INCOME),2,RoundingMode.HALF_UP)
+                    .divide(getTotalIncomeExpense(TransactionType.INCOME, from, to),2,RoundingMode.HALF_UP)
                     );
         } catch (ArithmeticException e){
             categoryStatistic.setPercentageInc(new BigDecimal(0));
         }
         try {
             categoryStatistic.setPercentageSpend(categoryStatistic.getExpenses()
-                    .divide(getTotalIncomeExpense(TransactionType.SPENDING),2,RoundingMode.HALF_UP)
+                    .divide(getTotalIncomeExpense(TransactionType.SPENDING, from, to),2,RoundingMode.HALF_UP)
                     );
         } catch (ArithmeticException e){
             categoryStatistic.setPercentageSpend(new BigDecimal(0));
         }
     }
 
-    public int getNumberOfTransactions(Category category){
-        int all = 0;
+    public int getNumberOfTransactions(Category category, Date from, Date to){
+        int number = 0;
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT COUNT(*) AS total FROM TRANSACTIONS WHERE CATEGORY_ID = ?"
-             )){
+                     "SELECT CATEGORY_ID, CREATION_DATE FROM TRANSACTIONS WHERE CATEGORY_ID = ?")) {
             st.setLong(1, category.getId());
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
-                    all = (int) rs.getLong("total");
+                    Date creationDate = new java.util.Date(rs.getDate("CREATION_DATE").getTime());
+                    if (from != null && to != null && !(creationDate.after(from) && creationDate.before(to))){
+                        continue;
+                    }
+                    ++number;
                 }
             }
-            return all;
+            return number;
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to get number of transactions " + category, ex);
+            throw new DataAccessException("Failed to load all transactions", ex);
         }
     }
 
-    public BigDecimal getIncomeExpense(Category category, TransactionType transactionType){
+    public BigDecimal getIncomeExpense(Category category, TransactionType transactionType, Date from, Date to){
        BigDecimal amount = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS totalAmount FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ?"
+                     "SELECT CATEGORY_ID, \"TYPE\", CREATION_DATE, AMOUNT FROM TRANSACTIONS WHERE CATEGORY_ID = ? AND \"TYPE\" = ?"
              )){
             st.setLong(1, category.getId());
             st.setString(2, transactionType.name());
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
-                    amount = BigDecimal.valueOf(rs.getDouble("totalAmount"));
+                    Date creationDate = new java.util.Date(rs.getDate("CREATION_DATE").getTime());
+                    if (from != null && to != null && !(creationDate.after(from) && creationDate.before(to))){
+                        continue;
+                    }
+                    amount = amount.add(BigDecimal.valueOf(rs.getDouble("AMOUNT")));
                 }
             }
-
             return amount.setScale(2,RoundingMode.HALF_UP);
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to get income or expense " + category, ex);
         }
     }
 
-    public BigDecimal getTotalIncomeExpense(TransactionType transactionType){
+    public BigDecimal getTotalIncomeExpense(TransactionType transactionType, Date from, Date to){
         BigDecimal amount = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
+                     "SELECT \"TYPE\", CREATION_DATE, AMOUNT FROM TRANSACTIONS WHERE \"TYPE\" = ?"
              )){
             st.setString(1, transactionType.name());
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
-                    amount = BigDecimal.valueOf(rs.getDouble("total"));
+                    Date creationDate = new java.util.Date(rs.getDate("CREATION_DATE").getTime());
+                    if (from != null && to != null && !(creationDate.after(from) && creationDate.before(to))){
+                        continue;
+                    }
+                    amount = amount.add(BigDecimal.valueOf(rs.getDouble("AMOUNT")));
                 }
             }
             return amount;
@@ -116,41 +126,28 @@ public class StatisticDao {
         }
     }
 
-    public BigDecimal getIncome(){
-        BigDecimal income = new BigDecimal(0);
+    public BigDecimal getBalance(Date from, Date to){
+        BigDecimal balance = new BigDecimal(0);
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
-             , ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
-            st.setString(1, TransactionType.INCOME.name());
+                     "SELECT CREATION_DATE, \"TYPE\", AMOUNT FROM TRANSACTIONS")) {
             try (var rs = st.executeQuery()) {
-                rs.first();
-                income = BigDecimal.valueOf(rs.getDouble("total"));
-            } catch (SQLException ex){
-                return income.setScale(2,RoundingMode.HALF_UP);
+                while (rs.next()) {
+                    Date creationDate = new java.util.Date(rs.getDate("CREATION_DATE").getTime());
+                    if (from != null && to != null && !(creationDate.after(from) && creationDate.before(to))){
+                        continue;
+                    }
+                    TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
+                    if (type == TransactionType.INCOME){
+                        balance = balance.add(BigDecimal.valueOf(rs.getDouble("AMOUNT")));
+                    } else {
+                        balance = balance.subtract(BigDecimal.valueOf(rs.getDouble("AMOUNT")));
+                    }
+                }
             }
-            return income.setScale(2,RoundingMode.HALF_UP);
+            return balance.setScale(2,RoundingMode.HALF_UP);
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to get Income " + ex);
-        }
-    }
-
-    public BigDecimal getExpense(){
-        BigDecimal expense = new BigDecimal(0);
-        try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement(
-                     "SELECT SUM(AMOUNT) AS total FROM TRANSACTIONS WHERE \"TYPE\" = ?"
-                     , ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)){
-            st.setString(1, TransactionType.SPENDING.name());
-            try (var rs = st.executeQuery()) {
-                rs.first();
-                expense = BigDecimal.valueOf(rs.getDouble("total"));
-            } catch (SQLException ex){
-                return expense.setScale(2,RoundingMode.HALF_UP);
-            }
-            return expense.setScale(2,RoundingMode.HALF_UP);
-        } catch (SQLException ex) {
-            throw new DataAccessException("Failed to get Expense " + ex);
+            throw new DataAccessException("Failed to load all transactions", ex);
         }
     }
 }

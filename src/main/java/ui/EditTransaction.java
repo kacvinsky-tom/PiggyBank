@@ -26,7 +26,7 @@ public class EditTransaction extends AbstractAddEditTransaction {
         amountField = createTextField("Amount:", String.valueOf(selectedTransaction.getAmount()), 17);
         noteField = createTextField("Note:", selectedTransaction.getNote(), 17);
         categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
-        categoryBox.setSelectedItem(selectedTransaction.getCategory());
+        categoryBox.setSelectedIndex(getCategoryIndex(selectedTransaction));
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
         spinner.setValue(selectedTransaction.getDate());
@@ -48,6 +48,17 @@ public class EditTransaction extends AbstractAddEditTransaction {
         tablesManager.getTranTableModel().updateEntity(selectedTransaction);
     }
 
+    private int getCategoryIndex(Transaction transaction){
+        int index = 0;
+        for (Category t : tablesManager.getCatTableModel().getCategories()){
+            if (transaction.getCategory().getName().equals(t.getName())){
+                return index;
+            }
+            ++index;
+        }
+        return -1;
+    }
+
     @Override
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         BigDecimal amount;
@@ -64,6 +75,7 @@ public class EditTransaction extends AbstractAddEditTransaction {
         updateTransaction(nameField.getText(), amount, category, date, noteField.getText(), type);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();
+        tablesManager.getTranTableModel().filterTransactions();
         dialog.dispose();
     }
 

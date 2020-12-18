@@ -4,6 +4,7 @@ import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import enums.TransactionType;
+import ui.filter.TransactionsFilter;
 
 import java.awt.*;
 import java.math.BigDecimal;
@@ -25,12 +26,14 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     private final TransactionDao transactionDao;
     private List<Transaction> transactions;
     private final CategoriesTable categoriesTable;
+    private TransactionsFilter filter;
 
     TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable){
         super(COLUMNS);
         this.transactionDao = transactionDao;
         this.categoriesTable = categoriesTable;
-        this.transactions = transactionDao.findAll();
+        loadTransactions();
+        update();
     }
 
     public List<Transaction> getTransactions() {
@@ -44,13 +47,25 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
 
     public void deleteRow(int rowIndex) {
         transactionDao.delete(transactions.get(rowIndex));
-        transactions.remove(rowIndex);
-        fireTableDataChanged();
+        update();
+    }
+
+    public void setFilter(TransactionsFilter filter){
+        this.filter = filter;
+    }
+
+    public void loadTransactions(){
+        this.transactions = transactionDao.findAll();
     }
 
     public void update(){
-        this.transactions = transactionDao.findAll();
         fireTableDataChanged();
+    }
+
+    public void filterTransactions(){
+        loadTransactions();
+        transactions.removeIf(transaction -> !filter.checkTransaction(transaction));
+        update();
     }
 
     public void changeCategoryToDefault(int rowIndex){
