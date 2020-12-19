@@ -29,7 +29,7 @@ public class StatisticDao {
                     Category category = new Category(rs.getString("NAME"), Color.decode(rs.getString("COLOR")));
                     category.setId(rs.getLong("ID"));
                     CategoryStatistic categoryStatistic = new CategoryStatistic(category);
-                    categoryStatistic.setTransactionsNumber(getNumberOfTransactions(category, from, to));
+                    categoryStatistic.setTransactionsCounter(getNumberOfTransactions(category, from, to));
                     categoryStatistic.setExpenses(getIncomeExpense(category, TransactionType.SPENDING, from, to));
                     categoryStatistic.setIncome(getIncomeExpense(category, TransactionType.INCOME, from, to));
                     categoryStatistic.setSum(categoryStatistic.getIncome().subtract(categoryStatistic.getExpenses()) );

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class CategoryStatistic {
     private final Category category;
-    private int transactionsNumber;
+    private int transactionsCounter;
     private BigDecimal expenses;
     private BigDecimal income;
     private BigDecimal percentageInc;
@@ -23,12 +23,12 @@ public class CategoryStatistic {
         return category;
     }
 
-    public int getTransactionsNumber() {
-        return transactionsNumber;
+    public int getTransactionsCounter() {
+        return transactionsCounter;
     }
 
-    public void setTransactionsNumber(int transactionsNumber) {
-        this.transactionsNumber = transactionsNumber;
+    public void setTransactionsCounter(int transactionsCounter) {
+        this.transactionsCounter = transactionsCounter;
     }
 
     public BigDecimal getExpenses() {
