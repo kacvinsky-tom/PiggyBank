@@ -28,6 +28,7 @@ public class TablesManager {
         transactionsTableModel = new TransactionsTable(transactionDao, categoriesTableModel);
 
         statisticsJTable = createJTable(statisticsTableModel);
+        statisticsJTable.setCellSelectionEnabled(false);
         statisticsBalanceJTable = createStatisticsBalanceJTable();
         categoriesJTable = createJTable(categoriesTableModel);
         transactionsJTable = createJTable(transactionsTableModel);
