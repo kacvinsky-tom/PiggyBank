@@ -1,0 +1,54 @@
+package cz.muni.fi.pv168.piggybank.ui;
+
+import cz.muni.fi.pv168.piggybank.data.StatisticDao;
+
+import javax.swing.table.AbstractTableModel;
+import java.math.BigDecimal;
+import java.util.Date;
+
+public class StatisticsBalanceTable extends AbstractTableModel {
+
+    private BigDecimal balance;
+    private final StatisticDao statisticDao;
+    private Date dateFrom;
+    private Date dateTo;
+
+    public StatisticsBalanceTable(StatisticDao statisticDao){
+        this.statisticDao = statisticDao;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
+
+    public void update(){
+        balance = statisticDao.getBalance(dateFrom, dateTo);
+        fireTableDataChanged();
+    }
+
+    @Override
+    public int getRowCount() {
+        return 1;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 2;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        switch (columnIndex){
+            case 0:
+                return "Balance";
+            case 1:
+                return balance;
+            default:
+                return null;    // TODO ADD SOME EXCEPTION HERE
+        }
+    }
+}
