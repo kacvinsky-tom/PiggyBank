@@ -10,7 +10,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class AddTransaction extends AbstractAddEditTransaction {
 
@@ -50,13 +52,12 @@ public class AddTransaction extends AbstractAddEditTransaction {
             messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
-        // ToDo
-        //Category category = tablesManager.getCatTableModel().getCategories().get(menu.getSelectionModel().getSelectedIndex());
+
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        // ToDo
-        Transaction newTransaction = new Transaction(nameField.getText(), amount, new Category("A", Color.BLACK), date, noteField.getText(), type);
+
+        Transaction newTransaction = new Transaction(nameField.getText(), amount, getCategoriesFromCheckBoxes(), date, noteField.getText(), type);
         tablesManager.getTranTableModel().addTransaction(newTransaction);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();

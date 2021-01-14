@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 public class EditTransaction extends AbstractAddEditTransaction {
 
@@ -33,8 +34,13 @@ public class EditTransaction extends AbstractAddEditTransaction {
         checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
         for (String c : tablesManager.getCatTableModel().getCategoriesNames()){
-            // ToDo
-            checkBoxPanel.add(new Checkbox(c, false));
+            for (String n : tablesManager.getCatTableModel().getCategoriesNames()){
+                if (c.equals(n)){
+                    checkBoxPanel.add(new Checkbox(c, true));
+                } else {
+                    checkBoxPanel.add(new Checkbox(c, false));
+                }
+            }
         }
     }
 
@@ -43,10 +49,10 @@ public class EditTransaction extends AbstractAddEditTransaction {
         createTransactionDialog("Save");
     }
 
-    private void updateTransaction(String name, BigDecimal  amount, Category category, Date date, String note, TransactionType type) {
+    private void updateTransaction(String name, BigDecimal  amount, List<Category> categories, Date date, String note, TransactionType type) {
         selectedTransaction.setName(name);
         selectedTransaction.setAmount(amount);
-        selectedTransaction.addCategory(category);
+        selectedTransaction.updateCategories(categories);
         selectedTransaction.setDate(date);
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
@@ -73,13 +79,11 @@ public class EditTransaction extends AbstractAddEditTransaction {
             messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
-        // ToDo
-        //Category category = tablesManager.getCatTableModel().getCategories().get(menu.getSelectionModel().getSelectedIndex());
+
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        // ToDo
-        updateTransaction(nameField.getText(), amount, new Category("A", Color.BLACK), date, noteField.getText(), type);
+        updateTransaction(nameField.getText(), amount, getCategoriesFromCheckBoxes(), date, noteField.getText(), type);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();
         tablesManager.getTranTableModel().filterTransactions();

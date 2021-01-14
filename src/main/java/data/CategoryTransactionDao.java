@@ -107,11 +107,12 @@ public class CategoryTransactionDao {
                     }
                     TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
                     BigDecimal amount = BigDecimal.valueOf(rs.getDouble("AMOUNT"));
+                    List<Category> list = new ArrayList<>();
+                    list.add(new Category(rs.getString("CAT_NAME"), Color.decode(rs.getString("COLOR"))));
                     Transaction transaction = new Transaction(
                             rs.getString("TRANS_NAME"),
                             amount,
-                            new Category(rs.getString("CAT_NAME"),
-                                    Color.decode(rs.getString("COLOR"))),
+                            list,
                             new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
                             rs.getString("NOTE"),
                             type);

@@ -17,15 +17,15 @@ public class Transaction {
     private String name;
     private Date date;
     private String note;
-    private final List<Category> categories;
+    private List<Category> categories;
     private TransactionType type;
 
-    public Transaction(String name, BigDecimal amount, Category category, Date date, String note, TransactionType type) {
-        categories = new ArrayList<Category>();
+    public Transaction(String name, BigDecimal amount, List<Category> cats, Date date, String note, TransactionType type) {
+        categories = new ArrayList<>();
         setType(type);
         setName(name);
         setAmount(amount);
-        addCategory(category);
+        this.categories = cats;
         setDate(date);
         setNote(note);
     }
@@ -78,15 +78,36 @@ public class Transaction {
         categories.set(index, category);
     }
 
+    public String getCategoriesNames(){
+        String cats = "";
+        for (Category c : categories){
+            if (categories.indexOf(c) != 0 || categories.indexOf(c) != categories.size() - 1){
+                cats += ", ";
+            }
+            cats += c.getName();
+        }
+        return cats;
+    }
+
     public List<Category> getCategories(){
         return categories;
     }
-    public Category getCategory() {
-        return categories.get(categories.size() - 1);
-    }
 
-    public void addCategory(Category category) {
-        categories.add(category);
+    public void updateCategories(List<Category> categories) {
+        boolean exist = false;
+        for (Category c : categories){
+            for (Category cc : this.categories){
+                if (c.getName().equals(cc.getName())){
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist){
+
+            }
+
+        }
+
     }
 
     public TransactionType getType() {

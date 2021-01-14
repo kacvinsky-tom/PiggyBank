@@ -5,6 +5,8 @@ import model.Category;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractAddEditTransaction extends AbstractAddEditAction {
 
@@ -24,6 +26,16 @@ public abstract class AbstractAddEditTransaction extends AbstractAddEditAction {
 
     protected void disposeDialog(ActionEvent e){
         categoriesDialog.dispose();
+    }
+
+    protected java.util.List<Category> getCategoriesFromCheckBoxes(){
+        List<Category> cats = new ArrayList<>();
+        for (Component c : checkBoxPanel.getComponents()) {
+            if (c instanceof JCheckBox) {
+                cats.add(new Category(c.getName()));
+            }
+        }
+        return cats;
     }
 
     protected void createCheckBoxDialog(ActionEvent e){

@@ -1,5 +1,6 @@
 package ui;
 
+import data.CategoryTransactionDao;
 import data.TransactionDao;
 import enums.TransactionType;
 import model.Category;
@@ -18,20 +19,22 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
             Column.readOnly("Name", String.class, Transaction::getName),
             Column.readOnly("Amount", BigDecimal.class, Transaction::getAmount),
             Column.readOnly("Type", TransactionType.class, Transaction::getType),
-            Column.readOnly("Category", Category.class, Transaction::getCategory),
+            Column.readOnly("Category", String.class, Transaction::getCategoriesNames),
             Column.readOnly("Category color", Color.class, Transaction::getCategoryColor),
             Column.readOnly("Created", Date.class, Transaction::getDate),
             Column.readOnly("Note", String.class, Transaction::getNote)
     );
 
     private final TransactionDao transactionDao;
+    private final CategoryTransactionDao categoryTransactionDao;
     private List<Transaction> transactions;
     private final CategoriesTable categoriesTable;
     private TransactionsFilter filter;
 
-    TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable) {
+    TransactionsTable(TransactionDao transactionDao, CategoryTransactionDao categoryTransactionDao, CategoriesTable categoriesTable) {
         super(COLUMNS);
         this.transactionDao = transactionDao;
+        this.categoryTransactionDao = categoryTransactionDao;
         this.categoriesTable = categoriesTable;
         loadTransactions();
         update();
@@ -55,7 +58,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     }
 
     public void loadTransactions() {
-        this.transactions = transactionDao.findAll();
+        this.transactions = categoryTransactionDao.findAll();
     }
 
     public void update() {

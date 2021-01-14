@@ -1,6 +1,7 @@
 package ui;
 
 import data.CategoryDao;
+import data.CategoryTransactionDao;
 import data.StatisticDao;
 import data.TransactionDao;
 
@@ -21,11 +22,11 @@ public class TablesManager {
     private final JTable categoriesJTable;
     private final JTable transactionsJTable;
 
-    public TablesManager(CategoryDao categoryDao, TransactionDao transactionDao, StatisticDao statisticDao){
+    public TablesManager(CategoryDao categoryDao, TransactionDao transactionDao, StatisticDao statisticDao, CategoryTransactionDao categoryTransactionDao){
         statisticsTableModel = new StatisticsTable(statisticDao);
         statisticsBalanceTableModel = new StatisticsBalanceTable(statisticDao);
         categoriesTableModel = new CategoriesTable(categoryDao);
-        transactionsTableModel = new TransactionsTable(transactionDao, categoriesTableModel);
+        transactionsTableModel = new TransactionsTable(transactionDao, categoryTransactionDao, categoriesTableModel);
 
         statisticsJTable = createJTable(statisticsTableModel);
         statisticsJTable.setCellSelectionEnabled(false);

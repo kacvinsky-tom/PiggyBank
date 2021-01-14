@@ -9,6 +9,11 @@ public class Category {
     private String name;
     private Color color;
 
+    public Category(String name){
+        setName(name);
+        setColor(Color.BLACK);  // ToDo Remove
+    }
+
     public Category(String name, Color color){
         setName(name);
         setColor(color);
