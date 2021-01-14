@@ -4,17 +4,18 @@ import javax.swing.*;
 
 public class MessageDialog {
     private final JFrame parentFrame;
+    private static final I18N I18N = new I18N(MessageDialog.class);
 
     public MessageDialog(JFrame parentFrame){
         this.parentFrame = parentFrame;
     }
 
     public void showAlertMessage(String message){
-        JOptionPane.showMessageDialog(parentFrame, message, "Alert", JOptionPane.WARNING_MESSAGE);
+        JOptionPane.showMessageDialog(parentFrame, message, I18N.getString("alert"), JOptionPane.WARNING_MESSAGE);
     }
 
     public void showErrorMessage(String message){
-        JOptionPane.showMessageDialog(parentFrame, message, "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(parentFrame, message, I18N.getString("error"), JOptionPane.ERROR_MESSAGE);
     }
 
     public boolean showConfirmMessage(String message, String title){

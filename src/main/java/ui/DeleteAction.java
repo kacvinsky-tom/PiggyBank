@@ -10,9 +10,10 @@ final class DeleteAction extends AbstractAction {
     private final DeleteCategory deleteCategory;
     private final DeleteTransaction deleteTransaction;
     private int selectedTabIndex = 0;
+    private static final I18N I18N = new I18N(DeleteAction.class);
 
     public DeleteAction(TablesManager tablesManager, MessageDialog messageDialog) {
-        super("Delete", Icons.DELETE_ICON);
+        super(I18N.getString("name"), Icons.DELETE_ICON);
         this.setEnabled(false);
         putValue(MNEMONIC_KEY, KeyEvent.VK_D);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl D"));
@@ -23,11 +24,11 @@ final class DeleteAction extends AbstractAction {
     public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
         if (selectedTabIndex == TableType.TRANSACTIONS.ordinal()){
-            putValue(SHORT_DESCRIPTION, "Deletes selected transactions");
+            putValue(SHORT_DESCRIPTION, I18N.getString("descriptionTransaction"));
         } else if (selectedTabIndex == TableType.STATISTICS.ordinal()){
             putValue(SHORT_DESCRIPTION, null);
         } else {
-            putValue(SHORT_DESCRIPTION, "Deletes selected categories");
+            putValue(SHORT_DESCRIPTION,  I18N.getString("descriptionCategory"));
         }
     }
 

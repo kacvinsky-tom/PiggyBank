@@ -11,10 +11,11 @@ class AddAction extends AbstractAction {
     private final AddTransaction addTransaction;
     private final AddCategory addCategory;
     private int selectedTabIndex = 0;
+    private static final I18N I18N = new I18N(AddAction.class);
 
     public AddAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
-        super("Add", Icons.ADD_ICON);
-        putValue(SHORT_DESCRIPTION, "Adds new transaction");
+        super(I18N.getString("name"), Icons.ADD_ICON);
+        putValue(SHORT_DESCRIPTION, I18N.getString("addTransaction"));
         putValue(MNEMONIC_KEY, KeyEvent.VK_A);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl N"));
         this.addTransaction = new AddTransaction(frame, tablesManager, messageDialog);
@@ -24,9 +25,9 @@ class AddAction extends AbstractAction {
     public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
         if (selectedTabIndex == TableType.TRANSACTIONS.ordinal() || selectedTabIndex == TableType.STATISTICS.ordinal()){
-            putValue(SHORT_DESCRIPTION, "Adds new transaction");
+            putValue(SHORT_DESCRIPTION, I18N.getString("addTransaction"));
         } else {
-            putValue(SHORT_DESCRIPTION, "Adds new category");
+            putValue(SHORT_DESCRIPTION, I18N.getString("addCategory"));
         }
     }
 

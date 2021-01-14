@@ -12,16 +12,17 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class AddTransaction extends AbstractAddEditTransaction {
+    private static final I18N I18N = new I18N(AddTransaction.class);
 
     public AddTransaction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
     }
 
     private void initializeComponents() {
-        dialog = createDialog("Add transaction", 230, 330);
-        nameField = createTextField("Name:", "", 17);
-        amountField = createTextField("Amount:", "", 17);
-        noteField = createTextField("Note:", "", 17);
+        dialog = createDialog(I18N.getString("addTransaction"), 230, 330);
+        nameField = createTextField(I18N.getString("name"), "", 17);
+        amountField = createTextField(I18N.getString("amount"), "", 17);
+        noteField = createTextField(I18N.getString("note"), "", 17);
         categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
         categoryBox.setSelectedItem(tablesManager.getCatTableModel().getOthers());
         transactionType = new JComboBox<>(TransactionType.values());
@@ -30,7 +31,7 @@ public class AddTransaction extends AbstractAddEditTransaction {
 
     public void add() {
         initializeComponents();
-        createTransactionDialog("Add");
+        createTransactionDialog(I18N.getString("add"));
     }
 
     @Override
@@ -39,7 +40,7 @@ public class AddTransaction extends AbstractAddEditTransaction {
         try {
             amount = new BigDecimal(amountField.getText().replace(",", ".")).abs();
         } catch (NumberFormatException ex) {
-            messageDialog.showErrorMessage("Enter valid number into amount!");
+            messageDialog.showErrorMessage(I18N.getString("errorMessage"));
             return;
         }
         Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
