@@ -92,36 +92,6 @@ public class TransactionDao {
         }
     }
 
-    //DO NOT USE
-    public List<Transaction> findAll() {
-        try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement(
-                     "SELECT TRANSACTIONS.ID AS TRANS_ID, AMOUNT, \"TYPE\", TRANSACTIONS.NAME AS TRANS_NAME, " +
-                             "CREATION_DATE, NOTE, CATEGORY_ID, CATEGORIES.NAME AS CAT_NAME, COLOR" +
-                            " FROM TRANSACTIONS LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS.CATEGORY_ID")) {
-            List<Transaction> transactions = new ArrayList<>();
-            try (var rs = st.executeQuery()) {
-                while (rs.next()) {
-                    TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
-                    BigDecimal amount = BigDecimal.valueOf(rs.getDouble("AMOUNT"));
-                    Transaction transaction = new Transaction(
-                            rs.getString("TRANS_NAME"),
-                            amount,
-                            new Category(rs.getString("CAT_NAME"),
-                                    Color.decode(rs.getString("COLOR"))),
-                            new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
-                            rs.getString("NOTE"),
-                            type);
-                    transaction.setId(rs.getLong("TRANS_ID"));
-                    transactions.add(transaction);
-                }
-            }
-            return transactions;
-        } catch (SQLException ex) {
-            throw new DataAccessException("Failed to load all transactions", ex);
-        }
-    }
-
     private void initTable() {
         if (!tableExits("APP", "TRANSACTIONS")) {
             createTable();

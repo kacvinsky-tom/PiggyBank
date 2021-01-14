@@ -74,6 +74,10 @@ public class Transaction {
         this.note = note;
     }
 
+    public void setCategory(Category category, int index){
+        categories.set(index, category);
+    }
+
     public List<Category> getCategories(){
         return categories;
     }
