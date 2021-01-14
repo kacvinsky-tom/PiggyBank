@@ -93,7 +93,6 @@ public class TransactionDao {
         }
     }
 
-
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
@@ -141,7 +140,6 @@ public class TransactionDao {
     private void createTable() {
         try (var connection = dataSource.getConnection();
              var st = connection.createStatement()) {
-
             st.executeUpdate("CREATE TABLE APP.TRANSACTIONS (" +
                     "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
                     "AMOUNT DECIMAL(30,2) NOT NULL," +

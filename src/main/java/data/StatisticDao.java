@@ -46,15 +46,13 @@ public class StatisticDao {
     private void setPercentageIncomeAndExpense(CategoryStatistic categoryStatistic) {
         try {
             categoryStatistic.setPercentageInc(categoryStatistic.getIncome()
-                    .divide(getTotalIncomeExpense(TransactionType.INCOME),2,RoundingMode.HALF_UP)
-                    );
+                    .divide(getTotalIncomeExpense(TransactionType.INCOME),2,RoundingMode.HALF_UP));
         } catch (ArithmeticException e){
             categoryStatistic.setPercentageInc(new BigDecimal(0));
         }
         try {
             categoryStatistic.setPercentageSpend(categoryStatistic.getExpenses()
-                    .divide(getTotalIncomeExpense(TransactionType.SPENDING),2,RoundingMode.HALF_UP)
-                    );
+                    .divide(getTotalIncomeExpense(TransactionType.SPENDING),2,RoundingMode.HALF_UP));
         } catch (ArithmeticException e){
             categoryStatistic.setPercentageSpend(new BigDecimal(0));
         }
