@@ -1,38 +1,40 @@
 package data;
 
+import enums.TransactionType;
 import model.Category;
 import model.Transaction;
-import enums.TransactionType;
 
 import javax.sql.DataSource;
 import java.awt.*;
 import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class TransactionDao {
+public class CategoryTransactionDao {
 
     private final DataSource dataSource;
 
-    public TransactionDao(DataSource dataSource) {
+    public CategoryTransactionDao(DataSource dataSource){
         this.dataSource = dataSource;
         initTable();
     }
 
-    public void create(Transaction transaction) {
-        if (transaction.getId() != null){
-            throw new IllegalArgumentException(String.format("Transaction already has ID: %s", transaction));
+    public void create(Transaction transaction, Category category) {
+        if (transaction.getId() == null){
+            throw new IllegalArgumentException("Transaction has null ID");
+        }
+        if (category.getId() == null){
+            throw new IllegalArgumentException("Category has null ID");
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE) VALUES (?, ?, ?, ?, ?)",
+                     "INSERT INTO TRANSACTIONS_CATEGORIES (CATEGORY_ID, TRANSACTION_ID) VALUES (?, ?)",
                      RETURN_GENERATED_KEYS)) {
-            setStatementParameters(transaction, st);
+            st.setLong(1, transaction.getId());
+            st.setLong(2, category.getId());
             st.executeUpdate();
             try (var rs = st.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -46,12 +48,26 @@ public class TransactionDao {
         }
     }
 
-    private void setStatementParameters(Transaction transaction, PreparedStatement st) throws SQLException {
-        st.setBigDecimal(1, transaction.getAmount());
-        st.setString(2, transaction.getType().name());
-        st.setString(3, transaction.getName());
-        st.setDate(4, new Date(transaction.getDate().getTime()));
-        st.setString(5, transaction.getNote());
+    public void deleteOnlyOneRecord(Transaction transaction, Category category) {
+        if (transaction.getId() == null){
+            throw new IllegalArgumentException("Transaction has null ID");
+        }
+        if (category.getId() == null){
+            throw new IllegalArgumentException("Category has null ID");
+        }
+        try (var connection = dataSource.getConnection();
+             var st = connection.prepareStatement(
+                     "DELETE FROM TRANSACTIONS_CATEGORIES WHERE TRANSACTION_ID = ? AND CATEGORY_ID = ?"
+             )){
+            st.setLong(1, transaction.getId());
+            st.setLong(2, category.getId());
+            int updatedRowCount = st.executeUpdate();
+            if(updatedRowCount == 0){
+                throw new DataAccessException("Failed to delete non-existing transaction or category: " + transaction);
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to delete transaction and category " + transaction, ex);
+        }
     }
 
     public void delete(Transaction transaction) {
@@ -60,7 +76,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "DELETE FROM TRANSACTIONS WHERE ID = ?"
+                     "DELETE FROM TRANSACTIONS_CATEGORIES WHERE TRANSACTION_ID = ?"
              )){
             st.setLong(1, transaction.getId());
             int updatedRowCount = st.executeUpdate();
@@ -72,36 +88,23 @@ public class TransactionDao {
         }
     }
 
-    public void update(Transaction transaction) {
-        if (transaction.getId() == null){
-            throw new IllegalArgumentException("Transaction has null ID");
-        }
-        try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement(
-                     "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ? WHERE ID = ?"
-             )){
-            setStatementParameters(transaction, st);
-            st.setLong(7, transaction.getId());
-            int updatedRowCount = st.executeUpdate();
-            if(updatedRowCount == 0){
-                throw new DataAccessException("Failed to update non-existing transaction: " + transaction);
-            }
-        }  catch (SQLException ex)
-        {
-            throw new DataAccessException("Failed to update transaction " + transaction, ex);
-        }
-    }
-
-    //DO NOT USE
     public List<Transaction> findAll() {
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
                      "SELECT TRANSACTIONS.ID AS TRANS_ID, AMOUNT, \"TYPE\", TRANSACTIONS.NAME AS TRANS_NAME, " +
                              "CREATION_DATE, NOTE, CATEGORY_ID, CATEGORIES.NAME AS CAT_NAME, COLOR" +
-                            " FROM TRANSACTIONS LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS.CATEGORY_ID")) {
+                             " FROM TRANSACTIONS_CATEGORIES LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS_CATEGORIES.CATEGORY_ID" +
+                             "LEFT OUTER JOIN TRANSACTIONS ON TRANSACTIONS.ID = TRANSACTIONS_CATEGORIES.TRANSACTION_ID ")) {
             List<Transaction> transactions = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
+                    var Id =  rs.getLong("TRANS_ID");
+                    Transaction trans = transactions.stream().filter(e -> e.getId() == Id).findAny().orElse(null);
+                    if (trans != null){
+                        trans.getCategories().add(new Category(rs.getString("CAT_NAME"),
+                                Color.decode(rs.getString("COLOR"))));
+                        continue;
+                    }
                     TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
                     BigDecimal amount = BigDecimal.valueOf(rs.getDouble("AMOUNT"));
                     Transaction transaction = new Transaction(
@@ -118,12 +121,12 @@ public class TransactionDao {
             }
             return transactions;
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to load all transactions", ex);
+            throw new DataAccessException("Failed to load all transactions with categories", ex);
         }
     }
 
     private void initTable() {
-        if (!tableExits("APP", "TRANSACTIONS")) {
+        if (!tableExits("APP", "TRANSACTIONS_CATEGORIES")) {
             createTable();
         }
     }
@@ -140,26 +143,13 @@ public class TransactionDao {
     private void createTable() {
         try (var connection = dataSource.getConnection();
              var st = connection.createStatement()) {
-            st.executeUpdate("CREATE TABLE APP.TRANSACTIONS (" +
-                    "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
-                    "AMOUNT DECIMAL(30,2) NOT NULL," +
-                    "\"TYPE\" VARCHAR(8) NOT NULL CONSTRAINT TYPE_CHECK CHECK (\"TYPE\" IN ('INCOME','SPENDING'))," +
-                    "\"NAME\" VARCHAR(100) NOT NULL," +
-                    "CREATION_DATE DATE NOT NULL," +
-                    "NOTE VARCHAR(255)," +
+
+            st.executeUpdate("CREATE TABLE APP.TRANSACTIONS_CATEGORIES (" +
+                    "CATEGORY_ID BIGINT DEFAULT 0 REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
+                    "TRANSACTION_ID BIGINT REFERENCES APP.TRANSACTIONS(ID)" +
                     ")");
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to create TRANSACTIONS table", ex);
-        }
-    }
-
-    public void dropTable() {
-        try (var connection = dataSource.getConnection();
-             var st = connection.createStatement()) {
-
-            st.executeUpdate("DROP TABLE APP.TRANSACTIONS");
-        } catch (SQLException ex) {
-            throw new DataAccessException("Failed to drop TRANSACTIONS table", ex);
+            throw new DataAccessException("Failed to create TRANSACTIONS_CATEGORIES table", ex);
         }
     }
 }
