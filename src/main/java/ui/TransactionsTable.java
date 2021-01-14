@@ -15,9 +15,9 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     private static final I18N I18N = new I18N(TransactionsTable.class);
 
     private static final List<Column<?, Transaction>> COLUMNS = List.of(
-            Column.readOnly("Name", String.class, Transaction::getName),
-            Column.readOnly("Amount", BigDecimal.class, Transaction::getAmount),
-            Column.readOnly("Type", TransactionType.class, Transaction::getType),
+            Column.readOnly(I18N.getString("name"), String.class, Transaction::getName),
+            Column.readOnly(I18N.getString("amount"), BigDecimal.class, Transaction::getAmount),
+            Column.readOnly(I18N.getString("type"), TransactionType.class, Transaction::getType),
             Column.readOnly(I18N.getString("category"), Category.class, Transaction::getCategory),
             Column.readOnly(I18N.getString("categoryColor"), Color.class, Transaction::getCategoryColor),
             Column.readOnly(I18N.getString("created"), Date.class, Transaction::getDate),

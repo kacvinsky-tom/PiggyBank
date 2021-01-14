@@ -39,7 +39,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
                 return;
             }
         }
-        others = new Category("Others", Color.GRAY);
+        others = new Category(I18N.getString("others"), Color.GRAY);
         this.categories.add(others);
         categoryDao.create(others);
     }
@@ -76,7 +76,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
     }
 
     public boolean deleteRow(int rowIndex) {
-        if (!categories.get(rowIndex).getName().equals("Others")) {
+        if (!categories.get(rowIndex).getName().equals(I18N.getString("others"))) {
             categoryDao.delete(categories.get(rowIndex));
             categories.remove(rowIndex);
             fireTableDataChanged();
