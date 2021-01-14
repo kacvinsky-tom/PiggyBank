@@ -72,11 +72,9 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         var category = categoriesTable.getCategories().get(rowIndex);
         if (!category.getName().equals("Others")) {
             transactions.stream()
-                    .filter(t -> t.getCategory().getName().equals(category.getName()))
-                    .forEach(t -> {
-                        t.setCategory(categoriesTable.getOthers());
-                        transactionDao.update(t);
-                    });
+                    .forEach(t -> {t.getCategories().stream()
+                            .filter(c -> c.getName().equals(category.getName()))
+                            .forEach(e -> t.getCategories().set(t.getCategories().indexOf(e), categoriesTable.getOthers())); transactionDao.update(t);});
             fireTableDataChanged();
         }
     }

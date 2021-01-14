@@ -30,7 +30,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE, CATEGORY_ID) VALUES (?, ?, ?, ?, ?, ?)",
+                     "INSERT INTO TRANSACTIONS (AMOUNT, \"TYPE\", \"NAME\", CREATION_DATE, NOTE) VALUES (?, ?, ?, ?, ?)",
                      RETURN_GENERATED_KEYS)) {
             setStatementParameters(transaction, st);
             st.executeUpdate();
@@ -52,7 +52,6 @@ public class TransactionDao {
         st.setString(3, transaction.getName());
         st.setDate(4, new Date(transaction.getDate().getTime()));
         st.setString(5, transaction.getNote());
-        st.setLong(6, transaction.getCategory().getId());
     }
 
     public void delete(Transaction transaction) {
@@ -79,7 +78,7 @@ public class TransactionDao {
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
-                     "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ?, CATEGORY_ID = ? WHERE ID = ?"
+                     "UPDATE TRANSACTIONS SET AMOUNT = ?, \"TYPE\" = ?, \"NAME\" = ?, CREATION_DATE = ?, NOTE = ? WHERE ID = ?"
              )){
             setStatementParameters(transaction, st);
             st.setLong(7, transaction.getId());
@@ -90,36 +89,6 @@ public class TransactionDao {
         }  catch (SQLException ex)
         {
             throw new DataAccessException("Failed to update transaction " + transaction, ex);
-        }
-    }
-
-
-    public List<Transaction> findAll() {
-        try (var connection = dataSource.getConnection();
-             var st = connection.prepareStatement(
-                     "SELECT TRANSACTIONS.ID AS TRANS_ID, AMOUNT, \"TYPE\", TRANSACTIONS.NAME AS TRANS_NAME, " +
-                             "CREATION_DATE, NOTE, CATEGORY_ID, CATEGORIES.NAME AS CAT_NAME, COLOR" +
-                            " FROM TRANSACTIONS LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS.CATEGORY_ID")) {
-            List<Transaction> transactions = new ArrayList<>();
-            try (var rs = st.executeQuery()) {
-                while (rs.next()) {
-                    TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
-                    BigDecimal amount = BigDecimal.valueOf(rs.getDouble("AMOUNT"));
-                    Transaction transaction = new Transaction(
-                            rs.getString("TRANS_NAME"),
-                            amount,
-                            new Category(rs.getString("CAT_NAME"),
-                                    Color.decode(rs.getString("COLOR"))),
-                            new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
-                            rs.getString("NOTE"),
-                            type);
-                    transaction.setId(rs.getLong("TRANS_ID"));
-                    transactions.add(transaction);
-                }
-            }
-            return transactions;
-        } catch (SQLException ex) {
-            throw new DataAccessException("Failed to load all transactions", ex);
         }
     }
 
@@ -141,7 +110,6 @@ public class TransactionDao {
     private void createTable() {
         try (var connection = dataSource.getConnection();
              var st = connection.createStatement()) {
-
             st.executeUpdate("CREATE TABLE APP.TRANSACTIONS (" +
                     "ID BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY," +
                     "AMOUNT DECIMAL(30,2) NOT NULL," +
@@ -149,7 +117,6 @@ public class TransactionDao {
                     "\"NAME\" VARCHAR(100) NOT NULL," +
                     "CREATION_DATE DATE NOT NULL," +
                     "NOTE VARCHAR(255)," +
-                    "CATEGORY_ID BIGINT DEFAULT 0 REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
                     ")");
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to create TRANSACTIONS table", ex);

@@ -5,7 +5,9 @@ import enums.TransactionType;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class Transaction {
@@ -15,14 +17,15 @@ public class Transaction {
     private String name;
     private Date date;
     private String note;
-    private Category category;
+    private final List<Category> categories;
     private TransactionType type;
 
     public Transaction(String name, BigDecimal amount, Category category, Date date, String note, TransactionType type) {
+        categories = new ArrayList<Category>();
         setType(type);
         setName(name);
         setAmount(amount);
-        setCategory(category);
+        addCategory(category);
         setDate(date);
         setNote(note);
     }
@@ -64,19 +67,26 @@ public class Transaction {
     }
 
     public Color getCategoryColor(){
-        return category.getColor();
+        return categories.get(0).getColor();
     }
 
     public void setNote(String note) {
         this.note = note;
     }
 
-    public Category getCategory() {
-        return category;
+    public void setCategory(Category category, int index){
+        categories.set(index, category);
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public List<Category> getCategories(){
+        return categories;
+    }
+    public Category getCategory() {
+        return categories.get(categories.size() - 1);
+    }
+
+    public void addCategory(Category category) {
+        categories.add(category);
     }
 
     public TransactionType getType() {

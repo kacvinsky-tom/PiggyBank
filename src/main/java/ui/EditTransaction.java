@@ -46,7 +46,7 @@ public class EditTransaction extends AbstractAddEditTransaction {
     private void updateTransaction(String name, BigDecimal  amount, Category category, Date date, String note, TransactionType type) {
         selectedTransaction.setName(name);
         selectedTransaction.setAmount(amount);
-        selectedTransaction.setCategory(category);
+        selectedTransaction.addCategory(category);
         selectedTransaction.setDate(date);
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
