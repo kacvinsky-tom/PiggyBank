@@ -25,6 +25,8 @@ public class DateSpinner extends JSpinner {
         this.setEditor(new JSpinner.DateEditor(this, "dd/MM/yyyy"));
         if (type == DateSpinnerType.FROM) {
             setFromSpinner(spinnerDateModel);
+        } else {
+            setToSpinner(spinnerDateModel);
         }
         this.setVisible(true);
     }
@@ -33,6 +35,14 @@ public class DateSpinner extends JSpinner {
         List<Transaction> tranList = tablesManager.getTranTableModel().getTransactions();
         if (!tranList.isEmpty()) {
             Date minDate = tranList.stream().map(Transaction::getDate).min(Date::compareTo).get();
+            spinnerDateModel.setValue(minDate);
+        }
+    }
+
+    private void setToSpinner(SpinnerDateModel spinnerDateModel) {
+        List<Transaction> tranList = tablesManager.getTranTableModel().getTransactions();
+        if (!tranList.isEmpty()) {
+            Date minDate = tranList.stream().map(Transaction::getDate).max(Date::compareTo).get();
             spinnerDateModel.setValue(minDate);
         }
     }

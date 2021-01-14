@@ -1,25 +1,26 @@
 package ui.filter;
 
-import ui.StatisticsTable;
 import ui.TablesManager;
 
-import javax.swing.table.TableRowSorter;
-
-public class StatisticsFilter extends AbstractFilterAction {
-    private final TableRowSorter<StatisticsTable> sorter;
+public class StatisticsFilter {
     private final FilterPanel filterPanel;
+    private final TablesManager tablesManager;
 
     public StatisticsFilter(TablesManager tablesManager, FilterPanel filterPanel){
-        super(tablesManager, filterPanel);
-        sorter = new TableRowSorter<>(tablesManager.getStatTableModel());
-        tablesManager.getStatJTable().setRowSorter(sorter);
         this.filterPanel = filterPanel;
+        this.tablesManager = tablesManager;
+        filterTable();
     }
 
     public void filterTable(){
-        filterPanel.checkSpinnersValues();
-        sorter.setRowFilter(null);
-        // TODO IMPLEMENT STATISTICS FILTER
+        this.tablesManager.getStatTableModel().setDateFrom(this.filterPanel.getDateFrom());
+        this.tablesManager.getStatTableModel().setDateTo(this.filterPanel.getDateTo());
+        tablesManager.getStatTableModel().update();
+
+        this.tablesManager.getStatBalTableModel().setDateFrom(this.filterPanel.getDateFrom());
+        this.tablesManager.getStatBalTableModel().setDateTo(this.filterPanel.getDateTo());
+        tablesManager.getStatBalTableModel().update();
     }
+
 
 }

@@ -25,6 +25,7 @@ public class FilterPanel extends JPanel {
         spinnerTo = new DateSpinner(tablesManager, DateSpinnerType.TO);
         categoriesComboBox = createComboBox();
         setFilterPanel();
+        setComponentsEnabled(TableType.STATISTICS.ordinal());
     }
 
     public JSpinner getSpinnerFrom() {
@@ -77,7 +78,7 @@ public class FilterPanel extends JPanel {
         return c.getTime();
     }
 
-    public void setComponentsEnable(int selectedTable){
+    public void setComponentsEnabled(int selectedTable){
         if (selectedTable == TableType.TRANSACTIONS.ordinal()){
             checkBoxIncomes.setEnabled(true);
             checkBoxSpending.setEnabled(true);
@@ -86,8 +87,8 @@ public class FilterPanel extends JPanel {
             categoriesComboBox.setEnabled(true);
 
         } else if (selectedTable == TableType.STATISTICS.ordinal()){
-            checkBoxIncomes.setEnabled(true);
-            checkBoxSpending.setEnabled(true);
+            checkBoxIncomes.setEnabled(false);
+            checkBoxSpending.setEnabled(false);
             spinnerFrom.setEnabled(true);
             spinnerTo.setEnabled(true);
             categoriesComboBox.setEnabled(false);
@@ -105,7 +106,7 @@ public class FilterPanel extends JPanel {
         Date startDate = (Date) spinnerFrom.getValue();
         Date endDate = (Date) spinnerTo.getValue();
         if (startDate.after(endDate)) {
-            messageDialog.showAlertMessage("Date 'From' shouldn't be older than date 'To'!");
+            spinnerFrom.setValue(spinnerTo.getValue());
         }
     }
 
@@ -113,7 +114,6 @@ public class FilterPanel extends JPanel {
         categoriesComboBox = new JComboBox<>(this.tablesManager.getCatTableModel().getCategories().toArray());
         categoriesComboBox.insertItemAt(new Category("All", null), 0);
         categoriesComboBox.setSelectedIndex(0);
-        categoriesComboBox.setEnabled(false);
         return categoriesComboBox;
     }
 

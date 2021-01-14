@@ -1,10 +1,12 @@
 package ui;
 
 import data.TransactionDao;
+import enums.TransactionType;
 import model.Category;
 import model.Transaction;
-import enums.TransactionType;
+import ui.filter.TransactionsFilter;
 
+import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,12 +27,14 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     private final TransactionDao transactionDao;
     private List<Transaction> transactions;
     private final CategoriesTable categoriesTable;
+    private TransactionsFilter filter;
 
-    TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable){
+    TransactionsTable(TransactionDao transactionDao, CategoriesTable categoriesTable) {
         super(COLUMNS);
         this.transactionDao = transactionDao;
         this.categoriesTable = categoriesTable;
-        this.transactions = transactionDao.findAll();
+        loadTransactions();
+        update();
     }
 
     public List<Transaction> getTransactions() {
@@ -43,19 +47,30 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     }
 
     public void deleteRow(int rowIndex) {
-        transactionDao.delete(transactions.get(rowIndex));
-        transactions.remove(rowIndex);
-        fireTableDataChanged();
+        new RowDeleter(rowIndex).execute();
     }
 
-    public void update(){
+    public void setFilter(TransactionsFilter filter) {
+        this.filter = filter;
+    }
+
+    public void loadTransactions() {
         this.transactions = transactionDao.findAll();
+    }
+
+    public void update() {
         fireTableDataChanged();
     }
 
-    public void changeCategoryToDefault(int rowIndex){
+    public void filterTransactions() {
+        loadTransactions();
+        transactions.removeIf(transaction -> !filter.checkTransaction(transaction));
+        update();
+    }
+
+    public void changeCategoryToDefault(int rowIndex) {
         var category = categoriesTable.getCategories().get(rowIndex);
-        if (!category.getName().equals("Others")){
+        if (!category.getName().equals("Others")) {
             transactions.stream()
                     .forEach(t -> {t.getCategories().stream()
                             .filter(c -> c.getName().equals(category.getName()))
@@ -79,5 +94,55 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         transactionDao.create(transaction);
         transactions.add(transaction);
         fireTableDataChanged();
+    }
+
+    private class RowDeleter extends SwingWorker<Boolean, Integer> {
+        private final int rowIndex;
+
+        public RowDeleter(int rowIndex) {
+            this.rowIndex = rowIndex;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            transactionDao.delete(transactions.get(rowIndex));
+            loadTransactions();
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            update();
+        }
+    }
+
+    private class RowAdder extends SwingWorker<Boolean, Integer> {
+        private final int rowIndex;
+
+        public RowAdder(int rowIndex) {
+            this.rowIndex = rowIndex;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            transactionDao.delete(transactions.get(rowIndex));
+            loadTransactions();
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            update();
+        }
     }
 }

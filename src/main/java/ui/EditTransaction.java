@@ -7,6 +7,7 @@ import model.Transaction;
 import ui.filter.DateSpinner;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -25,12 +26,16 @@ public class EditTransaction extends AbstractAddEditTransaction {
         nameField = createTextField("Name:", selectedTransaction.getName(), 17);
         amountField = createTextField("Amount:", String.valueOf(selectedTransaction.getAmount()), 17);
         noteField = createTextField("Note:", selectedTransaction.getNote(), 17);
-        categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
-        categoryBox.setSelectedItem(selectedTransaction.getCategory());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
         spinner.setValue(selectedTransaction.getDate());
         transactionType.setSelectedItem(selectedTransaction.getType());
+        checkBoxPanel = new JPanel();
+        checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
+        for (String c : tablesManager.getCatTableModel().getCategoriesNames()){
+            // ToDo
+            checkBoxPanel.add(new Checkbox(c, false));
+        }
     }
 
     public void edit() {
@@ -48,6 +53,17 @@ public class EditTransaction extends AbstractAddEditTransaction {
         tablesManager.getTranTableModel().updateEntity(selectedTransaction);
     }
 
+    private int getCategoryIndex(Transaction transaction){
+        int index = 0;
+        for (Category t : tablesManager.getCatTableModel().getCategories()){
+            if (transaction.getCategory().getName().equals(t.getName())){
+                return index;
+            }
+            ++index;
+        }
+        return -1;
+    }
+
     @Override
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         BigDecimal amount;
@@ -57,13 +73,16 @@ public class EditTransaction extends AbstractAddEditTransaction {
             messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
-        Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
+        // ToDo
+        //Category category = tablesManager.getCatTableModel().getCategories().get(menu.getSelectionModel().getSelectedIndex());
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        updateTransaction(nameField.getText(), amount, category, date, noteField.getText(), type);
+        // ToDo
+        updateTransaction(nameField.getText(), amount, new Category("A", Color.BLACK), date, noteField.getText(), type);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();
+        tablesManager.getTranTableModel().filterTransactions();
         dialog.dispose();
     }
 

@@ -7,6 +7,7 @@ import model.Transaction;
 import ui.filter.DateSpinner;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -22,10 +23,17 @@ public class AddTransaction extends AbstractAddEditTransaction {
         nameField = createTextField("Name:", "", 17);
         amountField = createTextField("Amount:", "", 17);
         noteField = createTextField("Note:", "", 17);
-        categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
-        categoryBox.setSelectedItem(tablesManager.getCatTableModel().getOthers());
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
+        checkBoxPanel = new JPanel();
+        checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
+        for (String c : tablesManager.getCatTableModel().getCategoriesNames()){
+            if (c.equals("Others")){
+                checkBoxPanel.add(new Checkbox(c, true));
+            } else {
+                checkBoxPanel.add(new Checkbox(c, false));
+            }
+        }
     }
 
     public void add() {
@@ -42,14 +50,17 @@ public class AddTransaction extends AbstractAddEditTransaction {
             messageDialog.showErrorMessage("Enter valid number into amount!");
             return;
         }
-        Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
+        // ToDo
+        //Category category = tablesManager.getCatTableModel().getCategories().get(menu.getSelectionModel().getSelectedIndex());
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        Transaction newTransaction = new Transaction(nameField.getText(), amount, category, date, noteField.getText(), type);
+        // ToDo
+        Transaction newTransaction = new Transaction(nameField.getText(), amount, new Category("A", Color.BLACK), date, noteField.getText(), type);
         tablesManager.getTranTableModel().addTransaction(newTransaction);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();
+        tablesManager.getTranTableModel().filterTransactions();
         dialog.dispose();
     }
 }

@@ -1,19 +1,18 @@
 package ui;
 
 import data.StatisticDao;
-import model.Category;
 import model.CategoryStatistic;
 
-import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic> {
 
     private static final List<Column<?, CategoryStatistic>> COLUMNS = List.of(
             Column.readOnly("Category", String.class, CategoryStatistic::getCategoryName),
-            Column.readOnly("Transactions", Integer.class, CategoryStatistic::getTransactionsNumber),
+            Column.readOnly("Transactions", Integer.class, CategoryStatistic::getTransactionsCounter),
             Column.readOnly("Income", BigDecimal.class, CategoryStatistic::getIncome),
             Column.readOnly("Expenses", BigDecimal.class, CategoryStatistic::getExpenses),
             Column.readOnly("% of total income", BigDecimal.class, CategoryStatistic::getPercentageInc),
@@ -23,15 +22,25 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
 
     private List<CategoryStatistic> statistics;
     private final StatisticDao statisticDao;
+    private Date dateFrom;
+    private Date dateTo;
 
     protected StatisticsTable(StatisticDao statisticDao) {
         super(COLUMNS);
         this.statisticDao = statisticDao;
-        statistics = new ArrayList<>(statisticDao.setAll());
+        statistics = new ArrayList<>();
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
 
     public void update(){
-        statistics = statisticDao.setAll();
+        statistics = statisticDao.setAll(dateFrom, dateTo);
         fireTableDataChanged();
     }
 

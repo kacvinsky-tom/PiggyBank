@@ -34,7 +34,8 @@ public class AddCategory extends AbstractAddEditCategory {
     }
 
     public void add() {
-        prepareColorPanel(generateRandomColor());
+        preselectedColor = generateRandomColor();
+        prepareColorPanel(preselectedColor);
         dialog = createDialog("Add category", 270, 150);
         nameField = createTextField("Name: ", "", 17);
         createCategoryDialog("Add");
@@ -44,6 +45,7 @@ public class AddCategory extends AbstractAddEditCategory {
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         if (nameField.getText().equals("")) {
             messageDialog.showErrorMessage("Enter name of the category!");
+            return;
         }
         Category newCategory = new Category(nameField.getText(), categoryColorPanel.getBackground());
         if (!checkCategoryExistence(newCategory, null)) {
