@@ -4,7 +4,6 @@ import data.TransactionDao;
 import enums.TransactionType;
 import model.Category;
 import model.Transaction;
-import enums.TransactionType;
 
 import javax.swing.*;
 import java.awt.*;
