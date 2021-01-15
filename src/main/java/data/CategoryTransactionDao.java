@@ -146,11 +146,21 @@ public class CategoryTransactionDao {
              var st = connection.createStatement()) {
 
             st.executeUpdate("CREATE TABLE APP.TRANSACTIONS_CATEGORIES (" +
-                    "CATEGORY_ID BIGINT DEFAULT 0 REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
                     "TRANSACTION_ID BIGINT REFERENCES APP.TRANSACTIONS(ID)" +
+                    "CATEGORY_ID BIGINT DEFAULT 0 REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
                     ")");
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to create TRANSACTIONS_CATEGORIES table", ex);
+        }
+    }
+
+    public void dropTable() {
+        try (var connection = dataSource.getConnection();
+             var st = connection.createStatement()) {
+
+            st.executeUpdate("DROP TABLE APP.TRANSACTIONS_CATEGORIES");
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to drop TRANSACTIONS_CATEGORIES table", ex);
         }
     }
 }
