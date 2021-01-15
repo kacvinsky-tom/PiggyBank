@@ -1,9 +1,12 @@
 package data;
 
+import enums.TransactionType;
 import model.Category;
+import model.Transaction;
 
 import javax.sql.DataSource;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,7 +50,7 @@ public class CategoryDao {
 
     public void delete(Category category) {
         if (category.getId() == null){
-            throw new IllegalArgumentException("Category has null ID");
+            throw new IllegalArgumentException("Category has null ID: " + category);
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
@@ -65,7 +68,7 @@ public class CategoryDao {
 
     public void update(Category category){
         if (category.getId() == null){
-            throw new IllegalArgumentException("Category has null ID");
+            throw new IllegalArgumentException("Category has null ID: " + category);
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
@@ -101,6 +104,25 @@ public class CategoryDao {
             return categories;
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to load all categories", ex);
+        }
+    }
+    public Category findById(long id) {
+        try (var connection = dataSource.getConnection();
+             var st = connection.prepareStatement("SELECT \"NAME\", COLOR FROM CATEGORIES WHERE ID = ?")) {
+            st.setLong(1, id);
+            try (var rs = st.executeQuery()) {
+                if (rs.next()) {
+                    Category category = new Category(
+                            rs.getString("NAME"),
+                            Color.decode(rs.getString("COLOR"))
+                    );
+                    category.setId(id);
+                    return category;
+                }
+                return null;
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to load Category ID " + id, ex);
         }
     }
 

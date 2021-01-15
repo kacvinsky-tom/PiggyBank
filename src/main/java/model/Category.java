@@ -42,4 +42,10 @@ public class Category {
     public String toString() {
         return name;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Category cat = (Category)obj;
+        return cat.getName().equals(this.getName());
+    }
 }
