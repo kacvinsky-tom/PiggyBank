@@ -116,7 +116,7 @@ public class TransactionDao {
                     "\"TYPE\" VARCHAR(8) NOT NULL CONSTRAINT TYPE_CHECK CHECK (\"TYPE\" IN ('INCOME','SPENDING'))," +
                     "\"NAME\" VARCHAR(100) NOT NULL," +
                     "CREATION_DATE DATE NOT NULL," +
-                    "NOTE VARCHAR(255)," +
+                    "NOTE VARCHAR(255)" +
                     ")");
         } catch (SQLException ex) {
             throw new DataAccessException("Failed to create TRANSACTIONS table", ex);

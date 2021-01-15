@@ -3,6 +3,7 @@ package ui;
 import data.CategoryDao;
 import model.Category;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
     }
 
     private void updateCategories() {
-        for (Category category : categories) {
-            categoryDao.update(category);
-        }
+        new CategoriesUpdater().execute();
     }
 
     private void addDefaultCategory() {
@@ -39,8 +38,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
             }
         }
         others = new Category("Others", Color.GRAY);
-        this.categories.add(others);
-        categoryDao.create(others);
+        new RowAdder(others).execute();
     }
 
     @Override
@@ -70,26 +68,115 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
     }
 
     public void addRow(Category category) {
-        categoryDao.create(category);
-        categories.add(category);
-        fireTableDataChanged();
+        new RowAdder(category).execute();
     }
 
     @Override
     protected void updateEntity(Category category) {
-        categoryDao.update(category);
+        new CategoryUpdater(category).execute();
         updateCategories();
-        fireTableDataChanged();
     }
 
     public boolean deleteRow(int rowIndex) {
         if (!categories.get(rowIndex).getName().equals("Others")) {
-            categoryDao.delete(categories.get(rowIndex));
-            categories.remove(rowIndex);
-            fireTableDataChanged();
+            new RowDeleter(categories.get(rowIndex)).execute();
             return true;
         }
         return false;
 
+    }
+
+    private class CategoryUpdater extends SwingWorker<Boolean, Integer> {
+        private final Category category;
+
+        public CategoryUpdater(Category category){
+            this.category = category;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            categoryDao.update(category);
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    private class CategoriesUpdater extends SwingWorker<Boolean, Integer> {
+
+        @Override
+        protected Boolean doInBackground() {
+            for (Category category : categories) {
+                categoryDao.update(category);
+            }
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            fireTableDataChanged();
+        }
+    }
+
+    private class RowAdder extends SwingWorker<Boolean, Integer> {
+        private final Category category;
+
+        public RowAdder(Category category){
+            this.category = category;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            categoryDao.create(category);
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            categories.add(category);
+            fireTableDataChanged();
+        }
+    }
+
+    private class RowDeleter extends SwingWorker<Boolean, Integer> {
+        private final Category category;
+
+        public RowDeleter(Category category){
+            this.category = category;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            categoryDao.delete(category);
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            categories.remove(category);
+            fireTableDataChanged();
+        }
     }
 }

@@ -3,6 +3,7 @@ package ui;
 import data.StatisticDao;
 import model.CategoryStatistic;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,8 +41,7 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
     }
 
     public void update(){
-        statistics = statisticDao.setAll(dateFrom, dateTo);
-        fireTableDataChanged();
+        new Updater().execute();
     }
 
     @Override
@@ -52,5 +52,24 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
     @Override
     protected CategoryStatistic getEntity(int rowIndex) {
         return statistics.get(rowIndex);
+    }
+
+    private class Updater extends SwingWorker<Boolean, Integer> {
+
+        @Override
+        protected Boolean doInBackground() {
+            statistics = statisticDao.setAll(dateFrom, dateTo);
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            fireTableDataChanged();
+        }
     }
 }

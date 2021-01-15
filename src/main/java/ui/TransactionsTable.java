@@ -36,7 +36,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         this.transactionDao = transactionDao;
         this.categoryTransactionDao = categoryTransactionDao;
         this.categoriesTable = categoriesTable;
-        loadTransactions();
+        this.transactions = categoryTransactionDao.findAll();
         update();
     }
 
@@ -57,34 +57,17 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         this.filter = filter;
     }
 
-    public void loadTransactions() {
-        this.transactions = categoryTransactionDao.findAll();
-    }
-
     public void update() {
         fireTableDataChanged();
     }
 
     public void filterTransactions() {
-        loadTransactions();
-        transactions.removeIf(transaction -> !filter.checkTransaction(transaction));
-        update();
+        new Filter().execute();
     }
 
     public void removeCategoryFromTransactions(int rowIndex) {
         var category = categoriesTable.getCategories().get(rowIndex);
-        for (Transaction transaction : transactions){
-            if (transaction.getCategories().contains(category)){
-                transaction.getCategories().remove(category);
-                categoryTransactionDao.deleteOnlyOneRecord(transaction, category);
-                if (transaction.getCategories().isEmpty()){
-                    categoryTransactionDao.create(transaction, new Category("Others"));
-                    transaction.getCategories().add(new Category("Others"));
-                }
-            }
-        }
-        // ToDO Maybe add loadTransactions()
-        update();
+        new CategoryRemover(category).execute();
     }
 
     @Override
@@ -100,34 +83,11 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     }
 
     public void addTransaction(Transaction transaction) {
-        transactionDao.create(transaction);
-        transactions.add(transaction);
-        updateCategoriesInTransaction(transaction.getCategories(), transaction);
-        update();
-    }
+        new RowAdder(transaction).execute();
+        updateCategoriesInTransaction(transaction.getCategories(), transaction); }
 
     public void updateCategoriesInTransaction(List<Category> categories, Transaction transaction) {
-        boolean exist = false;
-        for (Category c : categories){
-            for (Category cc : transaction.getCategories()){
-                if (c.getName().equals(cc.getName())){
-                    transaction.getCategories().remove(cc);
-                    exist = true;
-                    break;
-                }
-            }
-            if (!exist){
-                categoryTransactionDao.create(transaction, c);
-            }
-            exist = false;
-        }
-
-        for (Category c : transaction.getCategories()){
-            categoryTransactionDao.deleteOnlyOneRecord(transaction, c);
-        }
-
-        loadTransactions();
-        update();
+        new CategoriesUpdater(categories, transaction).execute();
     }
 
     private class RowDeleter extends SwingWorker<Boolean, Integer> {
@@ -140,7 +100,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         @Override
         protected Boolean doInBackground() {
             transactionDao.delete(transactions.get(rowIndex));
-            loadTransactions();
+            transactions = categoryTransactionDao.findAll();
             return true;
         }
 
@@ -156,16 +116,114 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     }
 
     private class RowAdder extends SwingWorker<Boolean, Integer> {
-        private final int rowIndex;
+        private final Transaction transaction;
 
-        public RowAdder(int rowIndex) {
-            this.rowIndex = rowIndex;
+        public RowAdder(Transaction transaction) {
+            this.transaction = transaction;
         }
 
         @Override
         protected Boolean doInBackground() {
-            transactionDao.delete(transactions.get(rowIndex));
-            loadTransactions();
+            transactionDao.create(transaction);
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            transactions.add(transaction);
+            update();
+        }
+    }
+
+    private class Filter extends SwingWorker<Boolean, Integer> {
+
+        @Override
+        protected Boolean doInBackground() {
+            transactions = categoryTransactionDao.findAll();
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            transactions.removeIf(transaction -> !filter.checkTransaction(transaction));
+            update();
+        }
+    }
+
+    private class CategoriesUpdater extends SwingWorker<Boolean, Integer> {
+        private final Transaction transaction;
+        private final List<Category> categories;
+
+        public CategoriesUpdater(List<Category> categories, Transaction transaction) {
+            this.categories = categories;
+            this.transaction = transaction;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            boolean exist = false;
+            for (Category c : categories){
+                for (Category cc : transaction.getCategories()){
+                    if (c.getName().equals(cc.getName())){
+                        transaction.getCategories().remove(cc);
+                        exist = true;
+                        break;
+                    }
+                }
+                if (!exist){
+                    categoryTransactionDao.create(transaction, c);
+                }
+                exist = false;
+            }
+
+            for (Category c : transaction.getCategories()){
+                categoryTransactionDao.deleteOnlyOneRecord(transaction, c);
+            }
+
+            transactions = categoryTransactionDao.findAll();
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            update();
+        }
+    }
+
+    private class CategoryRemover extends SwingWorker<Boolean, Integer> {
+        private final Category category;
+
+        public CategoryRemover(Category category) {
+            this.category = category;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            for (Transaction transaction : transactions){
+                if (transaction.getCategories().contains(category)){
+                    transaction.getCategories().remove(category);
+                    categoryTransactionDao.deleteOnlyOneRecord(transaction, category);
+                    if (transaction.getCategories().isEmpty()){
+                        categoryTransactionDao.create(transaction, new Category("Others"));
+                        transaction.getCategories().add(new Category("Others"));
+                    }
+                }
+            }
             return true;
         }
 

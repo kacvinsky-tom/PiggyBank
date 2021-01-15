@@ -146,7 +146,7 @@ public class CategoryTransactionDao {
              var st = connection.createStatement()) {
 
             st.executeUpdate("CREATE TABLE APP.TRANSACTIONS_CATEGORIES (" +
-                    "TRANSACTION_ID BIGINT REFERENCES APP.TRANSACTIONS(ID)" +
+                    "TRANSACTION_ID BIGINT REFERENCES APP.TRANSACTIONS(ID)," +
                     "CATEGORY_ID BIGINT DEFAULT 0 REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
                     ")");
         } catch (SQLException ex) {
