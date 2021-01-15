@@ -45,8 +45,12 @@ public class Category {
 
     @Override
     public boolean equals(Object obj) {
-        Category c = (Category) obj;
-        return c.getName().equals(this.getName());
+        try {
+            Category c = (Category) obj;
+            return c.getName().equals(this.getName());
+        } catch (NullPointerException e){
+            return false;
+        }
     }
 
     @Override
