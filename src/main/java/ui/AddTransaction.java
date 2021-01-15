@@ -23,14 +23,13 @@ public class AddTransaction extends AbstractAddEditTransaction {
         nameField = createTextField(I18N.getString("name"), "", 17);
         amountField = createTextField(I18N.getString("amount"), "", 17);
         noteField = createTextField(I18N.getString("note"), "", 17);
-        categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
-        categoryBox.setSelectedItem(tablesManager.getCatTableModel().getOthers());
+
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
         checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
         for (String c : tablesManager.getCatTableModel().getCategoriesNames()){
-            if (c.equals("Others")){
+            if (c.equals(I18N.getString("Others"))){
                 checkBoxPanel.add(new Checkbox(c, true));
             } else {
                 checkBoxPanel.add(new Checkbox(c, false));

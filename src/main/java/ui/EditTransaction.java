@@ -26,8 +26,6 @@ public class EditTransaction extends AbstractAddEditTransaction {
         nameField = createTextField(I18N.getString("name"), selectedTransaction.getName(), 17);
         amountField = createTextField(I18N.getString("amount"), String.valueOf(selectedTransaction.getAmount()), 17);
         noteField = createTextField(I18N.getString("note"), selectedTransaction.getNote(), 17);
-        categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
-        categoryBox.setSelectedIndex(getCategoryIndex(selectedTransaction));
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
         spinner.setValue(selectedTransaction.getDate());
@@ -35,9 +33,15 @@ public class EditTransaction extends AbstractAddEditTransaction {
         checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
         for (String c : tablesManager.getCatTableModel().getCategoriesNames()){
-            // ToDo
-            checkBoxPanel.add(new Checkbox(c, false));
+            for (String n : tablesManager.getCatTableModel().getCategoriesNames()){
+                if (c.equals(n)){
+                    checkBoxPanel.add(new Checkbox(c, true));
+                } else {
+                    checkBoxPanel.add(new Checkbox(c, false));
+                }
+            }
         }
+
     }
 
     public void edit() {

@@ -1,7 +1,5 @@
 package ui;
 
-import model.Category;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,6 +11,11 @@ public abstract class AbstractAddEditTransaction extends AbstractAddEditAction {
     protected JDialog categoriesDialog;
     protected JSpinner spinner;
     private static final I18N I18N = new I18N(AbstractAddEditTransaction.class);
+
+    protected JButton selectCatButton = new JButton("Select...");
+    protected JButton confirmButton = new JButton("Save");
+
+    protected JPanel checkBoxPanel;
 
     protected AbstractAddEditTransaction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog){
         super(frame, tablesManager, messageDialog);
@@ -44,7 +47,7 @@ public abstract class AbstractAddEditTransaction extends AbstractAddEditAction {
 
     protected void createTransactionDialog(String buttonTitle){
         dialog.add(new JLabel(I18N.getString("categoryLabel")));
-        dialog.add(categoryBox);
+        dialog.add(selectCatButton);
         dialog.add(new JLabel(I18N.getString("typeLabel")));
         dialog.add(transactionType);
         dialog.add(new JLabel(I18N.getString("dateLabel")));
