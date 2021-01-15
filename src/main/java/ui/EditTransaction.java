@@ -59,17 +59,6 @@ public class EditTransaction extends AbstractAddEditTransaction {
         tablesManager.getTranTableModel().updateEntity(selectedTransaction);
     }
 
-    private int getCategoryIndex(Transaction transaction){
-        int index = 0;
-        for (Category t : tablesManager.getCatTableModel().getCategories()){
-            if (transaction.getCategory().getName().equals(t.getName())){
-                return index;
-            }
-            ++index;
-        }
-        return -1;
-    }
-
     @Override
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         BigDecimal amount;
@@ -80,12 +69,12 @@ public class EditTransaction extends AbstractAddEditTransaction {
             return;
         }
         // ToDo
-        //Category category = tablesManager.getCatTableModel().getCategories().get(menu.getSelectionModel().getSelectedIndex());
+        Category category = tablesManager.getCatTableModel().getCategories().get(0);
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
         // ToDo
-        updateTransaction(nameField.getText(), amount, new Category("A", Color.BLACK), date, noteField.getText(), type);
+        updateTransaction(nameField.getText(), amount, category, date, noteField.getText(), type);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();
         tablesManager.getTranTableModel().filterTransactions();
