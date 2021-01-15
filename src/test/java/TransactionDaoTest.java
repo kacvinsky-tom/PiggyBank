@@ -76,19 +76,19 @@ final class TransactionDaoTest {
                 .withMessage("Transaction already has ID: " + sales);
     }
 
-//    @Test
-//    void createTransactionWithException() {
-//        var sqlException = new SQLException();
-//        TransactionDao failingDao = createFailingDao(sqlException);
-//
-//        var food = new Category("Food", Color.decode("#FFFFFA"));
-//        var bread = new Transaction("Test", new BigDecimal(100), food,
-//                new Date(2021,1,1),"test", TransactionType.SPENDING);
-//        assertThatExceptionOfType(DataAccessException.class)
-//                .isThrownBy(() -> failingDao.create(bread))
-//                .withMessage("Failed to store Transaction " + bread)
-//                .withCause(sqlException);
-//    }
+    @Test
+    void createTransactionWithException() {
+        var sqlException = new SQLException();
+        TransactionDao failingDao = createFailingDao(sqlException);
+
+        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var bread = new Transaction("Test", new BigDecimal(100), food,
+                new Date(2021,1,1),"test", TransactionType.SPENDING);
+        assertThatExceptionOfType(DataAccessException.class)
+                .isThrownBy(() -> failingDao.create(bread))
+                .withMessage("Failed to store transaction " + bread)
+                .withCause(sqlException);
+    }
 
     @Test
     void findAllEmpty() {
@@ -115,18 +115,18 @@ final class TransactionDaoTest {
                 .usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrder(bread, milk, mustard);
     }
-//
-//    @Test
-//    void findAllWithException() {
-//        var sqlException = new SQLException();
-//        TransactionDao failingDao = createFailingDao(sqlException);
-//
-//        assertThatExceptionOfType(DataAccessException.class)
-//                .isThrownBy(failingDao::findAll)
-//                .withMessage("Failed to load Transactions")
-//                .withCause(sqlException);
-//    }
-//
+
+    @Test
+    void findAllWithException() {
+        var sqlException = new SQLException();
+        TransactionDao failingDao = createFailingDao(sqlException);
+
+        assertThatExceptionOfType(DataAccessException.class)
+                .isThrownBy(failingDao::findAll)
+                .withMessage("Failed to load all transactions")
+                .withCause(sqlException);
+    }
+
     @Test
     void delete() {
         var food = new Category("Food", Color.decode("#FFFFFA"));
@@ -168,20 +168,22 @@ final class TransactionDaoTest {
                 .withMessage("Failed to delete non-existing transaction: " + bread);
     }
 
-//    @Test
-//    void deleteWithException() {
-//        var sqlException = new SQLException();
-//        TransactionDao failingDao = createFailingDao(sqlException);
-//
-//        var sales = new Transaction("Sales", "666");
-//        sales.setId(123L);
-//
-//        assertThatExceptionOfType(DataAccessException.class)
-//                .isThrownBy(() -> failingDao.delete(sales))
-//                .withMessage("Failed to delete Transaction " + sales)
-//                .withCause(sqlException);
-//    }
-//
+    @Test
+    void deleteWithException() {
+        var sqlException = new SQLException();
+        TransactionDao failingDao = createFailingDao(sqlException);
+
+        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var bread = new Transaction("Test", new BigDecimal(100), food,
+                new Date(2021,1,1),"test", TransactionType.SPENDING);
+        bread.setId(123L);
+
+        assertThatExceptionOfType(DataAccessException.class)
+                .isThrownBy(() -> failingDao.delete(bread))
+                .withMessage("Failed to delete transaction " + bread)
+                .withCause(sqlException);
+    }
+
     @Test
     void update() {
         var food = new Category("Food", Color.decode("#FFFFFA"));
@@ -229,20 +231,22 @@ final class TransactionDaoTest {
                 .withMessage("Failed to update non-existing transaction: " + bread);
     }
 
-//    @Test
-//    void updateWithException() {
-//        var sqlException = new SQLException();
-//        TransactionDao failingDao = createFailingDao(sqlException);
-//
-//        var sales = new Transaction("Sales", "666");
-//        sales.setId(123L);
-//
-//        assertThatExceptionOfType(DataAccessException.class)
-//                .isThrownBy(() -> failingDao.update(sales))
-//                .withMessage("Failed to update Transaction " + sales)
-//                .withCause(sqlException);
-//    }
-//
+    @Test
+    void updateWithException() {
+        var sqlException = new SQLException();
+        TransactionDao failingDao = createFailingDao(sqlException);
+
+        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var bread = new Transaction("Test", new BigDecimal(100), food,
+                new Date(2021,1,1),"test", TransactionType.SPENDING);
+        bread.setId(123L);
+
+        assertThatExceptionOfType(DataAccessException.class)
+                .isThrownBy(() -> failingDao.update(bread))
+                .withMessage("Failed to update transaction " + bread)
+                .withCause(sqlException);
+    }
+
     private TransactionDao createFailingDao(Throwable exceptionToBeThrown) {
         try {
             var dataSource = mock(DataSource.class);
