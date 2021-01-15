@@ -1,6 +1,7 @@
 package ui.filter;
 
 import enums.TransactionType;
+import model.Category;
 import model.Transaction;
 import ui.TablesManager;
 
@@ -30,7 +31,7 @@ public class TransactionsFilter {
         } catch (NullPointerException e){
             return true;
         }
-        return transaction.getCategory().getName().equals(filterPanel.getCategoriesComboBox().getSelectedItem().toString());
+        return transaction.getCategories().contains(new Category(filterPanel.getCategoriesComboBox().getSelectedItem().toString()));
     }
 
     private boolean checkType(Transaction transaction){

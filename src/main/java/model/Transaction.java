@@ -74,10 +74,6 @@ public class Transaction {
         this.note = note;
     }
 
-    public void setCategory(Category category, int index){
-        categories.set(index, category);
-    }
-
     public String getCategoriesNames(){
         String cats = "";
         for (Category c : categories){
@@ -91,23 +87,6 @@ public class Transaction {
 
     public List<Category> getCategories(){
         return categories;
-    }
-
-    public void updateCategories(List<Category> categories) {
-        boolean exist = false;
-        for (Category c : categories){
-            for (Category cc : this.categories){
-                if (c.getName().equals(cc.getName())){
-                    exist = true;
-                    break;
-                }
-            }
-            if (!exist){
-
-            }
-
-        }
-
     }
 
     public TransactionType getType() {

@@ -52,22 +52,11 @@ public class EditTransaction extends AbstractAddEditTransaction {
     private void updateTransaction(String name, BigDecimal  amount, List<Category> categories, Date date, String note, TransactionType type) {
         selectedTransaction.setName(name);
         selectedTransaction.setAmount(amount);
-        selectedTransaction.updateCategories(categories);
+        tablesManager.getTranTableModel().updateCategoriesInTransaction(categories, selectedTransaction);
         selectedTransaction.setDate(date);
         selectedTransaction.setNote(note);
         selectedTransaction.setType(type);
         tablesManager.getTranTableModel().updateEntity(selectedTransaction);
-    }
-
-    private int getCategoryIndex(Transaction transaction){
-        int index = 0;
-        for (Category t : tablesManager.getCatTableModel().getCategories()){
-            if (transaction.getCategory().getName().equals(t.getName())){
-                return index;
-            }
-            ++index;
-        }
-        return -1;
     }
 
     @Override

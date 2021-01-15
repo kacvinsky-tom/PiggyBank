@@ -2,7 +2,6 @@ package ui;
 
 import enums.DateSpinnerType;
 import enums.TransactionType;
-import model.Category;
 import model.Transaction;
 import ui.filter.DateSpinner;
 
@@ -10,9 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class AddTransaction extends AbstractAddEditTransaction {
 
@@ -55,7 +52,6 @@ public class AddTransaction extends AbstractAddEditTransaction {
 
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
-
 
         Transaction newTransaction = new Transaction(nameField.getText(), amount, getCategoriesFromCheckBoxes(), date, noteField.getText(), type);
         tablesManager.getTranTableModel().addTransaction(newTransaction);

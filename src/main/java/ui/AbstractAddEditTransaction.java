@@ -35,6 +35,10 @@ public abstract class AbstractAddEditTransaction extends AbstractAddEditAction {
                 cats.add(new Category(c.getName()));
             }
         }
+        if (cats.isEmpty()){
+            cats.add(new Category("Others"));
+            checkBoxPanel.getComponent(0).setEnabled(true);
+        }
         return cats;
     }
 

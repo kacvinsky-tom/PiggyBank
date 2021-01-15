@@ -71,15 +71,20 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         update();
     }
 
-    public void changeCategoryToDefault(int rowIndex) {
+    public void removeCategoryFromTransactions(int rowIndex) {
         var category = categoriesTable.getCategories().get(rowIndex);
-        if (!category.getName().equals("Others")) {
-            transactions.stream()
-                    .forEach(t -> {t.getCategories().stream()
-                            .filter(c -> c.getName().equals(category.getName()))
-                            .forEach(e -> t.getCategories().set(t.getCategories().indexOf(e), categoriesTable.getOthers())); transactionDao.update(t);});
-            fireTableDataChanged();
+        for (Transaction transaction : transactions){
+            if (transaction.getCategories().contains(category)){
+                transaction.getCategories().remove(category);
+                categoryTransactionDao.deleteOnlyOneRecord(transaction, category);
+                if (transaction.getCategories().isEmpty()){
+                    categoryTransactionDao.create(transaction, new Category("Others"));
+                    transaction.getCategories().add(new Category("Others"));
+                }
+            }
         }
+        // ToDO Maybe add loadTransactions()
+        update();
     }
 
     @Override
@@ -90,13 +95,39 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
     @Override
     protected void updateEntity(Transaction transaction) {
         transactionDao.update(transaction);
-        fireTableDataChanged();
+        updateCategoriesInTransaction(transaction.getCategories(), transaction);
+        update();
     }
 
     public void addTransaction(Transaction transaction) {
         transactionDao.create(transaction);
         transactions.add(transaction);
-        fireTableDataChanged();
+        updateCategoriesInTransaction(transaction.getCategories(), transaction);
+        update();
+    }
+
+    public void updateCategoriesInTransaction(List<Category> categories, Transaction transaction) {
+        boolean exist = false;
+        for (Category c : categories){
+            for (Category cc : transaction.getCategories()){
+                if (c.getName().equals(cc.getName())){
+                    transaction.getCategories().remove(cc);
+                    exist = true;
+                    break;
+                }
+            }
+            if (!exist){
+                categoryTransactionDao.create(transaction, c);
+            }
+            exist = false;
+        }
+
+        for (Category c : transaction.getCategories()){
+            categoryTransactionDao.deleteOnlyOneRecord(transaction, c);
+        }
+
+        loadTransactions();
+        update();
     }
 
     private class RowDeleter extends SwingWorker<Boolean, Integer> {
