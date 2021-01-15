@@ -4,7 +4,6 @@ import data.TransactionDao;
 import model.Category;
 import model.Transaction;
 import enums.TransactionType;
-import ui.filter.TransactionsFilter;
 
 import java.awt.*;
 import java.math.BigDecimal;

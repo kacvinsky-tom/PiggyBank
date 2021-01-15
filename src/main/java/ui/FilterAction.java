@@ -1,7 +1,4 @@
-package ui.filter;
-
-import ui.*;
-import ui.TablesManager;
+package ui;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

@@ -1,12 +1,12 @@
-package ui.filter;
+package ui;
 
 import enums.TransactionType;
 import model.Transaction;
-import ui.TablesManager;
 
 public class TransactionsFilter {
     private final TablesManager tablesManager;
     private final FilterPanel filterPanel;
+    private static final I18N I18N = new I18N(TransactionsFilter.class);
 
     public TransactionsFilter(TablesManager tablesManager, FilterPanel filterPanel) {
         this.tablesManager = tablesManager;
@@ -24,7 +24,7 @@ public class TransactionsFilter {
 
     private boolean checkCategory(Transaction transaction){
         try {
-            if (filterPanel.getCategoriesComboBox().getSelectedItem().toString().equals("All")) {
+            if (filterPanel.getCategoriesComboBox().getSelectedItem().toString().equals(I18N.getString("all"))) {
                 return true;
             }
         } catch (NullPointerException e){

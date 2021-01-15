@@ -7,7 +7,7 @@ final class I18N {
     private final ResourceBundle bundle;
     private final String prefix;
 
-    I18N(Class<?> clazz) {
+    public I18N(Class<?> clazz) {
         var packagePath = clazz.getPackageName().replace(".", "/") + '/';
         bundle = ResourceBundle.getBundle(packagePath + "i18n_sk");
         prefix = clazz.getSimpleName() + ".";

@@ -1,7 +1,6 @@
 package ui;
 
 import enums.TableType;
-import ui.filter.FilterAction;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

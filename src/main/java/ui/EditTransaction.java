@@ -4,7 +4,6 @@ import enums.DateSpinnerType;
 import enums.TransactionType;
 import model.Category;
 import model.Transaction;
-import ui.filter.DateSpinner;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,9 +22,9 @@ public class EditTransaction extends AbstractAddEditTransaction {
     private void initializeComponents() {
         selectedTransaction = tablesManager.getTranTableModel().getEntity(tablesManager.getTranJTable().getSelectedRow());
         dialog = createDialog(I18N.getString("title"), 230, 330);
-        nameField = createTextField(I18N.getString("name:"), selectedTransaction.getName(), 17);
-        amountField = createTextField(I18N.getString("amount:"), String.valueOf(selectedTransaction.getAmount()), 17);
-        noteField = createTextField(I18N.getString("note:"), selectedTransaction.getNote(), 17);
+        nameField = createTextField(I18N.getString("name"), selectedTransaction.getName(), 17);
+        amountField = createTextField(I18N.getString("amount"), String.valueOf(selectedTransaction.getAmount()), 17);
+        noteField = createTextField(I18N.getString("note"), selectedTransaction.getNote(), 17);
         categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
         categoryBox.setSelectedIndex(getCategoryIndex(selectedTransaction));
         transactionType = new JComboBox<>(TransactionType.values());

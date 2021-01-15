@@ -4,7 +4,6 @@ import enums.DateSpinnerType;
 import enums.TransactionType;
 import model.Category;
 import model.Transaction;
-import ui.filter.DateSpinner;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
