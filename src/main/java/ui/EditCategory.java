@@ -29,7 +29,7 @@ public class EditCategory extends AbstractAddEditCategory {
         dialog = createDialog(I18N.getString("dialogTitle"), 270, 150);
         nameField = createTextField(I18N.getString("name"), selectedCategory.getName(), 17);
 
-        if (selectedCategory.getName().equals(I18N.getString("others"))) {
+        if (selectedCategory.getName().equals("Others")) {
             nameField.setEnabled(false);
             nameField.addMouseListener(new MouseAdapter() {
                 @Override

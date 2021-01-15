@@ -71,7 +71,7 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
 
     public void changeCategoryToDefault(int rowIndex) {
         var category = categoriesTable.getCategories().get(rowIndex);
-        if (!category.getName().equals(I18N.getString("others"))){
+        if (!category.getName().equals("Others")){
             transactions.stream()
                     .filter(t -> t.getCategory().getName().equals(category.getName()))
                     .forEach(t -> {
