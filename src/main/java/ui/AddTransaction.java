@@ -29,7 +29,7 @@ public class AddTransaction extends AbstractAddEditTransaction {
         checkBoxPanel = new JPanel();
         checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
         for (String c : tablesManager.getCatTableModel().getCategoriesNames()){
-            if (c.equals(I18N.getString("Others"))){
+            if (c.equals(I18N.getString("others"))){
                 checkBoxPanel.add(new Checkbox(c, true));
             } else {
                 checkBoxPanel.add(new Checkbox(c, false));
