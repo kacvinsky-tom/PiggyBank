@@ -1,4 +1,4 @@
-package ui.filter;
+package ui;
 
 import enums.DateSpinnerType;
 import model.Transaction;

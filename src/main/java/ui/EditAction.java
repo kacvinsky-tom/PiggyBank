@@ -11,9 +11,10 @@ class EditAction extends AbstractAction {
     private final EditCategory editCategory;
     private final EditTransaction editTransaction;
     private int selectedTabIndex = 0;
+    private static final I18N I18N = new I18N(EditAction.class);
 
     public EditAction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
-        super("Edit", Icons.EDIT_ICON);
+        super(I18N.getString("name"), Icons.EDIT_ICON);
         this.setEnabled(false);
         putValue(MNEMONIC_KEY, KeyEvent.VK_E);
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke("ctrl E"));
@@ -24,11 +25,11 @@ class EditAction extends AbstractAction {
     public void updateSelectedTabIndex(int selectedTabIndex) {
         this.selectedTabIndex = selectedTabIndex;
         if (selectedTabIndex == TableType.TRANSACTIONS.ordinal()){
-            putValue(SHORT_DESCRIPTION, "Edits selected transaction");
+            putValue(SHORT_DESCRIPTION, I18N.getString("editsTransaction"));
         } else if (selectedTabIndex == TableType.STATISTICS.ordinal()){
             putValue(SHORT_DESCRIPTION, null);
         } else {
-            putValue(SHORT_DESCRIPTION, "Edits selected category");
+            putValue(SHORT_DESCRIPTION, I18N.getString("editsCategory"));
         }
     }
 

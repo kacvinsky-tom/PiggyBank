@@ -6,6 +6,7 @@ import java.util.Comparator;
 public class DeleteTransaction {
     private final TablesManager tablesManager;
     private final MessageDialog messageDialog;
+    private static final I18N I18N = new I18N(DeleteTransaction.class);
 
     public DeleteTransaction(TablesManager tablesManager, MessageDialog messageDialog){
         this.tablesManager = tablesManager;
@@ -13,9 +14,9 @@ public class DeleteTransaction {
     }
 
     public void delete() {
-        String message = "Are you sure you want to delete following transactions?\n";
+        String message = I18N.getString("message");
         message += messageDialog.createItemsString(tablesManager.getTranJTable());
-        if (!messageDialog.showConfirmMessage(message, "Delete")){
+        if (!messageDialog.showConfirmMessage(message, I18N.getString("title"))){
             return;
         }
         Arrays.stream(tablesManager.getTranJTable().getSelectedRows())

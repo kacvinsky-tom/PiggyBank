@@ -4,7 +4,6 @@ import enums.DateSpinnerType;
 import enums.TransactionType;
 import model.Category;
 import model.Transaction;
-import ui.filter.DateSpinner;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +14,7 @@ import java.util.Date;
 public class EditTransaction extends AbstractAddEditTransaction {
 
     private Transaction selectedTransaction;
+    private static final I18N I18N = new I18N(EditTransaction.class);
 
     public EditTransaction(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
@@ -22,10 +22,12 @@ public class EditTransaction extends AbstractAddEditTransaction {
 
     private void initializeComponents() {
         selectedTransaction = tablesManager.getTranTableModel().getEntity(tablesManager.getTranJTable().getSelectedRow());
-        dialog = createDialog("Edit transaction", 230, 330);
-        nameField = createTextField("Name:", selectedTransaction.getName(), 17);
-        amountField = createTextField("Amount:", String.valueOf(selectedTransaction.getAmount()), 17);
-        noteField = createTextField("Note:", selectedTransaction.getNote(), 17);
+        dialog = createDialog(I18N.getString("title"), 230, 330);
+        nameField = createTextField(I18N.getString("name"), selectedTransaction.getName(), 17);
+        amountField = createTextField(I18N.getString("amount"), String.valueOf(selectedTransaction.getAmount()), 17);
+        noteField = createTextField(I18N.getString("note"), selectedTransaction.getNote(), 17);
+        categoryBox = new JComboBox<>(tablesManager.getCatTableModel().getCategories().toArray());
+        categoryBox.setSelectedIndex(getCategoryIndex(selectedTransaction));
         transactionType = new JComboBox<>(TransactionType.values());
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
         spinner.setValue(selectedTransaction.getDate());
@@ -40,7 +42,7 @@ public class EditTransaction extends AbstractAddEditTransaction {
 
     public void edit() {
         initializeComponents();
-        createTransactionDialog("Save");
+        createTransactionDialog(I18N.getString("save"));
     }
 
     private void updateTransaction(String name, BigDecimal  amount, Category category, Date date, String note, TransactionType type) {
@@ -70,7 +72,7 @@ public class EditTransaction extends AbstractAddEditTransaction {
         try {
             amount = new BigDecimal(amountField.getText().replace(",", ".")).abs();
         } catch (NumberFormatException ex) {
-            messageDialog.showErrorMessage("Enter valid number into amount!");
+            messageDialog.showErrorMessage(I18N.getString("errorMessage"));
             return;
         }
         // ToDo

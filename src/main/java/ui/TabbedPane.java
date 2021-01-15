@@ -6,6 +6,7 @@ import javax.swing.event.ChangeEvent;
 public class TabbedPane extends JTabbedPane {
     private final TablesManager tablesManager;
     private final ToolBar toolBar;
+    private static final I18N I18N = new I18N(TabbedPane.class);
 
     public TabbedPane(TablesManager tablesManager, ToolBar toolBar){
         this.tablesManager = tablesManager;
@@ -35,8 +36,8 @@ public class TabbedPane extends JTabbedPane {
     }
 
     private void addJTablesToPane(){
-        this.add("Statistics", new JScrollPane(createStatisticsJPanel()));
-        this.add("Transactions", new JScrollPane(tablesManager.getTranJTable()));
-        this.add("Categories", new JScrollPane(tablesManager.getCatJTable()));
+        this.add(I18N.getString("statistics"), new JScrollPane(createStatisticsJPanel()));
+        this.add(I18N.getString("transactions"), new JScrollPane(tablesManager.getTranJTable()));
+        this.add(I18N.getString("categories"), new JScrollPane(tablesManager.getCatJTable()));
     }
 }

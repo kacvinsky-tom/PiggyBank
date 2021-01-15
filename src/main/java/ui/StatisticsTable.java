@@ -9,15 +9,16 @@ import java.util.Date;
 import java.util.List;
 
 public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic> {
+    private static final I18N I18N = new I18N(StatisticsTable.class);
 
     private static final List<Column<?, CategoryStatistic>> COLUMNS = List.of(
-            Column.readOnly("Category", String.class, CategoryStatistic::getCategoryName),
-            Column.readOnly("Transactions", Integer.class, CategoryStatistic::getTransactionsCounter),
-            Column.readOnly("Income", BigDecimal.class, CategoryStatistic::getIncome),
-            Column.readOnly("Expenses", BigDecimal.class, CategoryStatistic::getExpenses),
-            Column.readOnly("% of total income", BigDecimal.class, CategoryStatistic::getPercentageInc),
-            Column.readOnly("% of total spending", BigDecimal.class, CategoryStatistic::getPercentageSpend),
-            Column.readOnly("Sum", BigDecimal.class, CategoryStatistic::getSum)
+            Column.readOnly(I18N.getString("category"), String.class, CategoryStatistic::getCategoryName),
+            Column.readOnly(I18N.getString("transactions"), Integer.class, CategoryStatistic::getTransactionsCounter),
+            Column.readOnly(I18N.getString("income"), BigDecimal.class, CategoryStatistic::getIncome),
+            Column.readOnly(I18N.getString("expenses"), BigDecimal.class, CategoryStatistic::getExpenses),
+            Column.readOnly(I18N.getString("totalIncome"), BigDecimal.class, CategoryStatistic::getPercentageInc),
+            Column.readOnly(I18N.getString("totalSpending"), BigDecimal.class, CategoryStatistic::getPercentageSpend),
+            Column.readOnly(I18N.getString("sum"), BigDecimal.class, CategoryStatistic::getSum)
     );
 
     private List<CategoryStatistic> statistics;

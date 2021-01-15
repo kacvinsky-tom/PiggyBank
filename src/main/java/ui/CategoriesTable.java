@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoriesTable extends AbstractEntityTableModel<Category> {
+    private static final I18N I18N = new I18N(CategoriesTable.class);
 
     private static final List<Column<?, Category>> COLUMNS = List.of(
-            Column.readOnly("Name", String.class, Category::getName),
-            Column.readOnly("Color", Color.class, Category::getColor)
+            Column.readOnly(I18N.getString("name"), String.class, Category::getName),
+            Column.readOnly(I18N.getString("color"), Color.class, Category::getColor)
     );
 
     private final List<Category> categories;
@@ -33,12 +34,12 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
 
     private void addDefaultCategory() {
         for (Category category : categories) {
-            if (category.getName().equals("Others")) {
+            if (category.getName().equals(I18N.getString("others"))) {
                 others = category;
                 return;
             }
         }
-        others = new Category("Others", Color.GRAY);
+        others = new Category(I18N.getString("others"), Color.GRAY);
         this.categories.add(others);
         categoryDao.create(others);
     }
@@ -83,7 +84,7 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
     }
 
     public boolean deleteRow(int rowIndex) {
-        if (!categories.get(rowIndex).getName().equals("Others")) {
+        if (!categories.get(rowIndex).getName().equals(I18N.getString("others"))) {
             categoryDao.delete(categories.get(rowIndex));
             categories.remove(rowIndex);
             fireTableDataChanged();

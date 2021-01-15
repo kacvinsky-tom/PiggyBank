@@ -12,6 +12,7 @@ public class StatisticsBalanceTable extends AbstractTableModel {
     private final StatisticDao statisticDao;
     private Date dateFrom;
     private Date dateTo;
+    private static final I18N I18N = new I18N(StatisticsBalanceTable.class);
 
     public StatisticsBalanceTable(StatisticDao statisticDao){
         this.statisticDao = statisticDao;
@@ -44,7 +45,7 @@ public class StatisticsBalanceTable extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex){
             case 0:
-                return "Balance";
+                return I18N.getString("balance");
             case 1:
                 return balance;
             default:

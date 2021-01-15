@@ -11,15 +11,16 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
     protected final JLabel categoryColorPanel = new JLabel();
     protected JTextField nameField;
     protected Color preselectedColor;
+    private static final I18N I18N = new I18N(AbstractAddEditCategory.class);
 
     protected AbstractAddEditCategory(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog){
         super(frame, tablesManager, messageDialog);
     }
 
     protected void createCategoryDialog(String buttonTitle){
-        JButton setColorButton = new JButton("Show Color Chooser...");
+        JButton setColorButton = new JButton(I18N.getString("colorButton"));
         setColorButton.addActionListener(this::colorChooser);
-        dialog.add(new JLabel("Color: "));
+        dialog.add(new JLabel(I18N.getString("colorLabel")));
         dialog.add(setColorButton);
         dialog.add(categoryColorPanel);
         JButton button = createButton(buttonTitle);
@@ -37,11 +38,11 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
                 }
             }
             if (c.getName().equals(newCategory.getName())){
-                messageDialog.showErrorMessage("Category " + newCategory.getName() + " already exists!");
+                messageDialog.showErrorMessage(I18N.getString("categoryExists"));
                 return true;
 
             } else if (c.getColor().equals(newCategory.getColor())){
-                messageDialog.showErrorMessage("Chosen color is already taken by another category!");
+                messageDialog.showErrorMessage(I18N.getString("colorTaken"));
                 return true;
             }
         }
@@ -51,7 +52,7 @@ public abstract class AbstractAddEditCategory extends AbstractAddEditAction {
     protected void colorChooser(ActionEvent e) {
         Color newColor = JColorChooser.showDialog(
                 null,
-                "Choose Background Color",
+                I18N.getString("dialogTitle"),
                 preselectedColor);
         if (newColor != null) {
             categoryColorPanel.setBackground(newColor);

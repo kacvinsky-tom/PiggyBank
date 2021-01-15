@@ -1,10 +1,9 @@
-package ui.filter;
+package ui;
 
+import enums.TransactionType;
 import model.Category;
 import enums.DateSpinnerType;
 import enums.TableType;
-import ui.MessageDialog;
-import ui.TablesManager;
 
 import javax.swing.*;
 import java.util.*;
@@ -15,12 +14,13 @@ public class FilterPanel extends JPanel {
     private JComboBox<Object> categoriesComboBox;
     private final MessageDialog messageDialog;
     private final TablesManager tablesManager;
+    private static final ui.I18N I18N = new I18N(FilterPanel.class);
 
     public FilterPanel(TablesManager tablesManager, MessageDialog messageDialog){
         this.messageDialog = messageDialog;
         this.tablesManager = tablesManager;
-        checkBoxIncomes = new JCheckBox("Income", true);
-        checkBoxSpending = new JCheckBox("Spending", true);
+        checkBoxIncomes = new JCheckBox(I18N.getString(TransactionType.INCOME), true);
+        checkBoxSpending = new JCheckBox(I18N.getString(TransactionType.SPENDING), true);
         spinnerFrom = new DateSpinner(tablesManager, DateSpinnerType.FROM);
         spinnerTo = new DateSpinner(tablesManager, DateSpinnerType.TO);
         categoriesComboBox = createComboBox();
@@ -62,9 +62,9 @@ public class FilterPanel extends JPanel {
         this.add(checkBoxSpending);
         this.add(new JLabel("|"));
         this.add(categoriesComboBox);
-        this.add(new JLabel("| From:"));
+        this.add(new JLabel("| " + I18N.getString("from")));
         this.add(spinnerFrom);
-        this.add(new JLabel("To:"));
+        this.add(new JLabel(I18N.getString("to")));
         this.add(spinnerTo);
     }
 
@@ -112,7 +112,7 @@ public class FilterPanel extends JPanel {
 
     private JComboBox<Object> createComboBox() {
         categoriesComboBox = new JComboBox<>(this.tablesManager.getCatTableModel().getCategories().toArray());
-        categoriesComboBox.insertItemAt(new Category("All", null), 0);
+        categoriesComboBox.insertItemAt(new Category(I18N.getString("all"), null), 0);
         categoriesComboBox.setSelectedIndex(0);
         return categoriesComboBox;
     }
@@ -127,7 +127,7 @@ public class FilterPanel extends JPanel {
     public String[] fillComboBox(){
         List<Category> categories = this.tablesManager.getCatTableModel().getCategories();
         String[] resultArray = new String[categories.size() + 1];
-        resultArray[0] = "All";
+        resultArray[0] = I18N.getString("all");
         for (int i = 0; i < categories.size(); i++)
         {
             resultArray[i + 1] = categories.get(i).getName();
