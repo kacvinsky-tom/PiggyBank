@@ -58,6 +58,14 @@ public class CategoriesTable extends AbstractEntityTableModel<Category> {
         return categories;
     }
 
+    public List<String> getCategoriesNames(){
+        List<String> cats = new ArrayList<>();
+        for (Category c : categories){
+            cats.add(c.getName());
+        }
+        return cats;
+    }
+
     public Category getOthers() {
         return others;
     }

@@ -6,6 +6,7 @@ import model.Category;
 import model.Transaction;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -31,6 +32,12 @@ public class EditTransaction extends AbstractAddEditTransaction {
         spinner = new DateSpinner(tablesManager, DateSpinnerType.TO);
         spinner.setValue(selectedTransaction.getDate());
         transactionType.setSelectedItem(selectedTransaction.getType());
+        checkBoxPanel = new JPanel();
+        checkBoxPanel.setLayout(new BoxLayout(checkBoxPanel, BoxLayout.Y_AXIS));
+        for (String c : tablesManager.getCatTableModel().getCategoriesNames()){
+            // ToDo
+            checkBoxPanel.add(new Checkbox(c, false));
+        }
     }
 
     public void edit() {
@@ -68,11 +75,13 @@ public class EditTransaction extends AbstractAddEditTransaction {
             messageDialog.showErrorMessage(I18N.getString("errorMessage"));
             return;
         }
-        Category category = tablesManager.getCatTableModel().getCategories().get(categoryBox.getSelectedIndex());
+        // ToDo
+        //Category category = tablesManager.getCatTableModel().getCategories().get(menu.getSelectionModel().getSelectedIndex());
         TransactionType type = (TransactionType) transactionType.getItemAt(transactionType.getSelectedIndex());
         Date date = (Date) spinner.getValue();
 
-        updateTransaction(nameField.getText(), amount, category, date, noteField.getText(), type);
+        // ToDo
+        updateTransaction(nameField.getText(), amount, new Category("A", Color.BLACK), date, noteField.getText(), type);
         tablesManager.getStatTableModel().update();
         tablesManager.getStatBalTableModel().update();
         tablesManager.getTranTableModel().filterTransactions();

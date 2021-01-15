@@ -34,9 +34,13 @@ class AddAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (selectedTabIndex == TableType.TRANSACTIONS.ordinal() || selectedTabIndex == TableType.STATISTICS.ordinal()) {
+
             this.addTransaction.add();
+
         } else if (selectedTabIndex == TableType.CATEGORIES.ordinal()) {
+
             this.addCategory.add();
+
         }
     }
 }
