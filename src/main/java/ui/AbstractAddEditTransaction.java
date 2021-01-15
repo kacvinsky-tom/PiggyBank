@@ -12,8 +12,8 @@ public abstract class AbstractAddEditTransaction extends AbstractAddEditAction {
     protected JSpinner spinner;
     private static final I18N I18N = new I18N(AbstractAddEditTransaction.class);
 
-    protected JButton selectCatButton = new JButton("Select...");
-    protected JButton confirmButton = new JButton("Save");
+    protected JButton selectCatButton = new JButton(I18N.getString("select"));
+    protected JButton confirmButton = new JButton(I18N.getString("save"));
 
     protected JPanel checkBoxPanel;
 
