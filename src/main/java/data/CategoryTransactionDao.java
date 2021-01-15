@@ -93,8 +93,9 @@ public class CategoryTransactionDao {
              var st = connection.prepareStatement(
                      "SELECT TRANSACTIONS.ID AS TRANS_ID, AMOUNT, \"TYPE\", TRANSACTIONS.NAME AS TRANS_NAME, " +
                              "CREATION_DATE, NOTE, CATEGORY_ID, CATEGORIES.NAME AS CAT_NAME, COLOR" +
-                             " FROM TRANSACTIONS_CATEGORIES LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS_CATEGORIES.CATEGORY_ID" +
-                             "LEFT OUTER JOIN TRANSACTIONS ON TRANSACTIONS.ID = TRANSACTIONS_CATEGORIES.TRANSACTION_ID ")) {
+                             " FROM TRANSACTIONS_CATEGORIES LEFT OUTER JOIN TRANSACTIONS ON TRANSACTIONS.ID = TRANSACTIONS_CATEGORIES.TRANSACTION_ID" +
+                             " LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS_CATEGORIES.CATEGORY_ID"))
+        {
             List<Transaction> transactions = new ArrayList<>();
             try (var rs = st.executeQuery()) {
                 while (rs.next()) {
@@ -146,7 +147,7 @@ public class CategoryTransactionDao {
              var st = connection.createStatement()) {
 
             st.executeUpdate("CREATE TABLE APP.TRANSACTIONS_CATEGORIES (" +
-                    "TRANSACTION_ID BIGINT REFERENCES APP.TRANSACTIONS(ID)" +
+                    "TRANSACTION_ID BIGINT REFERENCES APP.TRANSACTIONS(ID)," +
                     "CATEGORY_ID BIGINT DEFAULT 0 REFERENCES APP.CATEGORIES(ID) ON DELETE SET DEFAULT" +
                     ")");
         } catch (SQLException ex) {

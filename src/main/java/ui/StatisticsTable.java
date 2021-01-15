@@ -40,7 +40,7 @@ public class StatisticsTable extends AbstractEntityTableModel<CategoryStatistic>
     }
 
     public void update(){
-        statistics = statisticDao.setAll(dateFrom, dateTo);
+        //statistics = statisticDao.setAll(dateFrom, dateTo);
         fireTableDataChanged();
     }
 
