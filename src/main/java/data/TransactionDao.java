@@ -190,7 +190,7 @@ public class TransactionDao {
                 return null;
             }
         } catch (SQLException ex) {
-            throw new DataAccessException("Failed to load department ID " + id, ex);
+            throw new DataAccessException("Failed to load transaction ID " + id, ex);
         }
     }
 }

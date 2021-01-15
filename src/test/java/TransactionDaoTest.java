@@ -81,7 +81,7 @@ final class TransactionDaoTest {
         var sqlException = new SQLException();
         TransactionDao failingDao = createFailingDao(sqlException);
 
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         assertThatExceptionOfType(DataAccessException.class)
@@ -98,7 +98,7 @@ final class TransactionDaoTest {
 
     @Test
     void findAll() {
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         var milk = new Transaction("Test", new BigDecimal(120), food,
@@ -129,7 +129,7 @@ final class TransactionDaoTest {
 
     @Test
     void delete() {
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         var milk = new Transaction("Test", new BigDecimal(120), food,
@@ -147,7 +147,7 @@ final class TransactionDaoTest {
 
     @Test
     void deleteWithNullId() {
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
 
@@ -158,7 +158,7 @@ final class TransactionDaoTest {
 
     @Test
     void deleteNonExisting() {
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         bread.setId(123L);
@@ -173,7 +173,7 @@ final class TransactionDaoTest {
         var sqlException = new SQLException();
         TransactionDao failingDao = createFailingDao(sqlException);
 
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         bread.setId(123L);
@@ -186,7 +186,7 @@ final class TransactionDaoTest {
 
     @Test
     void update() {
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         var anotherBread = new Transaction("Test", new BigDecimal(100), food,
@@ -209,7 +209,7 @@ final class TransactionDaoTest {
 
     @Test
     void updateWithNullId() {
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
 
@@ -220,7 +220,7 @@ final class TransactionDaoTest {
 
     @Test
     void updateNonExisting() {
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         bread.setId(123L);
@@ -236,7 +236,7 @@ final class TransactionDaoTest {
         var sqlException = new SQLException();
         TransactionDao failingDao = createFailingDao(sqlException);
 
-        var food = new Category("Food", Color.decode("#FFFFFA"));
+        var food = new Category("Food", Color.red);
         var bread = new Transaction("Test", new BigDecimal(100), food,
                 new Date(2021,1,1),"test", TransactionType.SPENDING);
         bread.setId(123L);
