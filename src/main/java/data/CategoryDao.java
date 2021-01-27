@@ -104,6 +104,27 @@ public class CategoryDao {
         }
     }
 
+    public Category findById(long id) {
+        try (var connection = dataSource.getConnection();
+             var st = connection.prepareStatement("SELECT \"NAME\", COLOR FROM CATEGORIES WHERE ID = ?")) {
+            st.setLong(1, id);
+            try (var rs = st.executeQuery()) {
+                if (rs.next()) {
+                    Category category = new Category(
+                            rs.getString("NAME"),
+                            Color.decode(rs.getString("COLOR"))
+                    );
+                    category.setId(id);
+                    return category;
+                }
+                return null;
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to load Category ID " + id, ex);
+        }
+    }
+
+
     private void initTable() {
         if (!tableExits("APP", "CATEGORIES")) {
             createTable();

@@ -123,6 +123,35 @@ public class TransactionDao {
         }
     }
 
+    public Transaction findById(long id) {
+        try (var connection = dataSource.getConnection();
+             var st = connection.prepareStatement("SELECT TRANSACTIONS.ID as TRANS_ID, AMOUNT, \"TYPE\", TRANSACTIONS.NAME AS TRANS_NAME, " +
+                     "CREATION_DATE, NOTE, CATEGORIES.NAME AS CAT_NAME, COLOR" +
+                     " FROM TRANSACTIONS LEFT OUTER JOIN CATEGORIES ON CATEGORIES.ID = TRANSACTIONS.CATEGORY_ID WHERE TRANSACTIONS.ID = ?")) {
+            st.setLong(1, id);
+            try (var rs = st.executeQuery()) {
+                if (rs.next()) {
+                    TransactionType type = TransactionType.valueOf(rs.getString("TYPE"));
+                    BigDecimal amount = BigDecimal.valueOf(rs.getDouble("AMOUNT"));
+                    Transaction transaction = new Transaction(
+                            rs.getString("TRANS_NAME"),
+                            amount,
+                            new Category(rs.getString("CAT_NAME"),
+                                    Color.decode(rs.getString("COLOR"))),
+                            new java.util.Date(rs.getDate("CREATION_DATE").getTime()),
+                            rs.getString("NOTE"),
+                            type);
+                    transaction.setId(rs.getLong("TRANS_ID"));
+                    return transaction;
+                }
+                return null;
+            }
+        } catch (SQLException ex) {
+            throw new DataAccessException("Failed to load transaction ID " + id, ex);
+        }
+    }
+
+
     private void initTable() {
         if (!tableExits("APP", "TRANSACTIONS")) {
             createTable();
