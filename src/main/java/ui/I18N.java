@@ -9,7 +9,7 @@ final class I18N {
 
     public I18N(Class<?> clazz) {
         var packagePath = clazz.getPackageName().replace(".", "/") + '/';
-        bundle = ResourceBundle.getBundle(packagePath + "i18n_sk");
+        bundle = ResourceBundle.getBundle(packagePath + "i18n");
         prefix = clazz.getSimpleName() + ".";
     }
 

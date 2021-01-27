@@ -5,6 +5,7 @@ import model.Category;
 import model.Transaction;
 import enums.TransactionType;
 
+import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -32,8 +33,8 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         super(COLUMNS);
         this.transactionDao = transactionDao;
         this.categoriesTable = categoriesTable;
-        loadTransactions();
-        update();
+        this.transactions = transactionDao.findAll();
+        fireTableDataChanged();
     }
 
     public List<Transaction> getTransactions() {
@@ -45,37 +46,26 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
         return transactions.size();
     }
 
+    public void update(){
+        fireTableDataChanged();
+    }
+
     public void deleteRow(int rowIndex) {
-        transactionDao.delete(transactions.get(rowIndex));
-        update();
+        new RowDeleter(transactions.get(rowIndex)).execute();
     }
 
     public void setFilter(TransactionsFilter filter){
         this.filter = filter;
     }
 
-    public void loadTransactions(){
-        this.transactions = transactionDao.findAll();
-    }
-
-    public void update(){
-        fireTableDataChanged();
-    }
-
     public void filterTransactions(){
-        loadTransactions();
-        transactions.removeIf(transaction -> !filter.checkTransaction(transaction));
-        update();
+        new RowFilter().execute();
     }
 
     public void changeCategoryToDefault(int rowIndex){
         var category = categoriesTable.getCategories().get(rowIndex);
         if (!category.getName().equals("Others")){
-            transactions.stream()
-                    .filter(t ->  t.getCategory().getName().equals(category.getName()))
-                    .forEach(t -> {t.setCategory(categoriesTable.getOthers());
-                    transactionDao.update(t);});
-            fireTableDataChanged();
+            new DefaultCategorySetter(transactions, category).execute();
         }
     }
 
@@ -86,13 +76,139 @@ public class TransactionsTable extends AbstractEntityTableModel<Transaction> {
 
     @Override
     protected void updateEntity(Transaction transaction) {
-        transactionDao.update(transaction);
-        fireTableDataChanged();
+        new RowUpdater(transaction).execute();
     }
 
     public void addTransaction(Transaction transaction) {
-        transactionDao.create(transaction);
-        transactions.add(transaction);
-        fireTableDataChanged();
+        new RowAdder(transaction).execute();
     }
+
+    private class RowDeleter extends SwingWorker<Boolean, Integer> {
+        private final Transaction transaction;
+        private List<Transaction> transactionsList;
+
+        public RowDeleter(Transaction transaction) {
+            this.transaction = transaction;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            transactionDao.delete(transaction);
+            transactionsList = transactionDao.findAll();
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            transactions = transactionsList;
+            fireTableDataChanged();
+        }
+    }
+
+    private class RowAdder extends SwingWorker<Boolean, Integer> {
+        private final Transaction transaction;
+
+        public RowAdder(Transaction transaction) {
+            this.transaction = transaction;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            transactionDao.delete(transaction);
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            transactions.add(transaction);
+            fireTableDataChanged();
+        }
+    }
+
+    private class RowFilter extends SwingWorker<Boolean, Integer> {
+        private List<Transaction> transactionsList;
+
+        @Override
+        protected Boolean doInBackground() {
+            transactionsList = transactionDao.findAll();
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            transactions = transactionsList;
+            transactions.removeIf(transaction -> !filter.checkTransaction(transaction));
+            fireTableDataChanged();
+        }
+    }
+
+    private class RowUpdater extends SwingWorker<Boolean, Integer> {
+        private final Transaction transaction;
+
+        public RowUpdater(Transaction transaction) {
+            this.transaction = transaction;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            transactionDao.update(transaction);
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            fireTableDataChanged();
+        }
+    }
+
+    private class DefaultCategorySetter extends SwingWorker<Boolean, Integer> {
+        private List<Transaction> transactionsList;
+        private final Category category;
+
+        public DefaultCategorySetter(List<Transaction> transactionsList, Category category) {
+            this.transactionsList = transactionsList;
+            this.category = category;
+        }
+
+        @Override
+        protected Boolean doInBackground() {
+            transactionsList.stream()
+                    .filter(t ->  t.getCategory().getName().equals(category.getName()))
+                    .forEach(t -> {t.setCategory(categoriesTable.getOthers());
+                        transactionDao.update(t);});
+            return true;
+        }
+
+        @Override
+        protected void done() {
+            try {
+                get();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            transactions = transactionsList;
+            fireTableDataChanged();
+        }
+    }
+
 }
