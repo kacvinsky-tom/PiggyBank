@@ -11,6 +11,7 @@ import java.awt.*;
 public class MainFrame extends JFrame {
     private final ToolBar toolBar;
     private final TabbedPane tabbedPane;
+    private static final I18N I18N = new I18N(MainFrame.class);
 
     public MainFrame(CategoryDao categoryDao, TransactionDao transactionDao, StatisticDao statisticDao) {
         TablesManager tablesManager = new TablesManager(categoryDao, transactionDao, statisticDao);
@@ -21,7 +22,7 @@ public class MainFrame extends JFrame {
     }
 
     private void setFrame() {
-        this.setTitle("Piggy Bank - Personal cash flow manager");
+        this.setTitle(I18N.getString("title"));
         this.setIconImage(Icons.PIGGY_IMAGE);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setPreferredSize(new Dimension(800, 500));

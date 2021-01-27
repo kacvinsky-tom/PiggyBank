@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 public class EditCategory extends AbstractAddEditCategory {
 
     private Category selectedCategory;
+    private static final I18N I18N = new I18N(EditCategory.class);
 
     public EditCategory(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
@@ -25,8 +26,8 @@ public class EditCategory extends AbstractAddEditCategory {
         selectedCategory = tablesManager.getCatTableModel().getEntity(tablesManager.getCatJTable().getSelectedRow());
         preselectedColor = selectedCategory.getColor();
         prepareColorPanel(preselectedColor);
-        dialog = createDialog("Edit category", 270, 150);
-        nameField = createTextField("Name: ", selectedCategory.getName(), 17);
+        dialog = createDialog(I18N.getString("dialogTitle"), 270, 150);
+        nameField = createTextField(I18N.getString("name"), selectedCategory.getName(), 17);
 
         if (selectedCategory.getName().equals("Others")) {
             nameField.setEnabled(false);
@@ -34,18 +35,18 @@ public class EditCategory extends AbstractAddEditCategory {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     super.mouseReleased(e);
-                    messageDialog.showAlertMessage("Name of the default category 'Others' is not editable!");
+                    messageDialog.showAlertMessage(I18N.getString("message"));
                 }
             });
         }
 
-        createCategoryDialog("Save");
+        createCategoryDialog(I18N.getString("save"));
     }
 
     @Override
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         if (nameField.getText().equals("")){
-            messageDialog.showErrorMessage("Enter name of the category!");
+            messageDialog.showErrorMessage(I18N.getString("errorMessage"));
 
         } else if (!checkCategoryExistence(new Category(nameField.getText(), categoryColorPanel.getBackground()), selectedCategory)){
             setCategory(nameField.getText(), categoryColorPanel.getBackground());

@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class AddCategory extends AbstractAddEditCategory {
+    private static final I18N I18N = new I18N(AddCategory.class);
 
     public AddCategory(JFrame frame, TablesManager tablesManager, MessageDialog messageDialog) {
         super(frame, tablesManager, messageDialog);
@@ -36,15 +37,15 @@ public class AddCategory extends AbstractAddEditCategory {
     public void add() {
         preselectedColor = generateRandomColor();
         prepareColorPanel(preselectedColor);
-        dialog = createDialog("Add category", 270, 150);
-        nameField = createTextField("Name: ", "", 17);
-        createCategoryDialog("Add");
+        dialog = createDialog(I18N.getString("addCategory"), 270, 150);
+        nameField = createTextField(I18N.getString("name"), "", 17);
+        createCategoryDialog(I18N.getString("add"));
     }
 
     @Override
     protected void buttonActionPerformed(ActionEvent actionEvent) {
         if (nameField.getText().equals("")) {
-            messageDialog.showErrorMessage("Enter name of the category!");
+            messageDialog.showErrorMessage(I18N.getString("errorMessage"));
             return;
         }
         Category newCategory = new Category(nameField.getText(), categoryColorPanel.getBackground());

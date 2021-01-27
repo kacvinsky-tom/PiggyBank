@@ -1,6 +1,4 @@
-package ui.filter;
-
-import ui.TablesManager;
+package ui;
 
 public class StatisticsFilter {
     private final FilterPanel filterPanel;
