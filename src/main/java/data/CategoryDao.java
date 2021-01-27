@@ -1,9 +1,12 @@
 package data;
 
+import enums.TransactionType;
 import model.Category;
+import model.Transaction;
 
 import javax.sql.DataSource;
 import java.awt.*;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -47,7 +50,7 @@ public class CategoryDao {
 
     public void delete(Category category) {
         if (category.getId() == null){
-            throw new IllegalArgumentException("Category has null ID");
+            throw new IllegalArgumentException("Category has null ID: " + category);
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
@@ -65,7 +68,7 @@ public class CategoryDao {
 
     public void update(Category category){
         if (category.getId() == null){
-            throw new IllegalArgumentException("Category has null ID");
+            throw new IllegalArgumentException("Category has null ID: " + category);
         }
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement(
@@ -103,7 +106,6 @@ public class CategoryDao {
             throw new DataAccessException("Failed to load all categories", ex);
         }
     }
-
     public Category findById(long id) {
         try (var connection = dataSource.getConnection();
              var st = connection.prepareStatement("SELECT \"NAME\", COLOR FROM CATEGORIES WHERE ID = ?")) {
@@ -123,7 +125,6 @@ public class CategoryDao {
             throw new DataAccessException("Failed to load Category ID " + id, ex);
         }
     }
-
 
     private void initTable() {
         if (!tableExits("APP", "CATEGORIES")) {
